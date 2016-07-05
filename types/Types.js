@@ -11,6 +11,7 @@ const POI_1 = require("./POI");
 const Refund_1 = require("./Refund");
 const Subscription_1 = require("./Subscription");
 const SubscriptionPlan_1 = require("./SubscriptionPlan");
+const SpaceAllocation_1 = require("./SpaceAllocation");
 class Types {
 }
 Types.typeMap = {
@@ -26,6 +27,7 @@ Types.typeMap = {
     "POI": POI_1.POI,
     "Refund": Refund_1.Refund,
     "Subscription": Subscription_1.Subscription,
-    "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan
+    "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan,
+    "SpaceAllocation": SpaceAllocation_1.SpaceAllocation
 };
 exports.Types = Types;

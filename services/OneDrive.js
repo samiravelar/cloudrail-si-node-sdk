@@ -234,11 +234,14 @@ const SERVICE_CODE = {
         ["create", "$L7", "Number", 0],
         ["create", "$L8", "Number", 0],
         ["size", "$L8", "$L5.value"],
-        ["if<than", "$L7", "$L8", 15],
+        ["if<than", "$L7", "$L8", 18],
         ["create", "$L9", "CloudMetaData"],
         ["get", "$L10", "$L5.value", "$L7"],
         ["set", "$L9.Name", "$L10.name"],
         ["set", "$L9.Size", "$L10.size"],
+        ["if!=than", "$L10.lastModifiedDateTime", null, 2],
+        ["create", "$L20", "Date", "$L10.lastModifiedDateTime"],
+        ["set", "$L9.modifiedAt", "$L20.time"],
         ["if==than", "$L10.folder", null, 2],
         ["set", "$L9.Folder", 0],
         ["jumpRel", 1],
@@ -249,8 +252,57 @@ const SERVICE_CODE = {
         ["string.concat", "$L9.Path", "$P2", "/", "$L9.Name"],
         ["push", "$L6", "$L9"],
         ["math.add", "$L7", "$L7", 1],
-        ["jumpRel", -16],
+        ["jumpRel", -19],
         ["set", "$P1", "$L6"]
+    ],
+    "getAllocation": [
+        ["callFunc", "checkAuth", "$P0", "$L10"],
+        ["create", "$L0", "Object"],
+        ["create", "$L1", "String"],
+        ["string.concat", "$L1", "https://api.onedrive.com/v1.0/drive", "?access_token=", "$L10"],
+        ["set", "$L0.url", "$L1"],
+        ["set", "$L0.method", "GET"],
+        ["create", "$L4", "Object"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["create", "$L5", "Object"],
+        ["json.parse", "$L5", "$L4.responseBody"],
+        ["create", "$L6", "SpaceAllocation"],
+        ["set", "$L6.total", "$L5.quota.total"],
+        ["set", "$L6.used", "$L5.quota.used"],
+        ["set", "$P1", "$L6"]
+    ],
+    "createShareLink": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["if==than", "$P2", "/", 2],
+        ["create", "$L2", "Error", "Cannot share root", "IllegalArgument"],
+        ["throwError", "$L2"],
+        ["callFunc", "checkAuth", "$P0", "$L12"],
+        ["set", "$L9", "$P2"],
+        ["callFunc", "getParentPath", "$P0", "$L27", "$L9"],
+        ["callFunc", "checkIfPathExists", "$P0", "$L10", "$L27"],
+        ["if==than", "$L10", "false", 2],
+        ["create", "$L31", "Error", "Parent path does not exist.", "NotFound"],
+        ["throwError", "$L31"],
+        ["set", "$L0", "$P2"],
+        ["string.urlEncode", "$L0", "$L0"],
+        ["string.concat", "$L1", "https://api.onedrive.com/v1.0/drive/root:", "$L0", ":/action.createLink", "?access_token=", "$L12"],
+        ["create", "$L3", "Object"],
+        ["set", "$L3.type", "view"],
+        ["json.stringify", "$L3", "$L3"],
+        ["stream.stringToStream", "$L3", "$L3"],
+        ["create", "$L7", "Object"],
+        ["set", "$L7.Content-Type", "application/json"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.url", "$L1"],
+        ["set", "$L2.method", "POST"],
+        ["set", "$L2.requestHeaders", "$L7"],
+        ["set", "$L2.requestBody", "$L3"],
+        ["http.requestCall", "$L4", "$L2"],
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["create", "$L5", "Object"],
+        ["json.parse", "$L5", "$L4.responseBody"],
+        ["set", "$P1", "$L5.link.webUrl"]
     ],
     "Authenticating:login": [
         ["callFunc", "checkAuth", "$P0", "$L0"]
@@ -296,6 +348,9 @@ const SERVICE_CODE = {
         ["create", "$P1", "CloudMetaData"],
         ["set", "$P1.Name", "$L5.name"],
         ["set", "$P1.Size", "$L5.size"],
+        ["if!=than", "$L5.lastModifiedDateTime", null, 2],
+        ["create", "$L10", "Date", "$L5.lastModifiedDateTime"],
+        ["set", "$P1.modifiedAt", "$L10.time"],
         ["if==than", "$L5.folder", null, 2],
         ["set", "$P1.Folder", 0],
         ["jumpRel", 1],
@@ -832,6 +887,66 @@ class OneDrive {
                 callback(err);
         });
     }
+    createShareLink(path, callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
+    getAllocation(callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getAllocation", this.interpreterStorage, null).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
     login(callback) {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(() => {
@@ -904,7 +1019,7 @@ class OneDrive {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.OneDrive = OneDrive;

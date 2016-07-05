@@ -12,7 +12,8 @@ class CloudMetaData extends SandboxObject_1.SandboxObject {
         s += "name -> '" + this.name + "'\n";
         s += "path -> '" + this.path + "'\n";
         s += "size -> '" + this.size + "'\n";
-        s += "folder -> '" + this.folder + "'";
+        s += "folder -> '" + this.folder + "'\n";
+        s += "modifiedAt -> '" + this.modifiedAt + "'";
         return s;
     }
 }

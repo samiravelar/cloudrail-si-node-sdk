@@ -402,6 +402,36 @@ const SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L1"],
         ["set", "$S0.accessToken", null]
     ],
+    "getAllocation": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["string.concat", "$L0.url", "https://www.googleapis.com/drive/v3/about?fields=storageQuota&key=", "$P0.clientID"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["set", "$L0.method", "GET"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$L3", "SpaceAllocation"],
+        ["if!=than", "$L2.storageQuota.limit", null, 2],
+        ["math.add", "$L4", "$L2.storageQuota.limit", 0],
+        ["set", "$L3.total", "$L4"],
+        ["if!=than", "$L2.storageQuota.usageInDrive", null, 2],
+        ["math.add", "$L5", "$L2.storageQuota.usageInDrive", 0],
+        ["set", "$L3.used", "$L5"],
+        ["set", "$P1", "$L3"]
+    ],
+    "createShareLink": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["if==than", "$P2", "/", 2],
+        ["create", "$L2", "Error", "Cannot share root", "IllegalArgument"],
+        ["throwError", "$L2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "String"],
+        ["callFunc", "resolvePath", "$P0", "$L0", "$P2"],
+        ["callFunc", "getRawMetadataByID", "$P0", "$L2", "$L0"],
+        ["set", "$P1", "$L2.alternateLink"]
+    ],
     "resolvePath": [
         ["if==than", "$P2", "/", 2],
         ["set", "$P1", "root"],
@@ -565,6 +595,9 @@ const SERVICE_CODE = {
         ["callFunc", "getRawMetadataByID", "$P0", "$L0", "$P2"],
         ["create", "$P1", "CloudMetaData"],
         ["set", "$P1.Name", "$L0.title"],
+        ["if!=than", "$L0.modifiedDate", null, 2],
+        ["create", "$L1", "Date", "$L0.modifiedDate"],
+        ["set", "$P1.modifiedAt", "$L1.time"],
         ["if!=than", "$L0.fileSize", null, 1],
         ["math.add", "$P1.Size", "$L0.fileSize", 0],
         ["if==than", "$L0.mimeType", "application/vnd.google-apps.folder", 2],
@@ -1078,6 +1111,66 @@ class GoogleDrive {
                 callback(err);
         });
     }
+    createShareLink(path, callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
+    getAllocation(callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getAllocation", this.interpreterStorage, null).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
     login(callback) {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(() => {
@@ -1150,7 +1243,7 @@ class GoogleDrive {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.GoogleDrive = GoogleDrive;

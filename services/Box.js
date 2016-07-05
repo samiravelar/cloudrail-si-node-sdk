@@ -279,6 +279,45 @@ const SERVICE_CODE = {
         ["callFunc", "checkHttpErrors", "$P0", "$L2", "token revokation", 200],
         ["set", "$S0.access_token", null]
     ],
+    "getAllocation": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["string.concat", "$L0.url", "https://api.box.com/2.0/users/me"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["set", "$L0.method", "GET"],
+        ["http.requestCall", "$L2", "$L0"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L2", "user about", 200],
+        ["json.parse", "$L3", "$L2.responseBody"],
+        ["create", "$L6", "SpaceAllocation"],
+        ["set", "$L6.total", "$L3.space_amount"],
+        ["set", "$L6.used", "$L3.space_used"],
+        ["set", "$P1", "$L6"]
+    ],
+    "createShareLink": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["if==than", "$P2", "/", 2],
+        ["create", "$L2", "Error", "Cannot share root", "IllegalArgument"],
+        ["throwError", "$L2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "resolvePath", "$P0", "$L0", "$P2"],
+        ["create", "$L7", "Object"],
+        ["create", "$L8", "Object"],
+        ["set", "$L7.shared_link", "$L8"],
+        ["json.stringify", "$L7", "$L7"],
+        ["stream.stringToStream", "$L7", "$L7"],
+        ["create", "$L2", "Object"],
+        ["string.concat", "$L3", "https://api.box.com/2.0/", "$L0.type", "s/", "$L0.id"],
+        ["set", "$L2.url", "$L3"],
+        ["set", "$L2.method", "PUT"],
+        ["set", "$L2.requestBody", "$L7"],
+        ["create", "$L2.requestHeaders", "Object"],
+        ["string.concat", "$L2.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["http.requestCall", "$L5", "$L2"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L5", "metadata retrieval", 200],
+        ["json.parse", "$L4", "$L5.responseBody"],
+        ["set", "$P1", "$L4.shared_link.url"]
+    ],
     "checkAuthentication": [
         ["create", "$L0", "Date"],
         ["if==than", "$S0.access_token", null, 2],
@@ -398,6 +437,8 @@ const SERVICE_CODE = {
     "makeMeta": [
         ["create", "$P1", "CloudMetaData"],
         ["set", "$P1.name", "$P2.name"],
+        ["if!=than", "$P2.modified_at", null, 1],
+        ["callFunc", "extractTimeWithTimezone", "$P0", "$P1.modifiedAt", "$P2.modified_at"],
         ["if==than", "$P2.type", "folder", 2],
         ["set", "$P1.folder", 1],
         ["jumpRel", 2],
@@ -407,6 +448,44 @@ const SERVICE_CODE = {
         ["string.concat", "$P1.path", "$P3", "$P2.name"],
         ["return"],
         ["string.concat", "$P1.path", "$P3", "/", "$P2.name"]
+    ],
+    "extractTimeWithTimezone": [
+        ["set", "$L0", "$P2"],
+        ["string.split", "$L1", "$L0", "\\+"],
+        ["size", "$L2", "$L1"],
+        ["if==than", "$L2", 2, 10],
+        ["get", "$L3", "$L1", 1],
+        ["string.slit", "$L4", "$L3", ":"],
+        ["get", "$L5", "$l4", 0],
+        ["get", "$L10", "$L1", 0],
+        ["string.concat", "$L10", "$L10", "Z"],
+        ["create", "$L11", "Date", "$L10"],
+        ["set", "$L12", "$L11.time"],
+        ["math.multiply", "$L13", "$L5", 3600000],
+        ["math.add", "$P1", "$L12", "$L13"],
+        ["return"],
+        ["get", "$L3", "$L1", 0],
+        ["string.split", "$L4", "$L3", "-"],
+        ["size", "$L5", "$L4"],
+        ["math.add", "$L6", "$L5", -1],
+        ["get", "$L7", "$L4", "$L6"],
+        ["string.split", "$L8", "$L7", ":"],
+        ["get", "$L9", "$L8", 0],
+        ["math.multiply", "$L10", "$L9", -3600000],
+        ["create", "$L11", "Number", 0],
+        ["create", "$L12", "String"],
+        ["math.add", "$L20", "$L6", -1],
+        ["if<than", "$L11", "$L6", 6],
+        ["get", "$L13", "$L4", "$L11"],
+        ["string.concat", "$L12", "$L12", "$L13"],
+        ["if!=than", "$L11", "$L20", 1],
+        ["string.concat", "$L12", "$L12", "-"],
+        ["math.add", "$L11", "$L11", 1],
+        ["jumpRel", -7],
+        ["string.concat", "$L12", "$L12", "Z"],
+        ["create", "$L14", "Date", "$L12"],
+        ["set", "$L15", "$L14.time"],
+        ["math.add", "$P1", "$L15", "$L10"]
     ],
     "validatePath": [
         ["if==than", "$P1", null, 2],
@@ -753,6 +832,66 @@ class Box {
                 callback(err);
         });
     }
+    createShareLink(path, callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
+    getAllocation(callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getAllocation", this.interpreterStorage, null).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
     login(callback) {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(() => {
@@ -825,7 +964,7 @@ class Box {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.Box = Box;

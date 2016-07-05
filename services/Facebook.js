@@ -5,15 +5,30 @@ const ErrorType_1 = require("../types/ErrorType");
 const DetailErrors_1 = require("../errors/DetailErrors");
 const InitSelfTest_1 = require("../servicecode/InitSelfTest");
 const SERVICE_CODE = {
-    "Authenticating:login": [
-        ["callFunc", "checkAuthentication", "$P0"]
+    "Social:postUpdate": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L0", "Error", "The content is not allowed to be null.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L3", "String"],
+        ["string.urlEncode", "$L3", "$P1"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["create", "$L1", "String"],
+        ["string.concat", "$L1", "https://graph.facebook.com/v2.6/me/feed?message=", "$L3"],
+        ["set", "$L0.url", "$L1"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["create", "$L2", "Object"],
+        ["http.requestCall", "$L2", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L2"]
     ],
-    "Authenticating:logout": [
+    "Social:getConnections": [
         ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L0", "Object"],
-        ["set", "$L0.method", "DELETE"],
+        ["set", "$L0.method", "GET"],
         ["create", "$L1", "String"],
-        ["string.concat", "$L1", "https://graph.facebook.com/v2.6/me/permissions"],
+        ["string.concat", "$L1", "https://graph.facebook.com/v2.6/me/friends"],
         ["set", "$L0.url", "$L1"],
         ["create", "$L0.requestHeaders", "Object"],
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
@@ -23,8 +38,38 @@ const SERVICE_CODE = {
         ["create", "$L3", "String"],
         ["stream.streamToString", "$L3", "$L2.responseBody"],
         ["json.parse", "$L4", "$L3"],
-        ["set", "$S0.accessToken", null],
-        ["set", "$P0.userInfo", null]
+        ["create", "$L9", "Number"],
+        ["size", "$L9", "$L4.data"],
+        ["create", "$P1", "Array"],
+        ["if!=than", "$L9", 0, 11],
+        ["set", "$L5", "$L4.data.items"],
+        ["create", "$L6", "Number"],
+        ["size", "$L6", "$L5"],
+        ["create", "$L7", "Number", 0],
+        ["if<than", "$L7", "$L6", 6],
+        ["create", "$L8", "Object"],
+        ["get", "$L8", "$L5", "$L7"],
+        ["string.concat", "$L9", "facebook-", "$L8.id"],
+        ["push", "$P1", "$L9"],
+        ["math.add", "$L7", "$L7", 1],
+        ["jumpRel", -7]
+    ],
+    "Authenticating:login": [
+        ["callFunc", "checkAuthentication", "$P0"]
+    ],
+    "Authenticating:logout": [
+        ["set", "$P0.userInfo", null],
+        ["if!=than", "$S0.accessToken", null, 10],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "DELETE"],
+        ["create", "$L1", "String"],
+        ["string.concat", "$L1", "https://graph.facebook.com/v2.6/me/permissions"],
+        ["set", "$L0.url", "$L1"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["create", "$L2", "Object"],
+        ["http.requestCall", "$L2", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L2"]
     ],
     "Profile:getIdentifier": [
         ["callFunc", "checkUserInfo", "$P0"],
@@ -122,9 +167,10 @@ const SERVICE_CODE = {
     "authenticate": [
         ["create", "$L0", "String"],
         ["create", "$L1", "String"],
-        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&scope=public_profile, email, user_birthday, user_about_me"],
+        ["string.urlEncode", "$L3", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=public_profile%2Cemail%2Cuser_birthday%2Cuser_about_me%2Cpublish_actions%2Cuser_friends"],
         ["awaitCodeRedirect", "$L2", "$L0"],
-        ["string.concat", "$L1", "https://graph.facebook.com/v2.3/oauth/access_token?client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
+        ["string.concat", "$L1", "https://graph.facebook.com/v2.3/oauth/access_token?client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
         ["create", "$L5", "Object"],
         ["set", "$L5.url", "$L1"],
         ["set", "$L5.method", "GET"],
@@ -139,26 +185,19 @@ const SERVICE_CODE = {
         ["set", "$S0.expireIn", "$L9"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 20],
+        ["if>=than", "$P1.code", 400, 13],
         ["json.parse", "$L0", "$P1.responseBody"],
-        ["set", "$L2", "$L0.message"],
+        ["set", "$L2", "$L0.error_user_msg"],
         ["if==than", "$P1.code", 401, 2],
         ["create", "$L3", "Error", "$L2", "Authentication"],
         ["throwError", "$L3"],
-        ["if==than", "$P1.code", 400, 2],
-        ["create", "$L3", "Error", "$L2", "Http"],
-        ["throwError", "$L3"],
-        ["if>=than", "$P1.code", 402, 5],
-        ["if<=than", "$P1.code", 509, 4],
-        ["if!=than", "$P1.code", 503, 3],
-        ["if!=than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "Http"],
+        ["if==than", "$P1.code", 404, 2],
+        ["create", "$L3", "Error", "$L2", "NotFound"],
         ["throwError", "$L3"],
         ["if==than", "$P1.code", 503, 2],
         ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
         ["throwError", "$L3"],
-        ["if==than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "NotFound"],
+        ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"]
     ]
 };
@@ -477,6 +516,65 @@ class Facebook {
                 callback(err);
         });
     }
+    postUpdate(content, callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postUpdate", this.interpreterStorage, content).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
+    getConnections(callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:getConnections", this.interpreterStorage, null).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
     saveAsString() {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
@@ -491,7 +589,7 @@ class Facebook {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.Facebook = Facebook;

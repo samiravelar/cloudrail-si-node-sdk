@@ -925,9 +925,9 @@ class PayPal {
                 callback(err);
         });
     }
-    createSubscriptionPlan(name, amount, currency, description, Longerval, Longerval_count, callback) {
+    createSubscriptionPlan(name, amount, currency, description, interval, intervalCount, callback) {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, Longerval, Longerval_count).then(() => {
+        ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, interval, intervalCount).then(() => {
             let error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
@@ -1058,7 +1058,7 @@ class PayPal {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.PayPal = PayPal;

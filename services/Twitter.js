@@ -13,9 +13,74 @@ const SERVICE_CODE = {
         ["delete", "$S0.oauthTokenSecret"],
         ["set", "$P0.userInfo", null]
     ],
+    "Social:postUpdate": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L0", "Error", "The status is not allowed to be null.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["size", "$L0", "$P1"],
+        ["if>than", "$L0", 140, 2],
+        ["create", "$L0", "Error", "The status is not allowed to contain more than 140 characters.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L3", "String"],
+        ["string.urlEncode", "$L3", "$P1"],
+        ["callFunc", "urlEncode", "$P0", "$L5", "$L3"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["string.concat", "$L0.url", "https://api.twitter.com/1.1/statuses/update.json"],
+        ["create", "$L1", "Array"],
+        ["push", "$L1", "oauth_consumer_key"],
+        ["push", "$L1", "oauth_nonce"],
+        ["push", "$L1", "oauth_signature_method"],
+        ["push", "$L1", "oauth_timestamp"],
+        ["push", "$L1", "oauth_token"],
+        ["push", "$L1", "oauth_version"],
+        ["push", "$L1", "status"],
+        ["create", "$L4", "Object"],
+        ["set", "$L4.status", "$P1"],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L4"],
+        ["string.concat", "$L21", "status=", "$L5"],
+        ["stream.stringToStream", "$L0.requestBody", "$L21"],
+        ["set", "$L0.requestHeaders.Content-Type", "application/x-www-form-urlencoded"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"]
+    ],
+    "Social:getConnections": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["set", "$L0.url", "https://api.twitter.com/1.1/friends/ids.json"],
+        ["create", "$L1", "Array"],
+        ["push", "$L1", "count"],
+        ["push", "$L1", "oauth_consumer_key"],
+        ["push", "$L1", "oauth_nonce"],
+        ["push", "$L1", "oauth_signature_method"],
+        ["push", "$L1", "oauth_timestamp"],
+        ["push", "$L1", "oauth_token"],
+        ["push", "$L1", "oauth_version"],
+        ["push", "$L1", "stringify_ids"],
+        ["create", "$L3", "Object"],
+        ["set", "$L3.count", "5000"],
+        ["set", "$L3.stringify_ids", "true"],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L3"],
+        ["string.concat", "$L0.url", "$L0.url", "?count=5000&stringify_ids=true"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["set", "$L3", "$L2.ids"],
+        ["create", "$P1", "Array"],
+        ["create", "$L4", "Number", 0],
+        ["size", "$L5", "$L3"],
+        ["if<than", "$L4", "$L5", 5],
+        ["get", "$L6", "$L3", "$L4"],
+        ["string.concat", "$L6", "twitter-", "$L6"],
+        ["push", "$P1", "$L6"],
+        ["math.add", "$L4", "$L4", 1],
+        ["jumpRel", -6]
+    ],
     "Profile:getIdentifier": [
         ["callFunc", "User:getInfo", "$P0"],
-        ["string.concat", "$P1", "twitter-", "$P0.userInfo.screenname"]
+        ["string.concat", "$P1", "twitter-", "$P0.userInfo.id"]
     ],
     "Profile:getFullName": [
         ["callFunc", "User:getInfo", "$P0"],
@@ -72,7 +137,7 @@ const SERVICE_CODE = {
         ["create", "$P0.userInfo", "Object"],
         ["create", "$L3", "Date"],
         ["set", "$P0.userInfo.lastUpdate", "$L3.Time"],
-        ["set", "$P0.userInfo.screenname", "$L2.screen_name"],
+        ["set", "$P0.userInfo.id", "$L2.id_str"],
         ["set", "$P0.userInfo.name", "$L2.name"],
         ["set", "$P0.userInfo.email", null],
         ["set", "$P0.userInfo.gender", null],
@@ -99,7 +164,7 @@ const SERVICE_CODE = {
         ["set", "$L2", ""],
         ["set", "$L3", 0],
         ["size", "$L4", "$P2"],
-        ["if<than", "$L3", "$L4", 12],
+        ["if<than", "$L3", "$L4", 15],
         ["get", "$L5", "$P2", "$L3"],
         ["if==than", "$L5", "oauth_callback", 1],
         ["set", "$L0.oauth_callback", "$P0.redirectUri"],
@@ -109,9 +174,12 @@ const SERVICE_CODE = {
         ["if==than", "$L6", null, 1],
         ["get", "$L6", "$P3", "$L5"],
         ["string.urlEncode", "$L6", "$L6"],
+        ["if==than", "$L5", "status", 2],
+        ["callFunc", "urlEncode", "$P0", "$L20", "$L6"],
+        ["set", "$L6", "$L20"],
         ["string.concat", "$L2", "$L2", "$L5", "=", "$L6"],
         ["math.add", "$L3", "$L3", 1],
-        ["jumpRel", -13],
+        ["jumpRel", -16],
         ["string.urlEncode", "$L2", "$L2"],
         ["string.concat", "$L1", "$L1", "$L2"],
         ["set", "$L2", "$S0.oauthTokenSecret"],
@@ -148,6 +216,22 @@ const SERVICE_CODE = {
         ["string.concat", "$P0", "$P0", "$L4"],
         ["math.add", "$L2", "$L2", 1],
         ["if>=than", "$L2", "$L1", -5]
+    ],
+    "urlEncode": [
+        ["string.split", "$L0", "$P2", "\\+"],
+        ["size", "$L1", "$L0"],
+        ["create", "$L2", "Number"],
+        ["set", "$L2", 0],
+        ["create", "$L4", "String"],
+        ["if<than", "$L2", "$L1", 7],
+        ["get", "$L5", "$L0", "$L2"],
+        ["if==than", "$L2", 0, 2],
+        ["set", "$L4", "$L5"],
+        ["jumpRel", 1],
+        ["string.concat", "$L4", "$L4", "%20", "$L5"],
+        ["math.add", "$L2", "$L2", 1],
+        ["jumpRel", -8],
+        ["set", "$P1", "$L4"]
     ],
     "checkAuthentication": [
         ["if!=than", "$S0.oauthToken", null, 2],
@@ -227,25 +311,19 @@ const SERVICE_CODE = {
         ["set", "$L13", "$L17", "$L16"],
         ["math.add", "$L11", "$L11", 1],
         ["jumpRel", -9],
-        ["debug.out", "$L13"],
         ["string.urlDecode", "$S0.oauthToken", "$L13.oauth_token"],
         ["string.urlDecode", "$S0.oauthTokenSecret", "$L13.oauth_token_secret"]
     ],
     "validateResponse": [
-        ["if==than", "$P1.code", 200, 1],
-        ["return"],
-        ["stream.streamToString", "$L2", "$P1.responseBody"],
-        ["if>=than", "$P1.code", 400, 2],
-        ["if<=than", "$P1.code", 509, 1],
+        ["if>=than", "$P1.code", 400, 9],
+        ["if==than", "$P1.code", 401, 2],
+        ["create", "$L3", "Error", "Invalid credentials or access rights. Make sure that your application has read and write permission.", "Authentication"],
+        ["throwError", "$L3"],
+        ["if==than", "$P1.code", 503, 2],
+        ["create", "$L3", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
+        ["throwError", "$L3"],
+        ["string.concat", "$L2", "$P1.code", " - ", "$P1.message"],
         ["create", "$L3", "Error", "$L2", "Http"],
-        ["if==than", "$P1.code", 400, 1],
-        ["create", "$L3", "Error", "$L2", "Http"],
-        ["if==than", "$P1.code", 401, 1],
-        ["create", "$L3", "Error", "$L2", "Authentication"],
-        ["if==than", "$P1.code", 404, 1],
-        ["create", "$L3", "Error", "$L2", "NotFound"],
-        ["if==than", "$P1.code", 503, 1],
-        ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
         ["throwError", "$L3"]
     ]
 };
@@ -563,6 +641,65 @@ class Twitter {
                 callback(err);
         });
     }
+    postUpdate(content, callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postUpdate", this.interpreterStorage, content).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
+    getConnections(callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:getConnections", this.interpreterStorage, null).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
     saveAsString() {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
@@ -577,7 +714,7 @@ class Twitter {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.Twitter = Twitter;

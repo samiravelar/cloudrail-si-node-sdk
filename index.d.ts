@@ -70,6 +70,7 @@ declare module 'cloudrail-si/types/CloudMetaData' {
 	    name: string;
 	    size: number;
 	    private _folder;
+	    modifiedAt: number;
 	    folder: boolean;
 	    toString(): string;
 	}
@@ -276,6 +277,14 @@ declare module 'cloudrail-si/types/SubscriptionPlan' {
 	    interval: string;
 	    interval_count: number;
 	    name: string;
+	}
+
+}
+declare module 'cloudrail-si/types/SpaceAllocation' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	export class SpaceAllocation extends SandboxObject {
+	    used: number;
+	    total: number;
 	}
 
 }
@@ -743,7 +752,7 @@ declare module 'cloudrail-si/helpers/Helper' {
 	export type ObjectMap<T> = {
 	    [key: string]: T;
 	};
-	export type NodeCallback<T> = (err?: Error, data?: T) => void;
+	export type NodeCallback<T> = (err: Error, data?: T) => void;
 	export class Helper {
 	    static addAll<T>(target: T[], source: T[]): void;
 	    static putAll<T>(target: ObjectMap<T>, source: ObjectMap<T>): void;
@@ -798,6 +807,7 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import stream = require("stream");
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	/**
 	 * A common interface for cloud storage services, abstracts to the level of paths consistently for all services.
 	 */
@@ -858,6 +868,19 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	     * @return The currently logged in user's (full) name
 	     */
 	    getUserName: (callback: NodeCallback<string>) => void;
+	    /**
+	     * Creates a share link, the permission is only to 'view' and download the file/folder
+	     *
+	     * @param path the path to the file/folder which the link to will be created
+	     *
+	     * @return The url as a String
+	     */
+	    createShareLink: (path: string, callback: NodeCallback<string>) => void;
+	    /**
+	     *
+	     * @return The total space in bytes and the used space
+	     */
+	    getAllocation: (callback: NodeCallback<SpaceAllocation>) => void;
 	}
 
 }
@@ -873,6 +896,7 @@ declare module 'cloudrail-si/services/Box' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class Box implements CloudStorage {
@@ -890,6 +914,8 @@ declare module 'cloudrail-si/services/Box' {
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -948,6 +974,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class Dropbox implements CloudStorage {
@@ -965,6 +992,8 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1022,12 +1051,36 @@ declare module 'cloudrail-si/interfaces/Profile' {
 	}
 
 }
+declare module 'cloudrail-si/interfaces/Social' {
+	import { Authenticating } from 'cloudrail-si/interfaces/basic/Authenticating';
+	import { Persistable } from 'cloudrail-si/interfaces/platformSpecific/Persistable';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	/**
+	 * Interface for interaction with social networks
+	 */
+	export interface Social extends Authenticating, Persistable {
+	    /**
+	     * Creates a new post/update to the currently logged in user's wall/stream/etc.
+	     * Throws an exception if the content is too long for the service instance.
+	     * @param content The post's content
+	     */
+	    postUpdate: (content: string, callback?: NodeCallback<void>) => void;
+	    /**
+	     * Retrieves a list of connection/friend/etc. IDs.
+	     * The IDs are compatible with those returned by Profile.getIdentifier().
+	     * @return A (possibly empty) list of IDs
+	     */
+	    getConnections: (callback: NodeCallback<string[]>) => void;
+	}
+
+}
 declare module 'cloudrail-si/services/Facebook' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
+	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	export class Facebook implements Profile {
+	export class Facebook implements Profile, Social {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
@@ -1042,6 +1095,8 @@ declare module 'cloudrail-si/services/Facebook' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    postUpdate(content: string, callback: NodeCallback<void>): void;
+	    getConnections(callback: NodeCallback<string[]>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1078,6 +1133,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class GoogleDrive implements CloudStorage {
@@ -1095,6 +1151,8 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1301,6 +1359,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class OneDrive implements CloudStorage {
@@ -1318,6 +1377,8 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1517,7 +1578,7 @@ declare module 'cloudrail-si/services/PayPal' {
 	    partiallyRefundCharge(id: string, amount: number, callback: NodeCallback<Refund>): void;
 	    getRefund(id: string, callback: NodeCallback<Refund>): void;
 	    getRefundsForCharge(id: string, callback: NodeCallback<Refund[]>): void;
-	    createSubscriptionPlan(name: string, amount: number, currency: string, description: string, Longerval: string, Longerval_count: number, callback: NodeCallback<SubscriptionPlan>): void;
+	    createSubscriptionPlan(name: string, amount: number, currency: string, description: string, interval: string, intervalCount: number, callback: NodeCallback<SubscriptionPlan>): void;
 	    listSubscriptionPlans(callback: NodeCallback<SubscriptionPlan[]>): void;
 	    createSubscription(planID: string, name: string, description: string, source: CreditCard, callback: NodeCallback<Subscription>): void;
 	    cancelSubscription(id: string, callback: NodeCallback<void>): void;
@@ -1590,7 +1651,7 @@ declare module 'cloudrail-si/services/Stripe' {
 	    partiallyRefundCharge(id: string, amount: number, callback: NodeCallback<Refund>): void;
 	    getRefund(id: string, callback: NodeCallback<Refund>): void;
 	    getRefundsForCharge(id: string, callback: NodeCallback<Refund[]>): void;
-	    createSubscriptionPlan(name: string, amount: number, currency: string, description: string, Longerval: string, Longerval_count: number, callback: NodeCallback<SubscriptionPlan>): void;
+	    createSubscriptionPlan(name: string, amount: number, currency: string, description: string, interval: string, intervalCount: number, callback: NodeCallback<SubscriptionPlan>): void;
 	    listSubscriptionPlans(callback: NodeCallback<SubscriptionPlan[]>): void;
 	    createSubscription(planID: string, name: string, description: string, source: CreditCard, callback: NodeCallback<Subscription>): void;
 	    cancelSubscription(id: string, callback: NodeCallback<void>): void;
@@ -1618,10 +1679,11 @@ declare module 'cloudrail-si/services/Twilio' {
 }
 declare module 'cloudrail-si/services/Twitter' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
+	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	export class Twitter implements Profile {
+	export class Twitter implements Profile, Social {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
@@ -1636,6 +1698,8 @@ declare module 'cloudrail-si/services/Twitter' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    postUpdate(content: string, callback: NodeCallback<void>): void;
+	    getConnections(callback: NodeCallback<string[]>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1756,29 +1820,6 @@ declare module 'cloudrail-si/index' {
 	    };
 	};
 	export = _default;
-
-}
-declare module 'cloudrail-si/interfaces/Social' {
-	import { Authenticating } from 'cloudrail-si/interfaces/basic/Authenticating';
-	import { Persistable } from 'cloudrail-si/interfaces/platformSpecific/Persistable';
-	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
-	/**
-	 * Interface for interaction with social networks
-	 */
-	export interface Social extends Authenticating, Persistable {
-	    /**
-	     * Creates a new post/update to the currently logged in user's wall/stream/etc.
-	     * Throws an exception if the content is too long for the service instance.
-	     * @param content The post's content
-	     */
-	    postUpdate: (content: string, callback?: NodeCallback<void>) => void;
-	    /**
-	     * Retrieves a list of connection/friend/etc. IDs.
-	     * The IDs are compatible with those returned by Profile.getIdentifier().
-	     * @return A (possibly empty) list of IDs
-	     */
-	    getConnections: (callback: NodeCallback<string[]>) => void;
-	}
 
 }
 // Type definitions for Node.js v4.x

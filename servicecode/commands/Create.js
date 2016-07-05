@@ -52,7 +52,9 @@ class Create {
             }
         }
         else {
-            newObject = new Types_1.Types.typeMap[type](...constructorArgs);
+            let constr = Types_1.Types.typeMap[type];
+            Helper_1.Helper.assert(constr != null);
+            newObject = new constr(...constructorArgs);
         }
         environment.setVariable(targetIdParts, newObject);
     }

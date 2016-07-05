@@ -24,11 +24,12 @@ With CloudRail, you can easily integrate external APIs into your application. Cl
 Interface | Included Services
 --- | ---
 Cloud Storage | Dropbox, Google Drive, OneDrive, Box
-Social Profiles | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram
+Profile | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram
 Payment | PayPal, Stripe
 Email | Maljet, Sendgrid
 SMS | Twilio, Nexmo
 Point of Interest | Google Places, Foursquare, Yelp
+Social | Facebook, Twitter
 ---
 ### Cloud Storage Interface:
 
@@ -44,15 +45,15 @@ Point of Interest | Google Places, Foursquare, Yelp
 * Get Meta Data of files, folders and perform all standard operations (copy, move, etc) with them.
 * Retrieve user information.
 
-[Full Documentation](https://docs.cloudrail.com/docs/cloud-storage)
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-cloudstorage)
 #### Code Example:
 
 ```` javascript
 const services = require("cloudrail-si").services;
 // let cs = new services.Box(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
-// let cs = new services.OneDrive(context, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
-// let cs = new services.GoogleDrive(context, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
-let cs = new services.Dropbox(context, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+// let cs = new services.OneDrive(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+// let cs = new services.GoogleDrive(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+let cs = new services.Dropbox(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 
 cs.createFolder("/TestFolder", (err) => { // <---
     if (err) throw err;
@@ -66,7 +67,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 
 ````
 ---
-### Social Media Profiles Interface:
+### Profile Interface:
 
 * Facebook
 * Github
@@ -84,7 +85,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 * Retrieve profile pictures.
 * Login using the Social Network.
 
-[Full Documentation](https://docs.cloudrail.com/docs/profile)
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-profile)
 #### Code Example:
 
 ```` javascript
@@ -118,7 +119,7 @@ profile.getEmail((err, email) => {
 * Refund previously made charges
 * Manage subscriptions
 
-[Full Documentation](https://docs.cloudrail.com/docs/payment)
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-payment)
 #### Code Example
 
 ```` javascript
@@ -143,7 +144,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
 
 * Send Email
 
-[Full Documentation](https://docs.cloudrail.com/docs/email)
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-email)
 
 #### Code Example
 
@@ -167,7 +168,7 @@ email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"
 
 * Send SMS
 
-[Full Documentation](https://docs.cloudrail.com/docs/sms)
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-sms)
 
 #### Code Example
 
@@ -193,7 +194,7 @@ sms.sendSMS("CloudRail", "+4912345678", "Hello from CloudRail", (err) => {
 * Get a list of POIs nearby
 * Filter by categories or search term
 
-[Full Documentation](https://docs.cloudrail.com/docs/points-of-interest)
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-pointsofinterest)
 #### Code Example
 
 ```` javascript
@@ -205,6 +206,35 @@ let poi = new services.GooglePlaces(null, "[apiKey]");
 poi.getNearbyPOIs(49.4557091, 8.5279138, 1000, "restaurant", null, (err, pois) => {
     if (err) throw err;
     console.log("Amount of locations called 'restaurant' in a 1 km radius around the given coordinates: " + pois.length);
+});
+````
+---
+### Social Interface:
+
+* Facebook
+* Twitter
+
+#### Features
+
+* Get the IDs of a user's friends/followers. Works well with the Profile interface's "login with" to check if two of your users are friends on a platform
+* Post to a user's wall
+
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-social)
+#### Code Example:
+
+```` javascript
+const services = require("cloudrail-si").services;
+// let social = new services.Facebook(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+let social = new services.Twitter(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]");
+
+social.getConnections((err, connIds) => {
+    if (err) throw err;
+    console.log("User has " + connIds.length + " connections");
+});
+
+social.postUpdate("Hello from CloudRail", (err) => {
+    if (err) throw err;
+    console.log("Update posted");
 });
 ````
 ---

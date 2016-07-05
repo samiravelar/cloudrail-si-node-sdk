@@ -17,7 +17,7 @@ class Split {
             limit = Helper_1.Helper.resolve(environment, parameters[3]);
             Helper_1.Helper.assert(Helper_1.Helper.isNumber(limit));
         }
-        let res = sourceString.split(separator, limit);
+        let res = sourceString.split(new RegExp(separator), limit);
         environment.setVariable(resultVar, res);
     }
 }

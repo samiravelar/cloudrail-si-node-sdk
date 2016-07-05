@@ -1,5 +1,5 @@
 const http = require("http");
-const opn = require('opn');
+const opn = require("opn");
 const services = require("cloudrail-si").services;
 
 const port = 12345;
@@ -17,10 +17,18 @@ let redirectReceiver = (url, state, callback) => {
     opn(url);
 };
 
-// The Instagram application with the given client ID and secret (replace "xxx") must have the redirect URI "http://localhost:12345/auth" registered
-let profile = new services.Instagram(redirectReceiver, "xxx", "xxx", "http://localhost:" + port + "/auth", "state");
+// The Dropbox application with the given client ID and secret (replace "xxx") must have the redirect URI "http://localhost:12345/auth" registered
+let cs = new services.Dropbox(redirectReceiver, "xxx", "xxx", "http://localhost:" + port + "/auth", "state");
 
-profile.getFullName((err, fullName) => {
-    if (err) console.log(err);
-    else console.log("User's full name is " + fullName);
+
+const filePath = "/Image.jpeg";
+let zip = require("zlib").createGzip();
+
+cs.download(filePath, (err, downStream) => {
+    cs.getMetadata(filePath, (err, meta) => {
+        let upStream = downStream.pipe(zip);
+        cs.upload(filePath + ".zip", upStream, meta.size, true, (err) => {
+            console.log("Successfully zipped");
+        });
+    });
 });

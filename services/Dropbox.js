@@ -144,6 +144,37 @@ const SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L1"],
         ["set", "$S0.access_token", null]
     ],
+    "getAllocation": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["create", "$L1", "String"],
+        ["set", "$L1", "https://api.dropboxapi.com/2/users/get_space_usage"],
+        ["set", "$L0.url", "$L1"],
+        ["set", "$L0.method", "POST"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["create", "$L4", "Object"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["create", "$L5", "Object"],
+        ["json.parse", "$L5", "$L4.responseBody"],
+        ["create", "$L6", "SpaceAllocation"],
+        ["set", "$L6.total", "$L5.allocation.allocated"],
+        ["set", "$L6.used", "$L5.used"],
+        ["set", "$P1", "$L6"]
+    ],
+    "createShareLink": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["if==than", "$P2", "/", 2],
+        ["create", "$L2", "Error", "Cannot share root", "IllegalArgument"],
+        ["throwError", "$L2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "checkParentPathExists", "$P0", "$P2"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.path", "$P2"],
+        ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"],
+        ["set", "$P1", "$L1.url"]
+    ],
     "checkAuthentication": [
         ["if!=than", null, "$S0.access_token", 1],
         ["return"],
@@ -183,6 +214,9 @@ const SERVICE_CODE = {
     "makeMeta": [
         ["create", "$P1", "CloudMetaData"],
         ["set", "$P1.name", "$P2.name"],
+        ["if!=than", "$P2.server_modified", null, 2],
+        ["create", "$L1", "Date", "$P2.server_modified"],
+        ["set", "$P1.modifiedAt", "$L1.time"],
         ["get", "$L0", "$P2", ".tag"],
         ["if==than", "$L0", "folder", 2],
         ["set", "$P1.folder", 1],
@@ -329,24 +363,30 @@ const SERVICE_CODE = {
         ["throwError", "$L0"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 21],
-        ["json.parse", "$L0", "$P1.responseBody"],
-        ["set", "$L2", "$L0.error_summary"],
-        ["if==than", "$P1.code", 401, 2],
-        ["create", "$L3", "Error", "$L2", "Authentication"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 400, 2],
+        ["if>=than", "$P1.code", 400, 27],
+        ["if==than", "$P1.code", 400, 3],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"],
+        ["if==than", "$P1.code", 401, 3],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
+        ["create", "$L3", "Error", "$L2", "Authentication"],
+        ["throwError", "$L3"],
+        ["if>=than", "$P1.code", 500, 6],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
+        ["if==than", "$P1.code", 503, 2],
+        ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
+        ["throwError", "$L3"],
+        ["create", "$L3", "Error", "$L2", "Authentication"],
+        ["throwError", "$L3"],
+        ["json.parse", "$L0", "$P1.responseBody"],
+        ["set", "$L2", "$L0.error_summary"],
         ["string.indexOf", "$L4", "$L0.error_summary", "not_found"],
         ["if>=than", "$P1.code", 402, 5],
         ["if<=than", "$P1.code", 509, 4],
         ["if!=than", "$P1.code", 503, 3],
         ["if==than", "$L4", -1, 2],
         ["create", "$L3", "Error", "$L2", "Http"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 503, 2],
-        ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
         ["throwError", "$L3"],
         ["if!=than", "$L4", -1, 2],
         ["create", "$L3", "Error", "$L2", "NotFound"],
@@ -701,6 +741,66 @@ class Dropbox {
                 callback(err);
         });
     }
+    createShareLink(path, callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
+    getAllocation(callback) {
+        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getAllocation", this.interpreterStorage, null).then(() => {
+            let error = ip.sandbox.thrownError;
+            if (error != null) {
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(() => {
+            let res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, err => {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    }
     login(callback) {
         let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(() => {
@@ -773,7 +873,7 @@ class Dropbox {
         let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(), err => callback(err));
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
     }
 }
 exports.Dropbox = Dropbox;
