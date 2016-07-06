@@ -43,7 +43,8 @@ Social | Facebook, Twitter
 * Download files from Cloud Storage.
 * Upload files to Cloud Storage.
 * Get Meta Data of files, folders and perform all standard operations (copy, move, etc) with them.
-* Retrieve user information.
+* Retrieve user and quota information
+* Generate share links for files and folders
 
 [Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-cloudstorage)
 #### Code Example:
