@@ -2,7 +2,7 @@
   "name": "express-mongo-oauth",
   "version": "0.0.1",
   "dependencies": {
-    "cloudrail-si": "^2.4.0",
+    "cloudrail-si": "^2.5.1",
     "express": "^4.14.0",
     "mongoose": "^4.5.1"
   },

@@ -1,31 +1,38 @@
 "use strict";
-const stream = require("stream");
-const CHUNK_SIZE = 8 * 1024;
-class LimitedReadableStream extends stream.Readable {
-    constructor(source, limit) {
-        super();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var stream = require("stream");
+var CHUNK_SIZE = 8 * 1024;
+var LimitedReadableStream = (function (_super) {
+    __extends(LimitedReadableStream, _super);
+    function LimitedReadableStream(source, limit) {
+        var _this = this;
+        _super.call(this);
         this.source = source;
         this.limit = limit;
         this.shouldPush = false;
         this.sourceReadable = source.readable;
-        source.on("readable", () => {
-            this.sourceReadable = true;
-            this.process();
+        source.on("readable", function () {
+            _this.sourceReadable = true;
+            _this.process();
         });
-        source.on("end", () => {
-            this.push(null);
+        source.on("end", function () {
+            _this.push(null);
         });
-        source.on("error", (err) => {
-            this.emit("error", err);
+        source.on("error", function (err) {
+            _this.emit("error", err);
         });
     }
-    _read() {
+    LimitedReadableStream.prototype._read = function () {
         this.shouldPush = true;
         this.process();
-    }
-    process() {
+    };
+    LimitedReadableStream.prototype.process = function () {
         if (this.shouldPush && this.sourceReadable) {
-            let chunk;
+            var chunk = void 0;
             while ((chunk = this.source.read(Math.min(this.limit, CHUNK_SIZE))) !== null) {
                 this.limit -= chunk.length;
                 if (this.limit === 0) {
@@ -39,6 +46,7 @@ class LimitedReadableStream extends stream.Readable {
                 }
             }
         }
-    }
-}
+    };
+    return LimitedReadableStream;
+}(stream.Readable));
 exports.LimitedReadableStream = LimitedReadableStream;

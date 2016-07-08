@@ -1,21 +1,24 @@
 "use strict";
-const Helper_1 = require("../../helpers/Helper");
-const VarAddress_1 = require("../VarAddress");
-class CallFunc {
-    getIdentifier() {
-        return "callFunc";
+var Helper_1 = require("../../helpers/Helper");
+var VarAddress_1 = require("../VarAddress");
+var CallFunc = (function () {
+    function CallFunc() {
     }
-    execute(environment, parameters) {
+    CallFunc.prototype.getIdentifier = function () {
+        return "callFunc";
+    };
+    CallFunc.prototype.execute = function (environment, parameters) {
         Helper_1.Helper.assert(parameters.length >= 1 && (Helper_1.Helper.isString(parameters[0]) || parameters[0] instanceof VarAddress_1.VarAddress));
-        let functionName = Helper_1.Helper.resolve(environment, parameters[0]);
+        var functionName = Helper_1.Helper.resolve(environment, parameters[0]);
         if (!Helper_1.Helper.isString(functionName)) {
             functionName = functionName.toString();
         }
-        let functionParameters = [];
-        for (let i = 1; i < parameters.length; i++) {
+        var functionParameters = [];
+        for (var i = 1; i < parameters.length; i++) {
             functionParameters.push(Helper_1.Helper.resolve(environment, parameters[i], false));
         }
         environment.callFunction(functionName, functionParameters);
-    }
-}
+    };
+    return CallFunc;
+}());
 exports.CallFunc = CallFunc;

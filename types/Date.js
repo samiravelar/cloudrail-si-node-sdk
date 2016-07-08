@@ -1,35 +1,49 @@
 "use strict";
-const SandboxObject_1 = require("./SandboxObject");
-const InternalError_1 = require("../errors/InternalError");
-class CustomDate extends SandboxObject_1.SandboxObject {
-    constructor(date) {
-        super();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var SandboxObject_1 = require("./SandboxObject");
+var InternalError_1 = require("../errors/InternalError");
+var CustomDate = (function (_super) {
+    __extends(CustomDate, _super);
+    function CustomDate(date) {
+        _super.call(this);
         if (date != null)
             this.date = new Date(Date.parse(date));
         else
             this.date = new Date();
     }
-    getDate() {
+    CustomDate.prototype.getDate = function () {
         return this.date;
-    }
-    get time() {
-        return this.date.getTime();
-    }
-    set time(value) {
-        this.date.setTime(value);
-    }
-    get rfcTime() {
-        return this.date.toISOString().slice(0, 19) + "Z";
-    }
-    toJSONString() {
+    };
+    Object.defineProperty(CustomDate.prototype, "time", {
+        get: function () {
+            return this.date.getTime();
+        },
+        set: function (value) {
+            this.date.setTime(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CustomDate.prototype, "rfcTime", {
+        get: function () {
+            return this.date.toISOString().slice(0, 19) + "Z";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    CustomDate.prototype.toJSONString = function () {
         return "" + this.date.getTime();
-    }
-    fromJSONString(jsonString) {
-        let cd = new CustomDate();
+    };
+    CustomDate.prototype.fromJSONString = function (jsonString) {
+        var cd = new CustomDate();
         cd.time = parseInt(jsonString);
         return cd;
-    }
-    compareTo(obj) {
+    };
+    CustomDate.prototype.compareTo = function (obj) {
         if (!(obj instanceof CustomDate)) {
             throw new InternalError_1.InternalError("Comparing a Date with a non-Date");
         }
@@ -41,6 +55,7 @@ class CustomDate extends SandboxObject_1.SandboxObject {
             return 0;
         else
             throw new InternalError_1.InternalError("Comparing a Date with a non-Date");
-    }
-}
+    };
+    return CustomDate;
+}(SandboxObject_1.SandboxObject));
 exports.CustomDate = CustomDate;

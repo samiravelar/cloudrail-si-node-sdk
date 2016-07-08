@@ -1,15 +1,15 @@
 "use strict";
-const Interpreter_1 = require("./Interpreter");
-const VarAddress_1 = require("./VarAddress");
-const InternalError_1 = require("../errors/InternalError");
-const Helper_1 = require("../helpers/Helper");
-const SandboxObject_1 = require("../types/SandboxObject");
-const Types_1 = require("../types/Types");
-const stream = require("stream");
-const LIST_MAX_ADD_JUMP_ALLOWED = 32;
-const JSON_AWARE_MARKER = "@JSONAware/";
-class Sandbox {
-    constructor(serviceCode, persistentStorage, instanceDependencyStorage) {
+var Interpreter_1 = require("./Interpreter");
+var VarAddress_1 = require("./VarAddress");
+var InternalError_1 = require("../errors/InternalError");
+var Helper_1 = require("../helpers/Helper");
+var SandboxObject_1 = require("../types/SandboxObject");
+var Types_1 = require("../types/Types");
+var stream = require("stream");
+var LIST_MAX_ADD_JUMP_ALLOWED = 32;
+var JSON_AWARE_MARKER = "@JSONAware/";
+var Sandbox = (function () {
+    function Sandbox(serviceCode, persistentStorage, instanceDependencyStorage) {
         this.localVariablesStack = [];
         this.parametersStack = [];
         this.codeFunctionNameStack = [];
@@ -19,48 +19,48 @@ class Sandbox {
         this.persistentStorage = persistentStorage;
         this.instanceDependencyStorage = instanceDependencyStorage;
     }
-    createNewStackLevel(functionName, codeLine) {
+    Sandbox.prototype.createNewStackLevel = function (functionName, codeLine) {
         this.localVariablesStack.push([]);
         this.parametersStack.push([]);
         this.codeFunctionNameStack.push(functionName);
         this.codeLineStack.push(codeLine);
-    }
-    currentParameters() {
+    };
+    Sandbox.prototype.currentParameters = function () {
         if (this.parametersStack.length === 0)
             return null;
         else
             return this.parametersStack[this.parametersStack.length - 1];
-    }
-    currentFunctionName() {
+    };
+    Sandbox.prototype.currentFunctionName = function () {
         if (this.codeFunctionNameStack.length === 0)
             return null;
         else
             return this.codeFunctionNameStack[this.codeFunctionNameStack.length - 1];
-    }
-    currentFunctionCode() {
+    };
+    Sandbox.prototype.currentFunctionCode = function () {
         return this.serviceCode[this.currentFunctionName()];
-    }
-    currentServiceCodeLine() {
+    };
+    Sandbox.prototype.currentServiceCodeLine = function () {
         if (this.codeLineStack.length === 0)
             return -1;
         else
             return this.codeLineStack[this.codeLineStack.length - 1];
-    }
-    incrementCurrentServiceCodeLine(amount) {
+    };
+    Sandbox.prototype.incrementCurrentServiceCodeLine = function (amount) {
         if (this.codeLineStack.length === 0)
             return;
         else
             this.codeLineStack[this.codeLineStack.length - 1] = this.codeLineStack[this.codeLineStack.length - 1] + amount;
-    }
-    returnFromFunction() {
+    };
+    Sandbox.prototype.returnFromFunction = function () {
         if (this.codeFunctionNameStack.length <= 1)
             return;
-        let currentStackLevel = this.codeFunctionNameStack.length - 1;
-        let callFunctionCommandParameters = Interpreter_1.Interpreter.decodeCommandParameters(this.serviceCode[this.codeFunctionNameStack[currentStackLevel - 1]][this.codeLineStack[currentStackLevel - 1]]);
-        for (let i = 0; i < callFunctionCommandParameters.length; i++) {
-            let paramterVar = callFunctionCommandParameters[i];
+        var currentStackLevel = this.codeFunctionNameStack.length - 1;
+        var callFunctionCommandParameters = Interpreter_1.Interpreter.decodeCommandParameters(this.serviceCode[this.codeFunctionNameStack[currentStackLevel - 1]][this.codeLineStack[currentStackLevel - 1]]);
+        for (var i = 0; i < callFunctionCommandParameters.length; i++) {
+            var paramterVar = callFunctionCommandParameters[i];
             if (paramterVar instanceof VarAddress_1.VarAddress) {
-                let value = this.parametersStack[currentStackLevel][i - 1];
+                var value = this.parametersStack[currentStackLevel][i - 1];
                 this.setVariable(paramterVar, value, currentStackLevel - 1);
             }
         }
@@ -69,15 +69,16 @@ class Sandbox {
         this.localVariablesStack.splice(currentStackLevel, 1);
         this.parametersStack.splice(currentStackLevel, 1);
         this.incrementCurrentServiceCodeLine(1);
-    }
-    setVariable(varAddress, value, stacklevel = this.localVariablesStack.length - 1) {
-        let varAddressParts;
+    };
+    Sandbox.prototype.setVariable = function (varAddress, value, stacklevel) {
+        if (stacklevel === void 0) { stacklevel = this.localVariablesStack.length - 1; }
+        var varAddressParts;
         if (varAddress instanceof VarAddress_1.VarAddress)
             varAddressParts = Sandbox.decodeVariableAddress(varAddress);
         else
             varAddressParts = varAddress;
-        let variables = this.getStackForAddressPart(varAddressParts[0], stacklevel);
-        let varIdx = varAddressParts[1];
+        var variables = this.getStackForAddressPart(varAddressParts[0], stacklevel);
+        var varIdx = varAddressParts[1];
         if (varAddressParts.length <= 2) {
             if (variables.length === varIdx) {
                 variables.push(value);
@@ -86,7 +87,7 @@ class Sandbox {
                 variables[varIdx] = value;
             }
             else if (variables.length + LIST_MAX_ADD_JUMP_ALLOWED > varIdx) {
-                for (let i = 0; i < varIdx - variables.length + 1; i++)
+                for (var i = 0; i < varIdx - variables.length + 1; i++)
                     variables.push(null);
                 variables[varIdx] = value;
             }
@@ -96,24 +97,27 @@ class Sandbox {
             return true;
         }
         return this.setEntry(variables[varIdx], varAddressParts.slice(2, varAddressParts.length), value);
-    }
-    getVariable(varAddress, stacklevel = this.localVariablesStack.length - 1, emptyIsNull = false) {
-        let varAddressParts;
+    };
+    Sandbox.prototype.getVariable = function (varAddress, stacklevel, emptyIsNull) {
+        if (stacklevel === void 0) { stacklevel = this.localVariablesStack.length - 1; }
+        if (emptyIsNull === void 0) { emptyIsNull = false; }
+        var varAddressParts;
         if (varAddress instanceof VarAddress_1.VarAddress)
             varAddressParts = Sandbox.decodeVariableAddress(varAddress);
         else
             varAddressParts = varAddress;
-        let variables = this.getStackForAddressPart(varAddressParts[0], stacklevel);
+        var variables = this.getStackForAddressPart(varAddressParts[0], stacklevel);
         if (emptyIsNull && varAddressParts[1] >= variables.length)
             return null;
-        let localEntry = variables[varAddressParts[1]];
+        var localEntry = variables[varAddressParts[1]];
         if (varAddressParts.length <= 2)
             return localEntry;
         return this.getEntry(localEntry, varAddressParts.slice(2, varAddressParts.length), emptyIsNull);
-    }
-    deleteVariable(varAddressParts, stacklevel = this.localVariablesStack.length - 1) {
-        let variables = this.getStackForAddressPart(varAddressParts[0], stacklevel);
-        let varIdx = varAddressParts[1];
+    };
+    Sandbox.prototype.deleteVariable = function (varAddressParts, stacklevel) {
+        if (stacklevel === void 0) { stacklevel = this.localVariablesStack.length - 1; }
+        var variables = this.getStackForAddressPart(varAddressParts[0], stacklevel);
+        var varIdx = varAddressParts[1];
         if (varAddressParts.length <= 2) {
             if (varIdx < variables.length) {
                 variables[varIdx] = null;
@@ -121,9 +125,9 @@ class Sandbox {
             return true;
         }
         return this.deleteEntry(variables[varIdx], varAddressParts.slice(2, varAddressParts.length));
-    }
-    getStackForAddressPart(part, stacklevel) {
-        let variables;
+    };
+    Sandbox.prototype.getStackForAddressPart = function (part, stacklevel) {
+        var variables;
         if (part === "L") {
             variables = this.localVariablesStack[stacklevel];
         }
@@ -137,18 +141,18 @@ class Sandbox {
             throw new InternalError_1.InternalError("Could not attribute variable part" + part);
         }
         return variables;
-    }
-    static decodeVariableAddress(varAddress) {
-        let decAdr = [];
-        let adr = varAddress.addressString;
+    };
+    Sandbox.decodeVariableAddress = function (varAddress) {
+        var decAdr = [];
+        var adr = varAddress.addressString;
         Helper_1.Helper.assert(adr[0] !== "$");
         if (adr[0] < '0' || adr[0] > '9') {
             decAdr.push(adr[0]);
             adr = adr.substring(1);
         }
-        let adrParts = adr.split(".");
-        for (let i = 0; i < adrParts.length; i++) {
-            let part = adrParts[i];
+        var adrParts = adr.split(".");
+        for (var i = 0; i < adrParts.length; i++) {
+            var part = adrParts[i];
             if (Helper_1.Helper.isNumberString(part)) {
                 decAdr.push(parseInt(part));
             }
@@ -157,13 +161,13 @@ class Sandbox {
             }
         }
         return decAdr;
-    }
-    setEntry(container, varAddress, value) {
+    };
+    Sandbox.prototype.setEntry = function (container, varAddress, value) {
         if (varAddress.length > 1) {
-            let nextContainer = this.getEntry(container, varAddress.slice(0, varAddress.length - 1), false);
+            var nextContainer = this.getEntry(container, varAddress.slice(0, varAddress.length - 1), false);
             return this.setEntry(nextContainer, varAddress.slice(1, varAddress.length), value);
         }
-        let varAddressPart = varAddress[0];
+        var varAddressPart = varAddress[0];
         if (Helper_1.Helper.isArray(container)) {
             if (Helper_1.Helper.isNumberString(varAddressPart)) {
                 varAddressPart = parseInt(varAddressPart);
@@ -171,10 +175,10 @@ class Sandbox {
             if (!Helper_1.Helper.isNumber(varAddressPart) || varAddressPart >= container.length) {
                 throw new InternalError_1.InternalError("Invalid index while indexing into an array");
             }
-            let idx = varAddressPart;
-            let list = container;
+            var idx = varAddressPart;
+            var list = container;
             if (list.length + LIST_MAX_ADD_JUMP_ALLOWED <= idx) {
-                for (let i = 0; i < idx - list.length + 1; i++)
+                for (var i = 0; i < idx - list.length + 1; i++)
                     list.push(null);
             }
             list[idx] = value;
@@ -192,10 +196,10 @@ class Sandbox {
             container.set(varAddressPart, value);
         }
         return false;
-    }
-    getEntry(container, varAddress, emptyIsNull) {
-        let entry;
-        let varAddressPart = varAddress[0];
+    };
+    Sandbox.prototype.getEntry = function (container, varAddress, emptyIsNull) {
+        var entry;
+        var varAddressPart = varAddress[0];
         if (Helper_1.Helper.isArray(container) || Helper_1.Helper.isString(container)) {
             if (Helper_1.Helper.isNumberString(varAddressPart)) {
                 varAddressPart = parseInt(varAddressPart);
@@ -223,13 +227,13 @@ class Sandbox {
             return this.getEntry(entry, varAddress.slice(1, varAddress.length), emptyIsNull);
         }
         return entry;
-    }
-    deleteEntry(container, varAddress) {
+    };
+    Sandbox.prototype.deleteEntry = function (container, varAddress) {
         if (varAddress.length > 1) {
-            let nextContainer = this.getEntry(container, varAddress.slice(0, varAddress.length - 1), false);
+            var nextContainer = this.getEntry(container, varAddress.slice(0, varAddress.length - 1), false);
             return this.deleteEntry(nextContainer, varAddress.slice(1, varAddress.length));
         }
-        let varAddressPart = varAddress[0];
+        var varAddressPart = varAddress[0];
         if (Helper_1.Helper.isArray(container)) {
             if (Helper_1.Helper.isNumberString(varAddressPart)) {
                 varAddressPart = parseInt(varAddressPart);
@@ -237,8 +241,8 @@ class Sandbox {
             if (!Helper_1.Helper.isNumber(varAddressPart) || varAddressPart >= container.length) {
                 throw new InternalError_1.InternalError("Invalid index while indexing into an array");
             }
-            let idx = varAddressPart;
-            let list = container;
+            var idx = varAddressPart;
+            var list = container;
             if (idx < list.length) {
                 list.splice(idx, 1);
             }
@@ -255,13 +259,13 @@ class Sandbox {
             container.set(varAddressPart, null);
         }
         return false;
-    }
-    callFunction(functionName, parameters) {
+    };
+    Sandbox.prototype.callFunction = function (functionName, parameters) {
         this.createNewStackLevel(functionName, -1);
-        let parameterStack = this.currentParameters();
+        var parameterStack = this.currentParameters();
         Helper_1.Helper.addAll(parameterStack, parameters);
-    }
-    compareVariables(aObj, bObj, commandID, typeCheck) {
+    };
+    Sandbox.prototype.compareVariables = function (aObj, bObj, commandID, typeCheck) {
         aObj = Helper_1.Helper.resolve(this, aObj, false);
         bObj = Helper_1.Helper.resolve(this, bObj, false);
         if (!typeCheck && (aObj == null || bObj == null)) {
@@ -281,15 +285,15 @@ class Sandbox {
         else {
             return Helper_1.Helper.compare(aObj, bObj);
         }
-    }
-    saveStateToString() {
-        let savelist = [];
+    };
+    Sandbox.prototype.saveStateToString = function () {
+        var savelist = [];
         savelist.push(this.codeFunctionNameStack);
         savelist.push(this.codeLineStack);
         savelist.push(this.localVariablesStack);
         savelist.push(this.parametersStack);
         savelist.push(this.persistentStorage);
-        return JSON.stringify(savelist, (key, value) => {
+        return JSON.stringify(savelist, function (key, value) {
             if (value instanceof stream.Readable) {
                 return undefined;
             }
@@ -300,15 +304,15 @@ class Sandbox {
                 return value;
             }
         });
-    }
-    loadStateFromString(savedState) {
-        let savelist = JSON.parse(savedState, (key, value) => {
+    };
+    Sandbox.prototype.loadStateFromString = function (savedState) {
+        var savelist = JSON.parse(savedState, function (key, value) {
             if (Helper_1.Helper.isString(value) && value.startsWith(JSON_AWARE_MARKER)) {
-                let start = JSON_AWARE_MARKER.length;
-                let className = value.substring(start, value.indexOf(":"));
-                let content = value.substring(value.indexOf(":") + 1);
-                let cl = Types_1.Types.typeMap[className];
-                let instance = new cl();
+                var start = JSON_AWARE_MARKER.length;
+                var className = value.substring(start, value.indexOf(":"));
+                var content = value.substring(value.indexOf(":") + 1);
+                var cl = Types_1.Types.typeMap[className];
+                var instance = new cl();
                 return instance["fromJSONString"](content);
             }
             else {
@@ -318,8 +322,8 @@ class Sandbox {
         this.codeFunctionNameStack = savelist[0];
         this.codeLineStack = savelist[1];
         this.localVariablesStack = savelist[2];
-        let mergeStacks = (jsonStack, stack) => {
-            for (let i = 0; i < jsonStack.length; i++) {
+        var mergeStacks = function (jsonStack, stack) {
+            for (var i = 0; i < jsonStack.length; i++) {
                 if (i >= stack.length) {
                     stack.push(jsonStack[i]);
                 }
@@ -328,15 +332,16 @@ class Sandbox {
                 }
             }
         };
-        let jsonParametersStack = savelist[3];
-        let jsonPersistentStorage = savelist[4];
+        var jsonParametersStack = savelist[3];
+        var jsonPersistentStorage = savelist[4];
         mergeStacks(jsonParametersStack, this.parametersStack);
         mergeStacks(jsonPersistentStorage, this.persistentStorage);
-    }
-    getParameter(idx, stacklevel) {
+    };
+    Sandbox.prototype.getParameter = function (idx, stacklevel) {
         if (this.parametersStack.length === 0 || stacklevel >= this.parametersStack.length || idx >= this.parametersStack[stacklevel].length)
             return null;
         return this.parametersStack[stacklevel][idx];
-    }
-}
+    };
+    return Sandbox;
+}());
 exports.Sandbox = Sandbox;

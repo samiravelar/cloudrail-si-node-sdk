@@ -1,20 +1,22 @@
 "use strict";
-const Interpreter_1 = require("./Interpreter");
-const Sandbox_1 = require("./Sandbox");
-const os = require("os");
-const dns = require("dns");
-class InitSelfTest {
-    static initTest(servicename) {
-        if (InitSelfTest.testedServices.has(servicename))
-            return true;
-        let testRes = InitSelfTest.execute(servicename);
-        if (testRes)
-            InitSelfTest.testedServices.add(servicename);
-        return testRes;
+var Interpreter_1 = require("./Interpreter");
+var Sandbox_1 = require("./Sandbox");
+var os = require("os");
+var dns = require("dns");
+var InitSelfTest = (function () {
+    function InitSelfTest() {
     }
-    static execute(servicename) {
-        let testState = true;
-        let SERVICE_CODE = {
+    InitSelfTest.initTest = function (servicename) {
+        if (InitSelfTest.testedServices.indexOf(servicename) !== -1)
+            return true;
+        var testRes = InitSelfTest.execute(servicename);
+        if (testRes && InitSelfTest.testedServices.indexOf(servicename) === -1)
+            InitSelfTest.testedServices.push(servicename);
+        return testRes;
+    };
+    InitSelfTest.execute = function (servicename) {
+        var testState = true;
+        var SERVICE_CODE = {
             "selfTest": [
                 ["create", "$L0", "Object"],
                 ["create", "$L1", "Object"],
@@ -50,16 +52,17 @@ class InitSelfTest {
                 ["if>=than", "$L2", "$L1", -5]
             ]
         };
-        let interpreterStorage = {
+        var interpreterStorage = {
             "serviceName": servicename,
             "platform": "Node.js",
             "os": os.type() + " , " + os.arch() + " , " + os.release()
         };
-        dns.lookup(os.hostname(), (err, add, fam) => {
-            let mac;
-            let interfaces = os.networkInterfaces();
-            for (let key in interfaces) {
-                for (let entry of interfaces[key]) {
+        dns.lookup(os.hostname(), function (err, add, fam) {
+            var mac;
+            var interfaces = os.networkInterfaces();
+            for (var key in interfaces) {
+                for (var _i = 0, _a = interfaces[key]; _i < _a.length; _i++) {
+                    var entry = _a[_i];
                     if (entry.address === add) {
                         mac = entry.mac;
                         break;
@@ -68,19 +71,19 @@ class InitSelfTest {
                 if (mac)
                     break;
             }
-            let pjson;
-            let path = "./package.json";
-            let limit = 50;
+            var pjson;
+            var path = "./package.json";
+            var limit = 50;
             while (!pjson && limit > 0) {
                 try {
-                    let tmp = require(path);
+                    var tmp = require(path);
                     if (tmp.name === "cloudrail-si")
                         throw Error();
                     else
                         pjson = tmp;
                 }
                 catch (err) {
-                    if (path.startsWith("./")) {
+                    if (path.indexOf("./") === 0) {
                         path = "." + path;
                     }
                     else {
@@ -89,8 +92,8 @@ class InitSelfTest {
                 }
                 limit--;
             }
-            let name;
-            let version;
+            var name;
+            var version;
             if (!pjson) {
                 name = "unknown";
                 version = "unknown";
@@ -99,11 +102,12 @@ class InitSelfTest {
                 name = pjson.name ? pjson.name : "unknown";
                 version = pjson.version ? pjson.version : "unknown";
             }
-            let interpreter = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, [], {}));
+            var interpreter = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, [], {}));
             interpreter.callFunction("selfTest", interpreterStorage, mac, name, version);
         });
         return testState;
-    }
-}
-InitSelfTest.testedServices = new Set();
+    };
+    InitSelfTest.testedServices = [];
+    return InitSelfTest;
+}());
 exports.InitSelfTest = InitSelfTest;

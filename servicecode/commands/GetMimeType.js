@@ -1,19 +1,22 @@
 "use strict";
-const Helper_1 = require("../../helpers/Helper");
-const VarAddress_1 = require("../VarAddress");
-class GetMimeType {
-    getIdentifier() {
+var Helper_1 = require("../../helpers/Helper");
+var VarAddress_1 = require("../VarAddress");
+var GetMimeType = (function () {
+    function GetMimeType() {
+    }
+    GetMimeType.prototype.getIdentifier = function () {
         return "getMimeType";
-    }
-    execute(environment, parameters) {
+    };
+    GetMimeType.prototype.execute = function (environment, parameters) {
         Helper_1.Helper.assert(parameters.length === 2 && parameters[0] instanceof VarAddress_1.VarAddress && (Helper_1.Helper.isString(parameters[1]) || parameters[1] instanceof VarAddress_1.VarAddress));
-        let resVar = parameters[0];
-        let fileExt = Helper_1.Helper.resolve(environment, parameters[1]);
+        var resVar = parameters[0];
+        var fileExt = Helper_1.Helper.resolve(environment, parameters[1]);
         environment.setVariable(resVar, mimeTypes[fileExt]);
-    }
-}
+    };
+    return GetMimeType;
+}());
 exports.GetMimeType = GetMimeType;
-const mimeTypes = {
+var mimeTypes = {
     "ez": "application/andrew-inset",
     "aw": "application/applixware",
     "atom": "application/atom+xml",

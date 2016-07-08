@@ -1,23 +1,24 @@
 "use strict";
-const Helper_1 = require("../../helpers/Helper");
-class Conditional {
-    constructor(identifier, compareFunction, typeCheck) {
+var Helper_1 = require("../../helpers/Helper");
+var Conditional = (function () {
+    function Conditional(identifier, compareFunction, typeCheck) {
         this.identifier = identifier;
         this.compareFunction = compareFunction;
         this.typeCheck = typeCheck;
     }
-    getIdentifier() {
+    Conditional.prototype.getIdentifier = function () {
         return this.identifier;
-    }
-    execute(environment, parameters) {
+    };
+    Conditional.prototype.execute = function (environment, parameters) {
         Helper_1.Helper.assert(parameters.length == 3);
-        let aObj = parameters[0];
-        let bObj = parameters[1];
-        let relativeEndPos = Helper_1.Helper.resolve(environment, parameters[2]);
+        var aObj = parameters[0];
+        var bObj = parameters[1];
+        var relativeEndPos = Helper_1.Helper.resolve(environment, parameters[2]);
         Helper_1.Helper.assert(Helper_1.Helper.isNumber(relativeEndPos));
-        let compare = environment.compareVariables(aObj, bObj, this.identifier, this.typeCheck);
+        var compare = environment.compareVariables(aObj, bObj, this.identifier, this.typeCheck);
         if (!this.compareFunction(compare))
             environment.incrementCurrentServiceCodeLine(relativeEndPos);
-    }
-}
+    };
+    return Conditional;
+}());
 exports.Conditional = Conditional;

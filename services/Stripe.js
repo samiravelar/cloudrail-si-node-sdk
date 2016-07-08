@@ -1,10 +1,10 @@
 "use strict";
-const Interpreter_1 = require("../servicecode/Interpreter");
-const Sandbox_1 = require("../servicecode/Sandbox");
-const ErrorType_1 = require("../types/ErrorType");
-const DetailErrors_1 = require("../errors/DetailErrors");
-const InitSelfTest_1 = require("../servicecode/InitSelfTest");
-const SERVICE_CODE = {
+var Interpreter_1 = require("../servicecode/Interpreter");
+var Sandbox_1 = require("../servicecode/Sandbox");
+var ErrorType_1 = require("../types/ErrorType");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var SERVICE_CODE = {
     "createCharge": [
         ["callFunc", "checkNull", "$P0", "$P2", "Amount"],
         ["callFunc", "checkLessThanZero", "$P0", "$P2", "Amount"],
@@ -515,8 +515,8 @@ const SERVICE_CODE = {
         ["throwError", "$L3"]
     ]
 };
-class Stripe {
-    constructor(redirectReceiver, secretKey) {
+var Stripe = (function () {
+    function Stripe(redirectReceiver, secretKey) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -524,15 +524,15 @@ class Stripe {
         };
         InitSelfTest_1.InitSelfTest.initTest("Stripe");
         this.interpreterStorage["secretKey"] = secretKey;
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    createCharge(amount, currency, source, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("createCharge", this.interpreterStorage, null, amount, currency, source).then(() => {
-            let error = ip.sandbox.thrownError;
+    Stripe.prototype.createCharge = function (amount, currency, source, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createCharge", this.interpreterStorage, null, amount, currency, source).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -549,20 +549,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getCharge(id, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("getCharge", this.interpreterStorage, null, id).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.getCharge = function (id, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getCharge", this.interpreterStorage, null, id).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -579,20 +579,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    listCharges(from, to, creditCard, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("listCharges", this.interpreterStorage, null, from, to, creditCard).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.listCharges = function (from, to, creditCard, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("listCharges", this.interpreterStorage, null, from, to, creditCard).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -609,20 +609,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    refundCharge(id, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("refundCharge", this.interpreterStorage, null, id).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.refundCharge = function (id, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("refundCharge", this.interpreterStorage, null, id).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -639,20 +639,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    partiallyRefundCharge(id, amount, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("partiallyRefundCharge", this.interpreterStorage, null, id, amount).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.partiallyRefundCharge = function (id, amount, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("partiallyRefundCharge", this.interpreterStorage, null, id, amount).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -669,20 +669,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getRefund(id, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("getRefund", this.interpreterStorage, null, id).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.getRefund = function (id, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getRefund", this.interpreterStorage, null, id).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -699,20 +699,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getRefundsForCharge(id, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("getRefundsForCharge", this.interpreterStorage, null, id).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.getRefundsForCharge = function (id, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getRefundsForCharge", this.interpreterStorage, null, id).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -729,20 +729,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    createSubscriptionPlan(name, amount, currency, description, interval, intervalCount, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, interval, intervalCount).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.createSubscriptionPlan = function (name, amount, currency, description, interval, intervalCount, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, interval, intervalCount).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -759,20 +759,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    listSubscriptionPlans(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("listSubscriptionPlans", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.listSubscriptionPlans = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("listSubscriptionPlans", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -789,20 +789,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    createSubscription(planID, name, description, source, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("createSubscription", this.interpreterStorage, null, planID, name, description, source).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.createSubscription = function (planID, name, description, source, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("createSubscription", this.interpreterStorage, null, planID, name, description, source).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -819,20 +819,20 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    cancelSubscription(id, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("cancelSubscription", this.interpreterStorage, id).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Stripe.prototype.cancelSubscription = function (id, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("cancelSubscription", this.interpreterStorage, id).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -849,30 +849,31 @@ class Stripe {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    saveAsString() {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+    };
+    Stripe.prototype.saveAsString = function () {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
-    }
-    loadAsString(savedState) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
-        let ip = new Interpreter_1.Interpreter(sandbox);
+    };
+    Stripe.prototype.loadAsString = function (savedState) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+        var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
-    }
-    resumeLogin(executionState, callback) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+    };
+    Stripe.prototype.resumeLogin = function (executionState, callback) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
-        let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
-    }
-}
+        var ip = new Interpreter_1.Interpreter(sandbox);
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(function () { return callback(undefined); }, function (err) { return callback(err); });
+    };
+    return Stripe;
+}());
 exports.Stripe = Stripe;

@@ -1,9 +1,15 @@
 "use strict";
-const SandboxObject_1 = require("./SandboxObject");
-const DetailErrors_1 = require("../errors/DetailErrors");
-class Charge extends SandboxObject_1.SandboxObject {
-    constructor(_amount, _created, _currency, _id, _refunded, _source, _status) {
-        super();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var SandboxObject_1 = require("./SandboxObject");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var Charge = (function (_super) {
+    __extends(Charge, _super);
+    function Charge(_amount, _created, _currency, _id, _refunded, _source, _status) {
+        _super.call(this);
         this._amount = _amount;
         this._created = _created;
         this._currency = _currency;
@@ -26,26 +32,55 @@ class Charge extends SandboxObject_1.SandboxObject {
         this._currency = _currency.toUpperCase();
         this._refunded = !!_refunded;
     }
-    get id() {
-        return this._id;
-    }
-    get amount() {
-        return this._amount;
-    }
-    get currency() {
-        return this._currency;
-    }
-    get source() {
-        return this._source;
-    }
-    get created() {
-        return this._created;
-    }
-    get status() {
-        return this._status;
-    }
-    get refunded() {
-        return this._refunded;
-    }
-}
+    Object.defineProperty(Charge.prototype, "id", {
+        get: function () {
+            return this._id;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Charge.prototype, "amount", {
+        get: function () {
+            return this._amount;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Charge.prototype, "currency", {
+        get: function () {
+            return this._currency;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Charge.prototype, "source", {
+        get: function () {
+            return this._source;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Charge.prototype, "created", {
+        get: function () {
+            return this._created;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Charge.prototype, "status", {
+        get: function () {
+            return this._status;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Charge.prototype, "refunded", {
+        get: function () {
+            return this._refunded;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Charge;
+}(SandboxObject_1.SandboxObject));
 exports.Charge = Charge;

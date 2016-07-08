@@ -1,113 +1,123 @@
 "use strict";
-const Helper_1 = require("../helpers/Helper");
-const InternalError_1 = require("../errors/InternalError");
-const VarAddress_1 = require("./VarAddress");
-const CallFunc_1 = require("./commands/CallFunc");
-const Create_1 = require("./commands/Create");
-const Clone_1 = require("./commands/Clone");
-const Delete_1 = require("./commands/Delete");
-const Get_1 = require("./commands/Get");
-const Uint8ToBase64_1 = require("./commands/array/Uint8ToBase64");
-const Md5_1 = require("./commands/hash/Md5");
-const Sha1_1 = require("./commands/crypt/hmac/Sha1");
-const Base64Encode_1 = require("./commands/string/Base64Encode");
-const StreamToString_1 = require("./commands/stream/StreamToString");
-const StringToStream_1 = require("./commands/stream/StringToStream");
-const MakeJoinedStream_1 = require("./commands/stream/MakeJoinedStream");
-const MakeLimitedStream_1 = require("./commands/stream/MakeLimitedStream");
-const RequestCall_1 = require("./commands/http/RequestCall");
-const Out_1 = require("./commands/debug/Out");
-const UserError_1 = require("../errors/UserError");
-const AwaitCodeRedirect_1 = require("./commands/AwaitCodeRedirect");
-const GetMimeType_1 = require("./commands/GetMimeType");
-const ThrowError_1 = require("./commands/ThrowError");
-const Parse_1 = require("./commands/json/Parse");
-const Stringify_1 = require("./commands/json/Stringify");
-const Floor_1 = require("./commands/math/Floor");
-const Conditional_1 = require("./commands/Conditional");
-const MathCombine_1 = require("./commands/math/MathCombine");
-const GetKeyArray_1 = require("./commands/object/GetKeyArray");
-const GetKeyValueArrays_1 = require("./commands/object/GetKeyValueArrays");
-const Concat_1 = require("./commands/string/Concat");
-const IndexOf_1 = require("./commands/string/IndexOf");
-const LastIndexOf_1 = require("./commands/string/LastIndexOf");
-const Split_1 = require("./commands/string/Split");
-const Substr_1 = require("./commands/string/Substr");
-const Substring_1 = require("./commands/string/Substring");
-const StringTransform_1 = require("./commands/string/StringTransform");
-const JumpRel_1 = require("./commands/JumpRel");
-const Pull_1 = require("./commands/Pull");
-const Push_1 = require("./commands/Push");
-const Return_1 = require("./commands/Return");
-const Set_1 = require("./commands/Set");
-const Size_1 = require("./commands/Size");
-const Format_1 = require("./commands/string/Format");
-class Interpreter {
-    constructor(sandbox) {
+var Helper_1 = require("../helpers/Helper");
+var InternalError_1 = require("../errors/InternalError");
+var VarAddress_1 = require("./VarAddress");
+var CallFunc_1 = require("./commands/CallFunc");
+var Create_1 = require("./commands/Create");
+var Clone_1 = require("./commands/Clone");
+var Delete_1 = require("./commands/Delete");
+var Get_1 = require("./commands/Get");
+var Uint8ToBase64_1 = require("./commands/array/Uint8ToBase64");
+var Md5_1 = require("./commands/hash/Md5");
+var Sha1_1 = require("./commands/crypt/hmac/Sha1");
+var Base64Encode_1 = require("./commands/string/Base64Encode");
+var StreamToString_1 = require("./commands/stream/StreamToString");
+var StringToStream_1 = require("./commands/stream/StringToStream");
+var MakeJoinedStream_1 = require("./commands/stream/MakeJoinedStream");
+var MakeLimitedStream_1 = require("./commands/stream/MakeLimitedStream");
+var RequestCall_1 = require("./commands/http/RequestCall");
+var Out_1 = require("./commands/debug/Out");
+var UserError_1 = require("../errors/UserError");
+var AwaitCodeRedirect_1 = require("./commands/AwaitCodeRedirect");
+var GetMimeType_1 = require("./commands/GetMimeType");
+var ThrowError_1 = require("./commands/ThrowError");
+var Parse_1 = require("./commands/json/Parse");
+var Stringify_1 = require("./commands/json/Stringify");
+var Floor_1 = require("./commands/math/Floor");
+var Conditional_1 = require("./commands/Conditional");
+var MathCombine_1 = require("./commands/math/MathCombine");
+var GetKeyArray_1 = require("./commands/object/GetKeyArray");
+var GetKeyValueArrays_1 = require("./commands/object/GetKeyValueArrays");
+var Concat_1 = require("./commands/string/Concat");
+var IndexOf_1 = require("./commands/string/IndexOf");
+var LastIndexOf_1 = require("./commands/string/LastIndexOf");
+var Split_1 = require("./commands/string/Split");
+var Substr_1 = require("./commands/string/Substr");
+var Substring_1 = require("./commands/string/Substring");
+var StringTransform_1 = require("./commands/string/StringTransform");
+var JumpRel_1 = require("./commands/JumpRel");
+var Pull_1 = require("./commands/Pull");
+var Push_1 = require("./commands/Push");
+var Return_1 = require("./commands/Return");
+var Set_1 = require("./commands/Set");
+var Size_1 = require("./commands/Size");
+var Format_1 = require("./commands/string/Format");
+var Promise = require("bluebird");
+var Interpreter = (function () {
+    function Interpreter(sandbox) {
         this.sandbox = sandbox;
     }
-    callFunction(functionName, ...parameters) {
+    Interpreter.prototype.callFunction = function (functionName) {
+        var parameters = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            parameters[_i - 1] = arguments[_i];
+        }
         this.sandbox.createNewStackLevel(functionName, 0);
         Helper_1.Helper.addAll(this.sandbox.currentParameters(), parameters);
         if (this.sandbox.currentFunctionCode() == null) {
-            let errorMessage = "Service code error: function '" + functionName + "' not found";
+            var errorMessage = "Service code error: function '" + functionName + "' not found";
             throw new InternalError_1.InternalError(errorMessage);
         }
         return this.run();
-    }
-    callFunctionSync(functionName, ...parameters) {
+    };
+    Interpreter.prototype.callFunctionSync = function (functionName) {
+        var parameters = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            parameters[_i - 1] = arguments[_i];
+        }
         this.sandbox.createNewStackLevel(functionName, 0);
         Helper_1.Helper.addAll(this.sandbox.currentParameters(), parameters);
         if (this.sandbox.currentFunctionCode() == null) {
-            let errorMessage = "Service code error: function '" + functionName + "' not found";
+            var errorMessage = "Service code error: function '" + functionName + "' not found";
             throw new InternalError_1.InternalError(errorMessage);
         }
         return this.runSync();
-    }
-    run() {
-        let condition = () => (this.sandbox.currentServiceCodeLine() < this.sandbox.currentFunctionCode().length && this.sandbox.currentServiceCodeLine() >= 0);
-        let body = () => {
-            let command = this.sandbox.currentFunctionCode()[this.sandbox.currentServiceCodeLine()];
+    };
+    Interpreter.prototype.run = function () {
+        var _this = this;
+        var condition = function () { return (_this.sandbox.currentServiceCodeLine() < _this.sandbox.currentFunctionCode().length && _this.sandbox.currentServiceCodeLine() >= 0); };
+        var body = function () {
+            var command = _this.sandbox.currentFunctionCode()[_this.sandbox.currentServiceCodeLine()];
             if (COMMANDS[command[0]] == null) {
                 throw new InternalError_1.InternalError("Unknown command: " + command[0]);
             }
-            let commandParameters = Interpreter.decodeCommandParameters(command);
-            return Promise.resolve().then(() => COMMANDS[command[0]].execute(this.sandbox, commandParameters)).then(() => {
-                if (this.sandbox.thrownError != null) {
+            var commandParameters = Interpreter.decodeCommandParameters(command);
+            return Promise.resolve().then(function () { return COMMANDS[command[0]].execute(_this.sandbox, commandParameters); }).then(function () {
+                if (_this.sandbox.thrownError != null) {
                     return false;
                 }
-                this.sandbox.incrementCurrentServiceCodeLine(1);
-                while ((this.sandbox.currentServiceCodeLine() >= this.sandbox.currentFunctionCode().length ||
-                    this.sandbox.currentServiceCodeLine() < 0) && this.sandbox.codeFunctionNameStack.length > 1) {
-                    this.sandbox.returnFromFunction();
+                _this.sandbox.incrementCurrentServiceCodeLine(1);
+                while ((_this.sandbox.currentServiceCodeLine() >= _this.sandbox.currentFunctionCode().length ||
+                    _this.sandbox.currentServiceCodeLine() < 0) && _this.sandbox.codeFunctionNameStack.length > 1) {
+                    _this.sandbox.returnFromFunction();
                 }
                 return true;
             });
         };
-        let loop = (condition, body) => {
+        var loop = function (condition, body) {
             if (condition()) {
-                return body().then(cont => cont ? loop(condition, body) : Promise.resolve());
+                return body().then(function (cont) { return cont ? loop(condition, body) : Promise.resolve(); });
             }
             else {
                 return Promise.resolve();
             }
         };
-        return Promise.resolve().then(() => loop(condition, body)).catch(e => {
+        return Promise.resolve().then(function () { return loop(condition, body); }).catch(function (e) {
             if (e instanceof UserError_1.UserError)
                 throw e;
-            let errorMessage = "Service code error in function " + this.sandbox.currentFunctionName() + " at line " + this.sandbox.currentServiceCodeLine() + " with message: " + e.message;
+            var errorMessage = "Service code error in function " + _this.sandbox.currentFunctionName() + " at line " + _this.sandbox.currentServiceCodeLine() + " with message: " + e.message;
             throw new InternalError_1.InternalError(errorMessage);
         });
-    }
-    runSync() {
+    };
+    Interpreter.prototype.runSync = function () {
         try {
             while (this.sandbox.currentServiceCodeLine() < this.sandbox.currentFunctionCode().length && this.sandbox.currentServiceCodeLine() >= 0) {
-                let command = this.sandbox.currentFunctionCode()[this.sandbox.currentServiceCodeLine()];
+                var command = this.sandbox.currentFunctionCode()[this.sandbox.currentServiceCodeLine()];
                 if (COMMANDS[command[0]] == null) {
                     throw new InternalError_1.InternalError("Unknown command: " + command[0]);
                 }
-                let commandParameters = Interpreter.decodeCommandParameters(command);
-                let commandRet = COMMANDS[command[0]].execute(this.sandbox, commandParameters);
+                var commandParameters = Interpreter.decodeCommandParameters(command);
+                var commandRet = COMMANDS[command[0]].execute(this.sandbox, commandParameters);
                 if (commandRet != null && commandRet instanceof Promise)
                     throw new InternalError_1.InternalError("Attempt to synchronously execute an asynchronous command");
                 if (this.sandbox.thrownError != null) {
@@ -123,35 +133,39 @@ class Interpreter {
         catch (e) {
             if (e instanceof UserError_1.UserError)
                 throw e;
-            let errorMessage = "Service code error in function " + this.sandbox.currentFunctionName() + " at line " + this.sandbox.currentServiceCodeLine() + " with message: " + e.message;
+            var errorMessage = "Service code error in function " + this.sandbox.currentFunctionName() + " at line " + this.sandbox.currentServiceCodeLine() + " with message: " + e.message;
             throw new InternalError_1.InternalError(errorMessage);
         }
-    }
-    static decodeCommandParameters(command) {
-        let commandParameters = command.slice(1, command.length);
-        for (let i = 0; i < commandParameters.length; i++) {
+    };
+    Interpreter.decodeCommandParameters = function (command) {
+        var commandParameters = command.slice(1, command.length);
+        for (var i = 0; i < commandParameters.length; i++) {
             if (Helper_1.Helper.isString(commandParameters[i])) {
-                if (commandParameters[i].startsWith("$")) {
+                if (commandParameters[i].indexOf("$") === 0) {
                     commandParameters[i] = new VarAddress_1.VarAddress(commandParameters[i].substring(1));
                 }
-                else if (commandParameters[i].startsWith("\\$")) {
+                else if (commandParameters[i].indexOf("\\$") === 0) {
                     commandParameters[i] = commandParameters[i].substring(1);
                 }
             }
         }
         return commandParameters;
-    }
-    getParameter(idx) {
+    };
+    Interpreter.prototype.getParameter = function (idx) {
         return this.sandbox.getParameter(idx, 0);
-    }
-    saveAsString() {
+    };
+    Interpreter.prototype.saveAsString = function () {
         return JSON.stringify(this.sandbox.persistentStorage);
-    }
-    loadAsString(savedState) {
+    };
+    Interpreter.prototype.loadAsString = function (savedState) {
         this.sandbox.persistentStorage = JSON.parse(savedState);
-    }
-    resumeFunction(functionName, ...parameters) {
-        let firstParameters;
+    };
+    Interpreter.prototype.resumeFunction = function (functionName) {
+        var parameters = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            parameters[_i - 1] = arguments[_i];
+        }
+        var firstParameters;
         if (this.sandbox.parametersStack.length === 0) {
             firstParameters = [];
             this.sandbox.parametersStack.push(firstParameters);
@@ -159,9 +173,9 @@ class Interpreter {
         else {
             firstParameters = this.sandbox.parametersStack[0];
         }
-        for (let i = 0; i < parameters.length; i++) {
+        for (var i = 0; i < parameters.length; i++) {
             if (Helper_1.Helper.isObject(parameters[i])) {
-                let m = parameters[i];
+                var m = parameters[i];
                 Helper_1.Helper.clear(m);
                 Helper_1.Helper.putAll(m, firstParameters[i]);
             }
@@ -175,10 +189,11 @@ class Interpreter {
             }
         }
         return this.run();
-    }
-}
+    };
+    return Interpreter;
+}());
 exports.Interpreter = Interpreter;
-const COMMAND_LIST = [
+var COMMAND_LIST = [
     new CallFunc_1.CallFunc(),
     new Clone_1.Clone(),
     new Create_1.Create(),
@@ -203,19 +218,19 @@ const COMMAND_LIST = [
     new Out_1.Out(),
     new AwaitCodeRedirect_1.AwaitCodeRedirect(),
     new GetMimeType_1.GetMimeType(),
-    new Conditional_1.Conditional("if==than", compare => compare == 0, false),
-    new Conditional_1.Conditional("if>=than", compare => compare >= 0, true),
-    new Conditional_1.Conditional("if>than", compare => compare > 0, true),
-    new Conditional_1.Conditional("if<=than", compare => compare <= 0, true),
-    new Conditional_1.Conditional("if<than", compare => compare < 0, true),
-    new Conditional_1.Conditional("if!=than", compare => compare != 0, false),
+    new Conditional_1.Conditional("if==than", function (compare) { return compare == 0; }, false),
+    new Conditional_1.Conditional("if>=than", function (compare) { return compare >= 0; }, true),
+    new Conditional_1.Conditional("if>than", function (compare) { return compare > 0; }, true),
+    new Conditional_1.Conditional("if<=than", function (compare) { return compare <= 0; }, true),
+    new Conditional_1.Conditional("if<than", function (compare) { return compare < 0; }, true),
+    new Conditional_1.Conditional("if!=than", function (compare) { return compare != 0; }, false),
     new ThrowError_1.ThrowError(),
     new Parse_1.Parse(),
     new Stringify_1.Stringify(),
-    new MathCombine_1.MathCombine("math.add", elements => elements.reduce((prev, curr) => prev + curr)),
-    new MathCombine_1.MathCombine("math.multiply", elements => elements.reduce((prev, curr) => prev * curr)),
-    new MathCombine_1.MathCombine("math.max", elements => elements.reduce((prev, curr) => Math.max(prev, curr))),
-    new MathCombine_1.MathCombine("math.min", elements => elements.reduce((prev, curr) => Math.min(prev, curr))),
+    new MathCombine_1.MathCombine("math.add", function (elements) { return elements.reduce(function (prev, curr) { return prev + curr; }); }),
+    new MathCombine_1.MathCombine("math.multiply", function (elements) { return elements.reduce(function (prev, curr) { return prev * curr; }); }),
+    new MathCombine_1.MathCombine("math.max", function (elements) { return elements.reduce(function (prev, curr) { return Math.max(prev, curr); }); }),
+    new MathCombine_1.MathCombine("math.min", function (elements) { return elements.reduce(function (prev, curr) { return Math.min(prev, curr); }); }),
     new Floor_1.Floor(),
     new GetKeyArray_1.GetKeyArray(),
     new GetKeyValueArrays_1.GetKeyValueArrays(),
@@ -226,12 +241,13 @@ const COMMAND_LIST = [
     new Split_1.Split(),
     new Substr_1.Substr(),
     new Substring_1.Substring(),
-    new StringTransform_1.StringTransform("string.lowerCase", str => str.toLowerCase()),
-    new StringTransform_1.StringTransform("string.upperCase", str => str.toUpperCase()),
-    new StringTransform_1.StringTransform("string.urlEncode", str => encodeURIComponent(str).split("%20").join("+")),
-    new StringTransform_1.StringTransform("string.urlDecode", str => decodeURIComponent(str.split("+").join("%20")))
+    new StringTransform_1.StringTransform("string.lowerCase", function (str) { return str.toLowerCase(); }),
+    new StringTransform_1.StringTransform("string.upperCase", function (str) { return str.toUpperCase(); }),
+    new StringTransform_1.StringTransform("string.urlEncode", function (str) { return encodeURIComponent(str).split("%20").join("+"); }),
+    new StringTransform_1.StringTransform("string.urlDecode", function (str) { return decodeURIComponent(str.split("+").join("%20")); })
 ];
-const COMMANDS = {};
-for (let command of COMMAND_LIST) {
+var COMMANDS = {};
+for (var _i = 0, COMMAND_LIST_1 = COMMAND_LIST; _i < COMMAND_LIST_1.length; _i++) {
+    var command = COMMAND_LIST_1[_i];
     COMMANDS[command.getIdentifier()] = command;
 }

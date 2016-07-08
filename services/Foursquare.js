@@ -1,10 +1,10 @@
 "use strict";
-const Interpreter_1 = require("../servicecode/Interpreter");
-const Sandbox_1 = require("../servicecode/Sandbox");
-const ErrorType_1 = require("../types/ErrorType");
-const DetailErrors_1 = require("../errors/DetailErrors");
-const InitSelfTest_1 = require("../servicecode/InitSelfTest");
-const SERVICE_CODE = {
+var Interpreter_1 = require("../servicecode/Interpreter");
+var Sandbox_1 = require("../servicecode/Sandbox");
+var ErrorType_1 = require("../types/ErrorType");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var SERVICE_CODE = {
     "init": [
         ["create", "$P0.crToFoursquare", "Object"],
         ["create", "$P0.foursquareToCr", "Object"],
@@ -206,8 +206,8 @@ const SERVICE_CODE = {
         ["set", "$P0.foursquareToCr", "$P1", "$P2"]
     ]
 };
-class Foursquare {
-    constructor(redirectReceiver, clientID, clientSecret) {
+var Foursquare = (function () {
+    function Foursquare(redirectReceiver, clientID, clientSecret) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -216,15 +216,15 @@ class Foursquare {
         InitSelfTest_1.InitSelfTest.initTest("Foursquare");
         this.interpreterStorage["clientID"] = clientID;
         this.interpreterStorage["clientSecret"] = clientSecret;
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    getNearbyPOIs(latitude, longitude, radius, searchTerm, categories, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(() => {
-            let error = ip.sandbox.thrownError;
+    Foursquare.prototype.getNearbyPOIs = function (latitude, longitude, radius, searchTerm, categories, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -241,31 +241,32 @@ class Foursquare {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    saveAsString() {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+    };
+    Foursquare.prototype.saveAsString = function () {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
-    }
-    loadAsString(savedState) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
-        let ip = new Interpreter_1.Interpreter(sandbox);
+    };
+    Foursquare.prototype.loadAsString = function (savedState) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+        var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
-    }
-    resumeLogin(executionState, callback) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+    };
+    Foursquare.prototype.resumeLogin = function (executionState, callback) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
-        let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
-    }
-}
+        var ip = new Interpreter_1.Interpreter(sandbox);
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(function () { return callback(undefined); }, function (err) { return callback(err); });
+    };
+    return Foursquare;
+}());
 exports.Foursquare = Foursquare;

@@ -1,13 +1,20 @@
 "use strict";
-const SandboxObject_1 = require("./SandboxObject");
-class POI extends SandboxObject_1.SandboxObject {
-    constructor(categories, imageURL, location, name, phone) {
-        super();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var SandboxObject_1 = require("./SandboxObject");
+var POI = (function (_super) {
+    __extends(POI, _super);
+    function POI(categories, imageURL, location, name, phone) {
+        _super.call(this);
         this.categories = categories;
         this.imageURL = imageURL;
         this.location = location;
         this.name = name;
         this.phone = phone;
     }
-}
+    return POI;
+}(SandboxObject_1.SandboxObject));
 exports.POI = POI;

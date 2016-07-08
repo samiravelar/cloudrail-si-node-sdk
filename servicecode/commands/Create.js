@@ -1,28 +1,31 @@
 "use strict";
-const Sandbox_1 = require("../Sandbox");
-const VarAddress_1 = require("../VarAddress");
-const Helper_1 = require("../../helpers/Helper");
-const InternalError_1 = require("../../errors/InternalError");
-const Types_1 = require("../../types/Types");
-class Create {
-    getIdentifier() {
-        return "create";
+var Sandbox_1 = require("../Sandbox");
+var VarAddress_1 = require("../VarAddress");
+var Helper_1 = require("../../helpers/Helper");
+var InternalError_1 = require("../../errors/InternalError");
+var Types_1 = require("../../types/Types");
+var Create = (function () {
+    function Create() {
     }
-    execute(environment, parameters) {
+    Create.prototype.getIdentifier = function () {
+        return "create";
+    };
+    Create.prototype.execute = function (environment, parameters) {
         Helper_1.Helper.assert(parameters.length >= 2 && parameters[0] instanceof VarAddress_1.VarAddress &&
             (Helper_1.Helper.isString(parameters[1]) || parameters[1] instanceof VarAddress_1.VarAddress));
-        let targetId = parameters[0];
-        let type = Helper_1.Helper.resolve(environment, parameters[1]);
+        var targetId = parameters[0];
+        var type = Helper_1.Helper.resolve(environment, parameters[1]);
         Helper_1.Helper.assert(Helper_1.Helper.isString(type));
-        let targetIdParts = Sandbox_1.Sandbox.decodeVariableAddress(targetId);
-        let newObject;
-        let constructorArgs = [];
-        for (let i = 2; i < parameters.length; i++) {
+        var targetIdParts = Sandbox_1.Sandbox.decodeVariableAddress(targetId);
+        var newObject;
+        var constructorArgs = [];
+        for (var i = 2; i < parameters.length; i++) {
             constructorArgs.push(Helper_1.Helper.resolve(environment, parameters[i]));
         }
         if (type === "String") {
             newObject = "";
-            for (let arg of constructorArgs) {
+            for (var _i = 0, constructorArgs_1 = constructorArgs; _i < constructorArgs_1.length; _i++) {
+                var arg = constructorArgs_1[_i];
                 newObject += arg.toString();
             }
         }
@@ -47,16 +50,18 @@ class Create {
         }
         else if (type === "Array") {
             newObject = [];
-            for (let value of constructorArgs) {
+            for (var _a = 0, constructorArgs_2 = constructorArgs; _a < constructorArgs_2.length; _a++) {
+                var value = constructorArgs_2[_a];
                 newObject.push(value);
             }
         }
         else {
-            let constr = Types_1.Types.typeMap[type];
+            var constr = Types_1.Types.typeMap[type];
             Helper_1.Helper.assert(constr != null);
-            newObject = new constr(...constructorArgs);
+            newObject = new (constr.bind.apply(constr, [void 0].concat(constructorArgs)))();
         }
         environment.setVariable(targetIdParts, newObject);
-    }
-}
+    };
+    return Create;
+}());
 exports.Create = Create;

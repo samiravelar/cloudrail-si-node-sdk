@@ -1,24 +1,27 @@
 "use strict";
-const crypto = require("crypto");
-const Helper_1 = require("../../../helpers/Helper");
-const VarAddress_1 = require("../../VarAddress");
-class Md5 {
-    getIdentifier() {
-        return "hash.md5";
+var crypto = require("crypto");
+var Helper_1 = require("../../../helpers/Helper");
+var VarAddress_1 = require("../../VarAddress");
+var Md5 = (function () {
+    function Md5() {
     }
-    execute(environment, parameters) {
+    Md5.prototype.getIdentifier = function () {
+        return "hash.md5";
+    };
+    Md5.prototype.execute = function (environment, parameters) {
         Helper_1.Helper.assert(parameters.length == 2 && parameters[0] instanceof VarAddress_1.VarAddress);
-        let resultVar = parameters[0];
-        let message = Helper_1.Helper.resolve(environment, parameters[1]);
+        var resultVar = parameters[0];
+        var message = Helper_1.Helper.resolve(environment, parameters[1]);
         Helper_1.Helper.assert(Helper_1.Helper.isString(message));
-        let hash = crypto.createHash("md5");
+        var hash = crypto.createHash("md5");
         hash.update(message);
-        let buf = hash.digest();
-        let numberArray = [];
-        for (let i = 0; i < buf.length; i++) {
+        var buf = hash.digest();
+        var numberArray = [];
+        for (var i = 0; i < buf.length; i++) {
             numberArray.push(buf.readUInt8(i));
         }
         environment.setVariable(resultVar, numberArray);
-    }
-}
+    };
+    return Md5;
+}());
 exports.Md5 = Md5;

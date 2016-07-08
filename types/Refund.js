@@ -1,9 +1,15 @@
 "use strict";
-const SandboxObject_1 = require("./SandboxObject");
-const DetailErrors_1 = require("../errors/DetailErrors");
-class Refund extends SandboxObject_1.SandboxObject {
-    constructor(_amount, _chargeID, _created, _id, _state, _currency) {
-        super();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var SandboxObject_1 = require("./SandboxObject");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var Refund = (function (_super) {
+    __extends(Refund, _super);
+    function Refund(_amount, _chargeID, _created, _id, _state, _currency) {
+        _super.call(this);
         this._amount = _amount;
         this._chargeID = _chargeID;
         this._created = _created;
@@ -21,23 +27,48 @@ class Refund extends SandboxObject_1.SandboxObject {
         }
         this._currency = _currency.toUpperCase();
     }
-    get id() {
-        return this._id;
-    }
-    get amount() {
-        return this._amount;
-    }
-    get created() {
-        return this._created;
-    }
-    get currency() {
-        return this._currency;
-    }
-    get chargeID() {
-        return this._chargeID;
-    }
-    get state() {
-        return this._state;
-    }
-}
+    Object.defineProperty(Refund.prototype, "id", {
+        get: function () {
+            return this._id;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Refund.prototype, "amount", {
+        get: function () {
+            return this._amount;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Refund.prototype, "created", {
+        get: function () {
+            return this._created;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Refund.prototype, "currency", {
+        get: function () {
+            return this._currency;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Refund.prototype, "chargeID", {
+        get: function () {
+            return this._chargeID;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Refund.prototype, "state", {
+        get: function () {
+            return this._state;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Refund;
+}(SandboxObject_1.SandboxObject));
 exports.Refund = Refund;

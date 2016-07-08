@@ -4,6 +4,6 @@
   "private": true,
   "dependencies": {
     "bluebird": "^3.4.1",
-    "cloudrail-si": "^2.4.0"
+    "cloudrail-si": "^2.5.1"
   }
 }

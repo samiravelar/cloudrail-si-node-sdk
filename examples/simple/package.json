@@ -3,6 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "cloudrail-si": "^2.4.0"
+    "cloudrail-si": "^2.5.1"
   }
 }

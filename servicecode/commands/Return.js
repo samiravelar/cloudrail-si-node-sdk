@@ -1,12 +1,15 @@
 "use strict";
-const Helper_1 = require("../../helpers/Helper");
-class Return {
-    getIdentifier() {
+var Helper_1 = require("../../helpers/Helper");
+var Return = (function () {
+    function Return() {
+    }
+    Return.prototype.getIdentifier = function () {
         return "return";
-    }
-    execute(environment, parameters) {
+    };
+    Return.prototype.execute = function (environment, parameters) {
         Helper_1.Helper.assert(parameters.length == 0);
-        environment.codeLineStack[environment.codeLineStack.length - 1] = Number.MAX_SAFE_INTEGER;
-    }
-}
+        environment.codeLineStack[environment.codeLineStack.length - 1] = 9007199254740991;
+    };
+    return Return;
+}());
 exports.Return = Return;

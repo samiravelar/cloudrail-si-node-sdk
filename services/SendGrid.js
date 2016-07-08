@@ -1,10 +1,10 @@
 "use strict";
-const Interpreter_1 = require("../servicecode/Interpreter");
-const Sandbox_1 = require("../servicecode/Sandbox");
-const ErrorType_1 = require("../types/ErrorType");
-const DetailErrors_1 = require("../errors/DetailErrors");
-const InitSelfTest_1 = require("../servicecode/InitSelfTest");
-const SERVICE_CODE = {
+var Interpreter_1 = require("../servicecode/Interpreter");
+var Sandbox_1 = require("../servicecode/Sandbox");
+var ErrorType_1 = require("../types/ErrorType");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var SERVICE_CODE = {
     "sendEmail": [
         ["callFunc", "checkMandatory", "$P0", "$P1", "fromAddress"],
         ["callFunc", "checkMandatory", "$P0", "$P2", "fromName"],
@@ -150,8 +150,8 @@ const SERVICE_CODE = {
         ["throwError", "$L3"]
     ]
 };
-class SendGrid {
-    constructor(redirectReceiver, username, password) {
+var SendGrid = (function () {
+    function SendGrid(redirectReceiver, username, password) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -160,15 +160,15 @@ class SendGrid {
         InitSelfTest_1.InitSelfTest.initTest("SendGrid");
         this.interpreterStorage["username"] = username;
         this.interpreterStorage["password"] = password;
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    sendEmail(fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("sendEmail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses).then(() => {
-            let error = ip.sandbox.thrownError;
+    SendGrid.prototype.sendEmail = function (fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("sendEmail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -185,30 +185,31 @@ class SendGrid {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    saveAsString() {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+    };
+    SendGrid.prototype.saveAsString = function () {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
-    }
-    loadAsString(savedState) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
-        let ip = new Interpreter_1.Interpreter(sandbox);
+    };
+    SendGrid.prototype.loadAsString = function (savedState) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+        var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
-    }
-    resumeLogin(executionState, callback) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+    };
+    SendGrid.prototype.resumeLogin = function (executionState, callback) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
-        let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
-    }
-}
+        var ip = new Interpreter_1.Interpreter(sandbox);
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(function () { return callback(undefined); }, function (err) { return callback(err); });
+    };
+    return SendGrid;
+}());
 exports.SendGrid = SendGrid;

@@ -12,6 +12,11 @@ const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
 const LoginSession = mongoose.model("LoginSession", new Schema({authState: String}));
 const User = mongoose.model("User", new Schema({userId: String, credentials: String, token: String}));
+
+const MONGO_ADDRESS = "mongodb://localhost:27017/test-db";
+
+mongoose.connect(MONGO_ADDRESS);
+
 const Instagram = require("cloudrail-si").services.Instagram;
 
 const INSTAGRAM_CLIENT_ID = "xxx"; // Replace with a valid client id
@@ -19,10 +24,6 @@ const INSTAGRAM_CLIENT_SECRET = "xxx"; // Replace with a valid client secret
 const PORT = 12345;
 const AUTH_ENDPOINT = "/auth";
 const REDIRECT_URI = "http://localhost:" + PORT + AUTH_ENDPOINT;
-
-const MONGO_ADDRESS = "mongodb://localhost:27017/test-db";
-
-mongoose.connect(MONGO_ADDRESS);
 
 // Someone navigated to the main path
 app.get("/", (req, res) => {

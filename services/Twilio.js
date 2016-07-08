@@ -1,10 +1,10 @@
 "use strict";
-const Interpreter_1 = require("../servicecode/Interpreter");
-const Sandbox_1 = require("../servicecode/Sandbox");
-const ErrorType_1 = require("../types/ErrorType");
-const DetailErrors_1 = require("../errors/DetailErrors");
-const InitSelfTest_1 = require("../servicecode/InitSelfTest");
-const SERVICE_CODE = {
+var Interpreter_1 = require("../servicecode/Interpreter");
+var Sandbox_1 = require("../servicecode/Sandbox");
+var ErrorType_1 = require("../types/ErrorType");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var SERVICE_CODE = {
     "sendSMSTW": [
         ["callFunc", "validateUserInput", "$P0", "$P1", "$P2", "$P3"],
         ["create", "$L0", "Object"],
@@ -102,8 +102,8 @@ const SERVICE_CODE = {
         ["throwError", "$L3"]
     ]
 };
-class Twilio {
-    constructor(redirectReceiver, accountSid, authToken) {
+var Twilio = (function () {
+    function Twilio(redirectReceiver, accountSid, authToken) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -112,15 +112,15 @@ class Twilio {
         InitSelfTest_1.InitSelfTest.initTest("Twilio");
         this.interpreterStorage["accountSid"] = accountSid;
         this.interpreterStorage["authToken"] = authToken;
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    sendSMS(fromName, toNumber, content, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("sendSMSTW", this.interpreterStorage, fromName, toNumber, content).then(() => {
-            let error = ip.sandbox.thrownError;
+    Twilio.prototype.sendSMS = function (fromName, toNumber, content, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("sendSMSTW", this.interpreterStorage, fromName, toNumber, content).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -137,30 +137,31 @@ class Twilio {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    saveAsString() {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+    };
+    Twilio.prototype.saveAsString = function () {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
-    }
-    loadAsString(savedState) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
-        let ip = new Interpreter_1.Interpreter(sandbox);
+    };
+    Twilio.prototype.loadAsString = function (savedState) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+        var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
-    }
-    resumeLogin(executionState, callback) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+    };
+    Twilio.prototype.resumeLogin = function (executionState, callback) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
-        let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
-    }
-}
+        var ip = new Interpreter_1.Interpreter(sandbox);
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(function () { return callback(undefined); }, function (err) { return callback(err); });
+    };
+    return Twilio;
+}());
 exports.Twilio = Twilio;

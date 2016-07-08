@@ -1,10 +1,10 @@
 "use strict";
-const Interpreter_1 = require("../servicecode/Interpreter");
-const Sandbox_1 = require("../servicecode/Sandbox");
-const ErrorType_1 = require("../types/ErrorType");
-const DetailErrors_1 = require("../errors/DetailErrors");
-const InitSelfTest_1 = require("../servicecode/InitSelfTest");
-const SERVICE_CODE = {
+var Interpreter_1 = require("../servicecode/Interpreter");
+var Sandbox_1 = require("../servicecode/Sandbox");
+var ErrorType_1 = require("../types/ErrorType");
+var DetailErrors_1 = require("../errors/DetailErrors");
+var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var SERVICE_CODE = {
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
     ],
@@ -327,8 +327,8 @@ const SERVICE_CODE = {
         ["throwError", "$L3"]
     ]
 };
-class Twitter {
-    constructor(redirectReceiver, clientID, clientSecret, redirectUri) {
+var Twitter = (function () {
+    function Twitter(redirectReceiver, clientID, clientSecret, redirectUri) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -338,15 +338,15 @@ class Twitter {
         this.interpreterStorage["clientID"] = clientID;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    getIdentifier(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    Twitter.prototype.getIdentifier = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -363,20 +363,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getFullName(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getFullName = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -393,20 +393,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getEmail(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getEmail = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -423,20 +423,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getGender(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getGender = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -453,20 +453,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getDescription(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getDescription = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -483,20 +483,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getDateOfBirth(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getDateOfBirth = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -513,20 +513,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getLocale(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getLocale = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -543,20 +543,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getPictureURL(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getPictureURL = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -573,20 +573,20 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    login(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Authenticating:login", this.interpreterStorage).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.login = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -603,19 +603,19 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    logout(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Authenticating:logout", this.interpreterStorage).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.logout = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -632,19 +632,19 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    postUpdate(content, callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Social:postUpdate", this.interpreterStorage, content).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.postUpdate = function (content, callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postUpdate", this.interpreterStorage, content).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -661,19 +661,19 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    getConnections(callback) {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("Social:getConnections", this.interpreterStorage, null).then(() => {
-            let error = ip.sandbox.thrownError;
+    };
+    Twitter.prototype.getConnections = function (callback) {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:getConnections", this.interpreterStorage, null).then(function () {
+            var error = ip.sandbox.thrownError;
             if (error != null) {
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
@@ -690,31 +690,32 @@ class Twitter {
                         throw new Error(error.toString());
                 }
             }
-        }).then(() => {
-            let res;
+        }).then(function () {
+            var res;
             res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
-        }, err => {
+        }, function (err) {
             if (callback != null && typeof callback === "function")
                 callback(err);
         });
-    }
-    saveAsString() {
-        let ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+    };
+    Twitter.prototype.saveAsString = function () {
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
-    }
-    loadAsString(savedState) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
-        let ip = new Interpreter_1.Interpreter(sandbox);
+    };
+    Twitter.prototype.loadAsString = function (savedState) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+        var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
-    }
-    resumeLogin(executionState, callback) {
-        let sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
+    };
+    Twitter.prototype.resumeLogin = function (executionState, callback) {
+        var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
-        let ip = new Interpreter_1.Interpreter(sandbox);
-        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(() => callback(undefined), err => callback(err));
-    }
-}
+        var ip = new Interpreter_1.Interpreter(sandbox);
+        ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(function () { return callback(undefined); }, function (err) { return callback(err); });
+    };
+    return Twitter;
+}());
 exports.Twitter = Twitter;
