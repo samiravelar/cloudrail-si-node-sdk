@@ -137,14 +137,24 @@ declare module 'cloudrail-si/types/Address' {
 }
 declare module 'cloudrail-si/errors/DetailErrors' {
 	export class AuthenticationError extends Error {
+	    message: string;
+	    constructor(message?: string);
 	}
 	export class HttpError extends Error {
+	    message: string;
+	    constructor(message?: string);
 	}
 	export class NotFoundError extends Error {
+	    message: string;
+	    constructor(message?: string);
 	}
 	export class ServiceUnavailableError extends Error {
+	    message: string;
+	    constructor(message?: string);
 	}
 	export class IllegalArgumentError extends Error {
+	    message: string;
+	    constructor(message?: string);
 	}
 
 }

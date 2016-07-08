@@ -6,40 +6,45 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var AuthenticationError = (function (_super) {
     __extends(AuthenticationError, _super);
-    function AuthenticationError() {
-        _super.apply(this, arguments);
+    function AuthenticationError(message) {
+        _super.call(this, message);
+        this.message = message;
     }
     return AuthenticationError;
 }(Error));
 exports.AuthenticationError = AuthenticationError;
 var HttpError = (function (_super) {
     __extends(HttpError, _super);
-    function HttpError() {
-        _super.apply(this, arguments);
+    function HttpError(message) {
+        _super.call(this, message);
+        this.message = message;
     }
     return HttpError;
 }(Error));
 exports.HttpError = HttpError;
 var NotFoundError = (function (_super) {
     __extends(NotFoundError, _super);
-    function NotFoundError() {
-        _super.apply(this, arguments);
+    function NotFoundError(message) {
+        _super.call(this, message);
+        this.message = message;
     }
     return NotFoundError;
 }(Error));
 exports.NotFoundError = NotFoundError;
 var ServiceUnavailableError = (function (_super) {
     __extends(ServiceUnavailableError, _super);
-    function ServiceUnavailableError() {
-        _super.apply(this, arguments);
+    function ServiceUnavailableError(message) {
+        _super.call(this, message);
+        this.message = message;
     }
     return ServiceUnavailableError;
 }(Error));
 exports.ServiceUnavailableError = ServiceUnavailableError;
 var IllegalArgumentError = (function (_super) {
     __extends(IllegalArgumentError, _super);
-    function IllegalArgumentError() {
-        _super.apply(this, arguments);
+    function IllegalArgumentError(message) {
+        _super.call(this, message);
+        this.message = message;
     }
     return IllegalArgumentError;
 }(Error));
