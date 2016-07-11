@@ -16,7 +16,7 @@ var Uint8ToBase64 = (function () {
         if (parameters.length > 2)
             urlSafe = !!Helper_1.Helper.resolve(environment, parameters[2]);
         Helper_1.Helper.assert(Helper_1.Helper.isArray(sourceArray));
-        var buf = Buffer["from"] ? Buffer["from"](sourceArray) : new Buffer(sourceArray);
+        var buf = (Buffer["from"] && Buffer["from"]["length"] > 1) ? Buffer["from"](sourceArray) : new Buffer(sourceArray);
         var dataString = buf.toString("binary");
         var base64String = Base64Encode_1.Base64Encode.encode(dataString, false, urlSafe);
         environment.setVariable(resultVar, base64String);

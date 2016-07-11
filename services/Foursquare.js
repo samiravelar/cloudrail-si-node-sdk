@@ -148,9 +148,15 @@ var SERVICE_CODE = {
         ["throwError", "$L1"]
     ],
     "checkHttpResponse": [
-        ["if>=than", "$P1.code", 400, 3],
+        ["if>=than", "$P1.code", 400, 9],
+        ["if==than", "$P1.code", 401, 2],
+        ["create", "$L1", "Error", "Invalid credentials or access rights.", "Authentication"],
+        ["throwError", "$L1"],
+        ["if==than", "$P1.code", 503, 2],
+        ["create", "$L1", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
+        ["throwError", "$L1"],
         ["json.parse", "$L0", "$P1.responseBody"],
-        ["create", "$L1", "Error", "$L0.error.description", "Http"],
+        ["create", "$L1", "Error", "$L0.meta.errorDetail", "Http"],
         ["throwError", "$L1"]
     ],
     "getCategoriesString": [

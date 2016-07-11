@@ -117,6 +117,7 @@ var SERVICE_CODE = {
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
         ["create", "$L2", "Object"],
         ["http.requestCall", "$L2", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L2"],
         ["create", "$L3", "String"],
         ["stream.streamToString", "$L3", "$L2.responseBody"],
         ["create", "$L4", "Object"],

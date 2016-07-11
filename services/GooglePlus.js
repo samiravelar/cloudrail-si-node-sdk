@@ -121,9 +121,8 @@ var SERVICE_CODE = {
         ["set", "$S0.expireIn", "$L9"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 20],
-        ["json.parse", "$L0", "$P1.responseBody"],
-        ["set", "$L2", "$L0.message"],
+        ["if>=than", "$P1.code", 400, 19],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["if==than", "$P1.code", 401, 2],
         ["create", "$L3", "Error", "$L2", "Authentication"],
         ["throwError", "$L3"],

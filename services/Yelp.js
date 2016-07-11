@@ -232,7 +232,13 @@ var SERVICE_CODE = {
         ["if>=than", "$L2", "$L1", -5]
     ],
     "checkHttpResponse": [
-        ["if>=than", "$P1.code", 400, 3],
+        ["if>=than", "$P1.code", 400, 9],
+        ["if==than", "$P2.code", 401, 2],
+        ["create", "$L3", "Error", "Invalid credentials or access rights. Make sure that your application has read and write permission.", "Authentication"],
+        ["throwError", "$L3"],
+        ["if==than", "$P2.code", 503, 2],
+        ["create", "$L3", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
+        ["throwError", "$L3"],
         ["json.parse", "$L0", "$P1.responseBody"],
         ["create", "$L1", "Error", "$L0.error.description", "Http"],
         ["throwError", "$L1"]

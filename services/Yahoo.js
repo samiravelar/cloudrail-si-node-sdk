@@ -167,26 +167,16 @@ var SERVICE_CODE = {
         ["set", "$S0.expireIn", "$L9"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 20],
-        ["json.parse", "$L0", "$P1.responseBody"],
-        ["set", "$L2", "$L0.message"],
+        ["if>=than", "$P1.code", 400, 10],
         ["if==than", "$P1.code", 401, 2],
-        ["create", "$L3", "Error", "$L2", "Authentication"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 400, 2],
-        ["create", "$L3", "Error", "$L2", "Http"],
-        ["throwError", "$L3"],
-        ["if>=than", "$P1.code", 402, 5],
-        ["if<=than", "$P1.code", 509, 4],
-        ["if!=than", "$P1.code", 503, 3],
-        ["if!=than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "Http"],
+        ["create", "$L3", "Error", "Invalid credentials or access rights. Make sure that your application has read and write permission.", "Authentication"],
         ["throwError", "$L3"],
         ["if==than", "$P1.code", 503, 2],
-        ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
+        ["create", "$L3", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
         ["throwError", "$L3"],
-        ["if==than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "NotFound"],
+        ["stream.streamToString", "$L0", "$P1.responseBody"],
+        ["string.concat", "$L2", "$P1.code", " - ", "$L0"],
+        ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"]
     ]
 };
