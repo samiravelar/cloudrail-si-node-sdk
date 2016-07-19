@@ -16,7 +16,7 @@ CloudRail is a free software library which abstracts multiple APIs from differen
   <img width="800px" src="http://cloudrail.github.io/img/available_interfaces_v2.png"/>
 </p>
 
-Full documentation can be found at https://docs.cloudrail.com/
+Full documentation can be found at https://github.com/CloudRail/cloudrail-si-node-sdk/wiki
 
 With CloudRail, you can easily integrate external APIs into your application. CloudRail is an abstracted interface that takes several services and then gives a developer-friendly API that uses common functions between all providers. This means that, for example, upload() works in exactly the same way for Dropbox as it does for Google Drive, OneDrive, and other Cloud Storage Services, and getEmail() works similarly the same way across all social networks.
 
