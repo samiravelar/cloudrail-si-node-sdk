@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "CloudStorage:getUserLogin": [
         ["callFunc", "User:about", "$P0"],
@@ -391,6 +392,14 @@ var SERVICE_CODE = {
         ["http.requestCall", "$L4", "$L2"],
         ["callFunc", "validateResponse", "$P0", "$L4"]
     ],
+    "exists": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "checkIfPathExists", "$P0", "$L0", "$P2"],
+        ["if==than", "$L0", "true", 2],
+        ["set", "$P1", 1],
+        ["return"],
+        ["set", "$P1", 0]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
     ],
@@ -685,11 +694,14 @@ var SERVICE_CODE = {
         ["throwError", "$L3"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 20],
+        ["if>=than", "$P1.code", 400, 23],
         ["json.parse", "$L0", "$P1.responseBody"],
         ["set", "$L2", "$L0.message"],
         ["if==than", "$P1.code", 401, 2],
         ["create", "$L3", "Error", "$L2", "Authentication"],
+        ["throwError", "$L3"],
+        ["if==than", "$P1.code", 403, 2],
+        ["create", "$L3", "Error", "Forbidden - Make sure that the Google Drive API is enabled.", "Http"],
         ["throwError", "$L3"],
         ["if==than", "$P1.code", 400, 2],
         ["create", "$L3", "Error", "$L2", "Http"],
@@ -817,10 +829,12 @@ var GoogleDrive = (function () {
         }
     }
     GoogleDrive.prototype.download = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadGD", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "download");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -847,10 +861,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.upload = function (filePath, stream, size, overwrite, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("uploadGD", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "upload");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -876,10 +892,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.move = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("moveGD", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "move");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -905,10 +923,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.delete = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteGD", this.interpreterStorage, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "delete");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -934,10 +954,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.copy = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("copyGD", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "copy");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -963,10 +985,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.createFolder = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createGDFolder", this.interpreterStorage, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "createFolder");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -992,10 +1016,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.getMetadata = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGDMetadata", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "getMetadata");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1022,10 +1048,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.getChildren = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGDChildren", this.interpreterStorage, null, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "getChildren");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1052,10 +1080,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.getUserLogin = function (callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "getUserLogin");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1082,10 +1112,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.getUserName = function (callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "getUserName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1112,10 +1144,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.createShareLink = function (path, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "createShareLink");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1142,10 +1176,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.getAllocation = function (callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "getAllocation");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1171,11 +1207,45 @@ var GoogleDrive = (function () {
                 callback(err);
         });
     };
+    GoogleDrive.prototype.exists = function (path, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "exists");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("exists", this.interpreterStorage, null, path).then(function () {
+            var error = ip.sandbox.thrownError;
+            if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "exists");
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(function () {
+            var res;
+            res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     GoogleDrive.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1201,10 +1271,12 @@ var GoogleDrive = (function () {
         });
     };
     GoogleDrive.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GoogleDrive", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

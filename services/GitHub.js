@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "getGHIdentifier": [
         ["callFunc", "checkAuthentication", "$P0"],
@@ -143,10 +144,12 @@ var GitHub = (function () {
         }
     }
     GitHub.prototype.getIdentifier = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHIdentifier", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getIdentifier");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -173,10 +176,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getFullName = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHFullName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getFullName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -203,10 +208,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getEmail = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHEmail", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getEmail");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -233,10 +240,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getGender = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHGender", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getGender");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -263,10 +272,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getDescription = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHDescription", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getDescription");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -293,10 +304,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getDateOfBirth = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHDateOfBirth", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getDateOfBirth");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -323,10 +336,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getLocale = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHLocale", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getLocale");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -353,10 +368,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.getPictureURL = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHPictureURL", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "getPictureURL");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -383,10 +400,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("loginGH", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -412,10 +431,12 @@ var GitHub = (function () {
         });
     };
     GitHub.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("GitHub", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("logoutGH", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GitHub", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

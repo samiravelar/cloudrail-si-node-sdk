@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
@@ -102,10 +103,12 @@ var Slack = (function () {
         }
     }
     Slack.prototype.getIdentifier = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getIdentifier");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -132,10 +135,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getFullName = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getFullName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -162,10 +167,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getEmail = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getEmail");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -192,10 +199,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getGender = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getGender");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -222,10 +231,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getDescription = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getDescription");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -252,10 +263,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getDateOfBirth = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getDateOfBirth");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -282,10 +295,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getLocale = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getLocale");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -312,10 +327,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.getPictureURL = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "getPictureURL");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -342,10 +359,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -371,10 +390,12 @@ var Slack = (function () {
         });
     };
     Slack.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("Slack", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Slack", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

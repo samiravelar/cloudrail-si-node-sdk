@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "CloudStorage:getUserLogin": [
         ["callFunc", "User:about", "$P0"],
@@ -130,6 +131,30 @@ var SERVICE_CODE = {
         ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L2", "https://api.dropboxapi.com/2/files/list_folder/continue"],
         ["callFunc", "processRawMeta", "$P0", "$P1", "$L1"],
         ["jumpRel", -6]
+    ],
+    "CloudStorage:exists": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.url", "https://api.dropboxapi.com/2/files/get_metadata"],
+        ["set", "$L2.method", "POST"],
+        ["create", "$L2.requestHeaders", "Object"],
+        ["string.concat", "$L2.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["set", "$L2.requestHeaders.Content-Type", "application/json"],
+        ["create", "$L3", "Object"],
+        ["set", "$L3.path", "$P2"],
+        ["json.stringify", "$L3", "$L3"],
+        ["stream.stringToStream", "$L2.requestBody", "$L3"],
+        ["http.requestCall", "$L4", "$L2"],
+        ["if==than", "$L4.code", 200, 2],
+        ["set", "$P1", 1],
+        ["return"],
+        ["if<than", "$L4.code", 429, 5],
+        ["json.parse", "$L0", "$L4.responseBody"],
+        ["string.indexOf", "$L1", "$L0.error_summary", "not_found"],
+        ["if!=than", "$L4", -1, 2],
+        ["set", "$P1", 0],
+        ["return"],
+        ["callFunc", "validateResponse", "$P0", "$L4"]
     ],
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
@@ -447,10 +472,12 @@ var Dropbox = (function () {
         }
     }
     Dropbox.prototype.download = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "download");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -477,10 +504,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.upload = function (filePath, stream, size, overwrite, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "upload");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -506,10 +535,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.move = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "move");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -535,10 +566,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.delete = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "delete");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -564,10 +597,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.copy = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "copy");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -593,10 +628,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.createFolder = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "createFolder");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -622,10 +659,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.getMetadata = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "getMetadata");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -652,10 +691,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.getChildren = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "getChildren");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -682,10 +723,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.getUserLogin = function (callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "getUserLogin");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -712,10 +755,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.getUserName = function (callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "getUserName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -742,10 +787,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.createShareLink = function (path, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "createShareLink");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -772,10 +819,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.getAllocation = function (callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "getAllocation");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -801,11 +850,45 @@ var Dropbox = (function () {
                 callback(err);
         });
     };
+    Dropbox.prototype.exists = function (path, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "exists");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:exists", this.interpreterStorage, null, path).then(function () {
+            var error = ip.sandbox.thrownError;
+            if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "exists");
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(function () {
+            var res;
+            res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     Dropbox.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -831,10 +914,12 @@ var Dropbox = (function () {
         });
     };
     Dropbox.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Dropbox", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

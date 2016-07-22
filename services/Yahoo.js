@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "getYUIdentifier": [
         ["callFunc", "checkAuthentication", "$P0"],
@@ -198,10 +199,12 @@ var Yahoo = (function () {
         }
     }
     Yahoo.prototype.getIdentifier = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUIdentifier", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getIdentifier");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -228,10 +231,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getFullName = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUFullName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getFullName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -258,10 +263,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getEmail = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUEmail", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getEmail");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -288,10 +295,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getGender = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUGender", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getGender");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -318,10 +327,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getDescription = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUDescription", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getDescription");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -348,10 +359,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getDateOfBirth = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUDateOfBirth", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getDateOfBirth");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -378,10 +391,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getLocale = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYULocale", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getLocale");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -408,10 +423,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.getPictureURL = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUPictureURL", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "getPictureURL");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -438,10 +455,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("loginYU", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -467,10 +486,12 @@ var Yahoo = (function () {
         });
     };
     Yahoo.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("Yahoo", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("logoutYU", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Yahoo", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

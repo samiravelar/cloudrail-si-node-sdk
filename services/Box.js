@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "CloudStorage:getUserLogin": [
         ["callFunc", "User:about", "$P0"],
@@ -318,6 +319,18 @@ var SERVICE_CODE = {
         ["json.parse", "$L4", "$L5.responseBody"],
         ["set", "$P1", "$L4.shared_link.url"]
     ],
+    "exists": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["if==than", "$P2", "/", 2],
+        ["create", "$L2", "Error", "Root does not have MetaData", "IllegalArgument"],
+        ["throwError", "$L2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "resolvePath", "$P0", "$L0", "$P2", 1],
+        ["if==than", "$L0", null, 2],
+        ["set", "$P1", 0],
+        ["return"],
+        ["set", "$P1", 1]
+    ],
     "checkAuthentication": [
         ["create", "$L0", "Date"],
         ["if==than", "$S0.access_token", null, 2],
@@ -538,10 +551,12 @@ var Box = (function () {
         }
     }
     Box.prototype.download = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("Box", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "download");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -568,10 +583,12 @@ var Box = (function () {
         });
     };
     Box.prototype.upload = function (filePath, stream, size, overwrite, callback) {
+        Statistics_1.Statistics.addCall("Box", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "upload");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -597,10 +614,12 @@ var Box = (function () {
         });
     };
     Box.prototype.move = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("Box", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "move");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -626,10 +645,12 @@ var Box = (function () {
         });
     };
     Box.prototype.delete = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("Box", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "delete");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -655,10 +676,12 @@ var Box = (function () {
         });
     };
     Box.prototype.copy = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("Box", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "copy");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -684,10 +707,12 @@ var Box = (function () {
         });
     };
     Box.prototype.createFolder = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("Box", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "createFolder");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -713,10 +738,12 @@ var Box = (function () {
         });
     };
     Box.prototype.getMetadata = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("Box", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "getMetadata");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -743,10 +770,12 @@ var Box = (function () {
         });
     };
     Box.prototype.getChildren = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("Box", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "getChildren");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -773,10 +802,12 @@ var Box = (function () {
         });
     };
     Box.prototype.getUserLogin = function (callback) {
+        Statistics_1.Statistics.addCall("Box", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "getUserLogin");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -803,10 +834,12 @@ var Box = (function () {
         });
     };
     Box.prototype.getUserName = function (callback) {
+        Statistics_1.Statistics.addCall("Box", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "getUserName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -833,10 +866,12 @@ var Box = (function () {
         });
     };
     Box.prototype.createShareLink = function (path, callback) {
+        Statistics_1.Statistics.addCall("Box", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "createShareLink");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -863,10 +898,12 @@ var Box = (function () {
         });
     };
     Box.prototype.getAllocation = function (callback) {
+        Statistics_1.Statistics.addCall("Box", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "getAllocation");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -892,11 +929,45 @@ var Box = (function () {
                 callback(err);
         });
     };
+    Box.prototype.exists = function (path, callback) {
+        Statistics_1.Statistics.addCall("Box", "exists");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("exists", this.interpreterStorage, null, path).then(function () {
+            var error = ip.sandbox.thrownError;
+            if (error != null) {
+                Statistics_1.Statistics.addError("Box", "exists");
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(function () {
+            var res;
+            res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     Box.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("Box", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -922,10 +993,12 @@ var Box = (function () {
         });
     };
     Box.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("Box", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Box", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

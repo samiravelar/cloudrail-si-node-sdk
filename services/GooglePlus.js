@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
@@ -161,10 +162,12 @@ var GooglePlus = (function () {
         }
     }
     GooglePlus.prototype.getIdentifier = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getIdentifier");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -191,10 +194,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getFullName = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getFullName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -221,10 +226,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getEmail = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getEmail");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -251,10 +258,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getGender = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getGender");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -281,10 +290,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getDescription = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getDescription");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -311,10 +322,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getDateOfBirth = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getDateOfBirth");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -341,10 +354,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getLocale = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getLocale");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -371,10 +386,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.getPictureURL = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "getPictureURL");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -401,10 +418,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -430,10 +449,12 @@ var GooglePlus = (function () {
         });
     };
     GooglePlus.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("GooglePlus", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("GooglePlus", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

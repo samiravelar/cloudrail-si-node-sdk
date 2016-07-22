@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "SendNexmoSMS": [
         ["callFunc", "validateUserInput", "$P0", "$P1", "$P2", "$P3"],
@@ -101,10 +102,12 @@ var Nexmo = (function () {
         }
     }
     Nexmo.prototype.sendSMS = function (fromName, toNumber, content, callback) {
+        Statistics_1.Statistics.addCall("Nexmo", "sendSMS");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("SendNexmoSMS", this.interpreterStorage, fromName, toNumber, content).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("Nexmo", "sendSMS");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

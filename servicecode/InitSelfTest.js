@@ -1,6 +1,7 @@
 "use strict";
 var Interpreter_1 = require("./Interpreter");
 var Sandbox_1 = require("./Sandbox");
+var Promise = require("bluebird");
 var os = require("os");
 var dns = require("dns");
 var InitSelfTest = (function () {
@@ -55,57 +56,76 @@ var InitSelfTest = (function () {
         var interpreterStorage = {
             "serviceName": servicename,
             "platform": "Node.js",
-            "os": os.type() + " , " + os.arch() + " , " + os.release()
+            "os": InitSelfTest.getOS()
         };
-        dns.lookup(os.hostname(), function (err, add, fam) {
-            var mac;
-            var interfaces = os.networkInterfaces();
-            for (var key in interfaces) {
-                for (var _i = 0, _a = interfaces[key]; _i < _a.length; _i++) {
-                    var entry = _a[_i];
-                    if (entry.address === add) {
-                        mac = entry.mac;
-                        break;
-                    }
-                }
-                if (mac)
-                    break;
-            }
-            var pjson;
-            var path = "./package.json";
-            var limit = 50;
-            while (!pjson && limit > 0) {
-                try {
-                    var tmp = require(path);
-                    if (tmp.name === "cloudrail-si")
-                        throw Error();
-                    else
-                        pjson = tmp;
-                }
-                catch (err) {
-                    if (path.indexOf("./") === 0) {
-                        path = "." + path;
-                    }
-                    else {
-                        path = "../" + path;
-                    }
-                }
-                limit--;
-            }
-            var name;
-            var version;
-            if (!pjson) {
-                name = "unknown";
-                version = "unknown";
-            }
-            else {
-                name = pjson.name ? pjson.name : "unknown";
-                version = pjson.version ? pjson.version : "unknown";
-            }
+        InitSelfTest.getMac().then(function (mac) {
+            var nv = InitSelfTest.getNameVersion();
             var interpreter = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, [], {}));
-            interpreter.callFunction("selfTest", interpreterStorage, mac, name, version);
+            interpreter.callFunction("selfTest", interpreterStorage, mac, nv.name, nv.version);
         });
         return testState;
+    };
+    InitSelfTest.getMac = function () {
+        return new Promise(function (resolve, reject) {
+            dns.lookup(os.hostname(), function (err, add, fam) {
+                if (err)
+                    reject(err);
+                var mac;
+                var interfaces = os.networkInterfaces();
+                for (var key in interfaces) {
+                    for (var _i = 0, _a = interfaces[key]; _i < _a.length; _i++) {
+                        var entry = _a[_i];
+                        if (entry.address === add) {
+                            mac = entry.mac;
+                            break;
+                        }
+                    }
+                    if (mac)
+                        break;
+                }
+                resolve(mac);
+            });
+        });
+    };
+    InitSelfTest.getNameVersion = function () {
+        var pjson;
+        var path = "./package.json";
+        var limit = 50;
+        while (!pjson && limit > 0) {
+            try {
+                var tmp = require(path);
+                if (tmp.name === "cloudrail-si")
+                    throw Error();
+                else
+                    pjson = tmp;
+            }
+            catch (err) {
+                if (path.indexOf("./") === 0) {
+                    path = "." + path;
+                }
+                else {
+                    path = "../" + path;
+                }
+            }
+            limit--;
+        }
+        var name;
+        var version;
+        if (!pjson) {
+            name = "unknown";
+            version = "unknown";
+        }
+        else {
+            name = pjson.name ? pjson.name : "unknown";
+            version = pjson.version ? pjson.version : "unknown";
+        }
+        return {
+            name: name,
+            version: version
+        };
+    };
+    InitSelfTest.getOS = function () {
+        return os.type() + " , " + os.arch() + " , " + os.release();
     };
     InitSelfTest.testedServices = [];
     return InitSelfTest;

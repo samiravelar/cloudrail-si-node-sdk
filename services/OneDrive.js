@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "CloudStorage:getUserLogin": [
         ["callFunc", "User:about", "$P0"],
@@ -304,6 +305,14 @@ var SERVICE_CODE = {
         ["json.parse", "$L5", "$L4.responseBody"],
         ["set", "$P1", "$L5.link.webUrl"]
     ],
+    "exists": [
+        ["callFunc", "checkAuth", "$P0", "$L12"],
+        ["callFunc", "checkIfPathExists", "$P0", "$L0", "$P2"],
+        ["if==than", "$L0", "true", 2],
+        ["set", "$P1", 1],
+        ["return"],
+        ["set", "$P1", 0]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuth", "$P0", "$L0"]
     ],
@@ -593,10 +602,12 @@ var OneDrive = (function () {
         }
     }
     OneDrive.prototype.download = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadSC", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "download");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -623,10 +634,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.upload = function (filePath, stream, size, overwrite, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("uploadSC", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "upload");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -652,10 +665,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.move = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("moveSC", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "move");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -681,10 +696,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.delete = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteSC", this.interpreterStorage, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "delete");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -710,10 +727,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.copy = function (sourcePath, destinationPath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("copySC", this.interpreterStorage, sourcePath, destinationPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "copy");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -739,10 +758,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.createFolder = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createFolderSC", this.interpreterStorage, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "createFolder");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -768,10 +789,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.getMetadata = function (filePath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getMetadataSC", this.interpreterStorage, null, filePath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "getMetadata");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -798,10 +821,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.getChildren = function (folderPath, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getChildrenSC", this.interpreterStorage, null, folderPath).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "getChildren");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -828,10 +853,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.getUserLogin = function (callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "getUserLogin");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -858,10 +885,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.getUserName = function (callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "getUserName");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -888,10 +917,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.createShareLink = function (path, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "createShareLink");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -918,10 +949,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.getAllocation = function (callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "getAllocation");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -947,11 +980,45 @@ var OneDrive = (function () {
                 callback(err);
         });
     };
+    OneDrive.prototype.exists = function (path, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "exists");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("exists", this.interpreterStorage, null, path).then(function () {
+            var error = ip.sandbox.thrownError;
+            if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "exists");
+                switch (error.getErrorType()) {
+                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                    case ErrorType_1.ErrorType.AUTHENTICATION:
+                        throw new DetailErrors_1.AuthenticationError(error.toString());
+                    case ErrorType_1.ErrorType.NOT_FOUND:
+                        throw new DetailErrors_1.NotFoundError(error.toString());
+                    case ErrorType_1.ErrorType.HTTP:
+                        throw new DetailErrors_1.HttpError(error.toString());
+                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                    default:
+                        throw new Error(error.toString());
+                }
+            }
+        }).then(function () {
+            var res;
+            res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     OneDrive.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "login");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -977,10 +1044,12 @@ var OneDrive = (function () {
         });
     };
     OneDrive.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("OneDrive", "logout");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());

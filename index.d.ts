@@ -898,14 +898,53 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	     * @return The total space in bytes and the used space
 	     */
 	    getAllocation: (callback: NodeCallback<SpaceAllocation>) => void;
+	    /**
+	     * @return True if the file/folder exists, else false
+	     */
+	    exists: (path: string, callback: NodeCallback<boolean>) => void;
 	}
 
 }
 declare module 'cloudrail-si/servicecode/InitSelfTest' {
+	import * as Promise from "bluebird";
 	export class InitSelfTest {
 	    private static testedServices;
 	    static initTest(servicename: string): boolean;
 	    static execute(servicename: string): boolean;
+	    static getMac(): Promise<string>;
+	    static getNameVersion(): {
+	        name: string;
+	        version: string;
+	    };
+	    static getOS(): string;
+	}
+
+}
+declare module 'cloudrail-si/Settings' {
+	export class Settings {
+	    static licenseKey: string;
+	    static setKey(key: string): void;
+	}
+
+}
+declare module 'cloudrail-si/statistics/Statistics' {
+	export class Statistics {
+	    private static CR_VERSION;
+	    private static SERVER_URL;
+	    private static DELAY;
+	    private static timer;
+	    private static data;
+	    private static next;
+	    private static count;
+	    private static entryID;
+	    private static callSyncPromise;
+	    private static sendStatSyncPromise;
+	    static addCall(service: string, method: string): void;
+	    static addError(service: string, method: string): void;
+	    private static sendStatistics();
+	    private static getMethodCalls(service, method);
+	    private static hashString(str);
+	    private static getCRVer();
 	}
 
 }
@@ -933,6 +972,7 @@ declare module 'cloudrail-si/services/Box' {
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1011,6 +1051,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1170,6 +1211,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1396,6 +1438,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1799,7 +1842,8 @@ declare module 'cloudrail-si/index' {
 	import { Refund } from 'cloudrail-si/types/Refund';
 	import { Subscription } from 'cloudrail-si/types/Subscription';
 	import { SubscriptionPlan } from 'cloudrail-si/types/SubscriptionPlan';
-	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation'; var _default: {
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { Settings } from 'cloudrail-si/Settings'; var _default: {
 	    "services": {
 	        "Box": typeof Box;
 	        "Dropbox": typeof Dropbox;
@@ -1837,6 +1881,7 @@ declare module 'cloudrail-si/index' {
 	        "SubscriptionPlan": typeof SubscriptionPlan;
 	        "SpaceAllocation": typeof SpaceAllocation;
 	    };
+	    "Settings": typeof Settings;
 	};
 	export = _default;
 

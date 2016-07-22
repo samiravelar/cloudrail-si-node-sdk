@@ -4,6 +4,7 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
+var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
         ["if==than", "$P0.useSandbox", 1, 2],
@@ -716,10 +717,12 @@ var PayPal = (function () {
         }
     }
     PayPal.prototype.createCharge = function (amount, currency, source, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "createCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createCharge", this.interpreterStorage, null, amount, currency, source).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "createCharge");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -746,10 +749,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.getCharge = function (id, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "getCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getCharge", this.interpreterStorage, null, id).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "getCharge");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -776,10 +781,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.listCharges = function (from, to, creditCard, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "listCharges");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listCharges", this.interpreterStorage, null, from, to, creditCard).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "listCharges");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -806,10 +813,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.refundCharge = function (id, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "refundCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("refundCharge", this.interpreterStorage, null, id).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "refundCharge");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -836,10 +845,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.partiallyRefundCharge = function (id, amount, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "partiallyRefundCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("partiallyRefundCharge", this.interpreterStorage, null, id, amount).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "partiallyRefundCharge");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -866,10 +877,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.getRefund = function (id, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "getRefund");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getRefund", this.interpreterStorage, null, id).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "getRefund");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -896,10 +909,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.getRefundsForCharge = function (id, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "getRefundsForCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getRefundsForCharge", this.interpreterStorage, null, id).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "getRefundsForCharge");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -926,10 +941,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.createSubscriptionPlan = function (name, amount, currency, description, interval, intervalCount, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "createSubscriptionPlan");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, interval, intervalCount).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "createSubscriptionPlan");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -956,10 +973,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.listSubscriptionPlans = function (callback) {
+        Statistics_1.Statistics.addCall("PayPal", "listSubscriptionPlans");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listSubscriptionPlans", this.interpreterStorage, null).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "listSubscriptionPlans");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -986,10 +1005,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.createSubscription = function (planID, name, description, source, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "createSubscription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createSubscription", this.interpreterStorage, null, planID, name, description, source).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "createSubscription");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
@@ -1016,10 +1037,12 @@ var PayPal = (function () {
         });
     };
     PayPal.prototype.cancelSubscription = function (id, callback) {
+        Statistics_1.Statistics.addCall("PayPal", "cancelSubscription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("cancelSubscription", this.interpreterStorage, id).then(function () {
             var error = ip.sandbox.thrownError;
             if (error != null) {
+                Statistics_1.Statistics.addError("PayPal", "cancelSubscription");
                 switch (error.getErrorType()) {
                     case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                         throw new DetailErrors_1.IllegalArgumentError(error.toString());
