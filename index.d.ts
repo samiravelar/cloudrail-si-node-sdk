@@ -1656,7 +1656,7 @@ declare module 'cloudrail-si/services/SendGrid' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, username: string, password: string);
+	    constructor(redirectReceiver: RedirectReceiver, apiKey: string);
 	    sendEmail(fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], callback: NodeCallback<void>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;

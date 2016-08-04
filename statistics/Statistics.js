@@ -10,8 +10,6 @@ var Statistics = (function () {
     }
     Statistics.addCall = function (service, method) {
         Statistics.callSyncPromise = Statistics.callSyncPromise.then(function () {
-            if (Settings_1.Settings.licenseKey == null)
-                return;
             function schedule() {
                 Statistics.timer = setTimeout(function () {
                     Statistics.sendStatistics();
@@ -30,8 +28,6 @@ var Statistics = (function () {
         });
     };
     Statistics.addError = function (service, method) {
-        if (Settings_1.Settings.licenseKey == null)
-            return;
         var calls = Statistics.getMethodCalls(service, method);
         calls["error"]++;
     };
@@ -58,7 +54,8 @@ var Statistics = (function () {
                     delete client.mac;
                     body.app = app;
                     body.client = client;
-                    body.appKey = Settings_1.Settings.licenseKey;
+                    if (Settings_1.Settings.licenseKey != null)
+                        body.appKey = Settings_1.Settings.licenseKey;
                     body.libraryVersion = Statistics.CR_VERSION;
                     body.appHash = appHash;
                     body.clientHash = clientHash;
