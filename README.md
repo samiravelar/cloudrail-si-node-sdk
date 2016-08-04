@@ -159,7 +159,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
 ````javascript
 const services = require("cloudrail-si").services;
 // let email = new services.Mailjet(null, "[clientID]", "[clientSecret]");
-let email = new services.Sendgrid(null, "[username]", "[password]");
+let email = new services.Sendgrid(null, "[APIKey]");
 
 email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"], "Welcome", "Hello from CloudRail", null, null, null, (err) => {
     if (err) throw err;
