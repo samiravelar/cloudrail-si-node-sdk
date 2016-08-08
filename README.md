@@ -31,12 +31,12 @@ With CloudRail, you can easily integrate external APIs into your application. Cl
 Interface | Included Services
 --- | ---
 Cloud Storage | Dropbox, Google Drive, OneDrive, Box
-Profile | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram
+Social Profile | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram
+Social Interaction | Facebook, Twitter
 Payment | PayPal, Stripe
 Email | Maljet, Sendgrid
 SMS | Twilio, Nexmo
 Point of Interest | Google Places, Foursquare, Yelp
-Social | Facebook, Twitter
 ---
 ### Cloud Storage Interface:
 
