@@ -75,7 +75,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 
 ````
 ---
-### Profile Interface:
+### Social Profile Interface:
 
 * Facebook
 * Github
@@ -113,6 +113,35 @@ profile.getFullName((err, fullName) => {
 profile.getEmail((err, email) => {
     if (err) throw err;
     console.log("User's email address is " + email);
+});
+````
+---
+### Social Interaction Interface:
+
+* Facebook
+* Twitter
+
+#### Features
+
+* Get the IDs of a user's friends/followers. Works well with the Profile interface's "login with" to check if two of your users are friends on a platform
+* Post to a user's wall
+
+[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-social)
+#### Code Example:
+
+```` javascript
+const services = require("cloudrail-si").services;
+// let social = new services.Facebook(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+let social = new services.Twitter(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]");
+
+social.getConnections((err, connIds) => {
+    if (err) throw err;
+    console.log("User has " + connIds.length + " connections");
+});
+
+social.postUpdate("Hello from CloudRail", (err) => {
+    if (err) throw err;
+    console.log("Update posted");
 });
 ````
 ---
@@ -216,35 +245,7 @@ poi.getNearbyPOIs(49.4557091, 8.5279138, 1000, "restaurant", null, (err, pois) =
     console.log("Amount of locations called 'restaurant' in a 1 km radius around the given coordinates: " + pois.length);
 });
 ````
----
-### Social Interface:
 
-* Facebook
-* Twitter
-
-#### Features
-
-* Get the IDs of a user's friends/followers. Works well with the Profile interface's "login with" to check if two of your users are friends on a platform
-* Post to a user's wall
-
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-social)
-#### Code Example:
-
-```` javascript
-const services = require("cloudrail-si").services;
-// let social = new services.Facebook(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
-let social = new services.Twitter(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]");
-
-social.getConnections((err, connIds) => {
-    if (err) throw err;
-    console.log("User has " + connIds.length + " connections");
-});
-
-social.postUpdate("Hello from CloudRail", (err) => {
-    if (err) throw err;
-    console.log("Update posted");
-});
-````
 ---
 More interfaces are coming soon.
 
