@@ -1809,6 +1809,13 @@ declare module 'cloudrail-si/services/Yelp' {
 	}
 
 }
+declare module 'cloudrail-si/RedirectReceivers' {
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class RedirectReceivers {
+	    static getLocalAuthenticator(port?: number, respHtml?: string): RedirectReceiver;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -1843,7 +1850,8 @@ declare module 'cloudrail-si/index' {
 	import { Subscription } from 'cloudrail-si/types/Subscription';
 	import { SubscriptionPlan } from 'cloudrail-si/types/SubscriptionPlan';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
-	import { Settings } from 'cloudrail-si/Settings'; var _default: {
+	import { Settings } from 'cloudrail-si/Settings';
+	import { RedirectReceivers } from 'cloudrail-si/RedirectReceivers'; var _default: {
 	    "services": {
 	        "Box": typeof Box;
 	        "Dropbox": typeof Dropbox;
@@ -1882,6 +1890,7 @@ declare module 'cloudrail-si/index' {
 	        "SpaceAllocation": typeof SpaceAllocation;
 	    };
 	    "Settings": typeof Settings;
+	    "RedirectReceivers": typeof RedirectReceivers;
 	};
 	export = _default;
 

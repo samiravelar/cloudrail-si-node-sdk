@@ -33,6 +33,7 @@ var Subscription_1 = require("./types/Subscription");
 var SubscriptionPlan_1 = require("./types/SubscriptionPlan");
 var SpaceAllocation_1 = require("./types/SpaceAllocation");
 var Settings_1 = require("./Settings");
+var RedirectReceivers_1 = require("./RedirectReceivers");
 module.exports = {
     "services": {
         "Box": Box_1.Box,
@@ -71,5 +72,6 @@ module.exports = {
         "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan,
         "SpaceAllocation": SpaceAllocation_1.SpaceAllocation
     },
-    "Settings": Settings_1.Settings
+    "Settings": Settings_1.Settings,
+    "RedirectReceivers": RedirectReceivers_1.RedirectReceivers
 };
