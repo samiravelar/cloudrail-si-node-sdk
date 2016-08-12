@@ -24,8 +24,13 @@ var AwaitCodeRedirect = (function () {
         var redirectReceiver = environment.instanceDependencyStorage["redirectReceiver"];
         if (!redirectReceiver || typeof redirectReceiver !== "function")
             throw new UserError_1.UserError("This service needs the RedirectReceiver to be implemented as a function. Have a look at our examples and documentation if you are unsure how to do that.");
-        return new Promise(function (resolve) {
-            redirectReceiver(urlStr, environment.saveStateToString(), resolve);
+        return new Promise(function (resolve, reject) {
+            redirectReceiver(urlStr, environment.saveStateToString(), function (error, redirectedUrl) {
+                if (error)
+                    reject(error);
+                else
+                    resolve(redirectedUrl);
+            });
         }).then(function (redirectUrl) {
             var queryMap = url.parse(redirectUrl, true).query;
             var resMap = {};

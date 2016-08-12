@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+  </head>
+  
+  <body>
+    <h1>CloudRail Demo App</h1>
+
+    <p>Demonstrates how CloudRail's node.js SDK can be used with the electron framework</p>
+    <p>This button will make the app forget about the currently logged in user: <button type="button" id="logout-button">Logout</button></p>
+    <p>Gets authorization for a Dropbox account and displays storage quotas: <button type="button" id="space-button">Show space in your Dropbox</button></p>
+    <p id="space-pane"></p>
+  </body>
+
+  <script>
+    require('./renderer.js')
+  </script>
+</html>

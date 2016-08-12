@@ -76,7 +76,7 @@ app.get(AUTH_ENDPOINT, (req, res) => {
     let profile = new Instagram((url, state, cb) => {
 
         // This time the function just calls the callback with the incoming url
-        cb("http://localhost:" + PORT + req.url);
+        cb(undefined, "http://localhost:" + PORT + req.url);
 
         // We can leave state undefined, it is not used anymore
     }, INSTAGRAM_CLIENT_ID, INSTAGRAM_CLIENT_SECRET, REDIRECT_URI, undefined);

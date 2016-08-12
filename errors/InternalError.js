@@ -7,9 +7,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var InternalError = (function (_super) {
     __extends(InternalError, _super);
     function InternalError(message) {
-        var newMessage = "An internal error has occured which you probably cannot fix. " +
-            "We'd very much appreciate it if you would report it to the CloudRail team. The error message is:\n" + message;
-        _super.call(this, newMessage);
+        _super.call(this, "An internal error has occured which you probably cannot fix. " + "We'd very much appreciate it if you would report it to the CloudRail team. The error message is:\n" + message);
+        this.message = message;
     }
     return InternalError;
 }(Error));

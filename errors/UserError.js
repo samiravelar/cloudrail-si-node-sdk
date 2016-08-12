@@ -7,8 +7,8 @@ var __extends = (this && this.__extends) || function (d, b) {
 var UserError = (function (_super) {
     __extends(UserError, _super);
     function UserError(message) {
-        var newMessage = "An error occured that you should be able to fix. The error message is:\n" + message;
-        _super.call(this, newMessage);
+        _super.call(this, "An error occured that you should be able to fix. The error message is:\n" + message);
+        this.message = message;
     }
     return UserError;
 }(Error));

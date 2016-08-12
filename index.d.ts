@@ -18,6 +18,7 @@ declare module 'cloudrail-si/interfaces/platformSpecific/Persistable' {
 }
 declare module 'cloudrail-si/errors/InternalError' {
 	export class InternalError extends Error {
+	    message: string;
 	    constructor(message: string);
 	}
 
@@ -473,6 +474,7 @@ declare module 'cloudrail-si/servicecode/commands/debug/Out' {
 }
 declare module 'cloudrail-si/errors/UserError' {
 	export class UserError extends Error {
+	    message: string;
 	    constructor(message: string);
 	}
 
@@ -481,7 +483,7 @@ declare module 'cloudrail-si/servicecode/commands/AwaitCodeRedirect' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
-	export type RedirectReceiver = (url: string, currentState: string, callback: (redirectedUrl: string) => void) => void;
+	export type RedirectReceiver = (url: string, currentState: string, callback: (error: Error, redirectedUrl?: string) => void) => void;
 	export class AwaitCodeRedirect implements Command {
 	    getIdentifier(): string;
 	    execute(environment: Sandbox, parameters: any[]): Promise<void>;
@@ -1813,6 +1815,13 @@ declare module 'cloudrail-si/RedirectReceivers' {
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class RedirectReceivers {
 	    static getLocalAuthenticator(port?: number, respHtml?: string): RedirectReceiver;
+	    /**
+	     * A RedirectReceiver implementation for users of the "electron" framework
+	     * @param BrowserWindow The BrowserWindow constructor
+	     * @param redirectUrl The redirect URL that will receive the code(s)
+	     * @return The RedirectReceiver
+	     */
+	    static getElectronAuthenticator(BrowserWindow: any, redirectUrl: string): RedirectReceiver;
 	}
 
 }

@@ -103,7 +103,7 @@ var Interpreter = (function () {
             }
         };
         return Promise.resolve().then(function () { return loop(condition, body); }).catch(function (e) {
-            if (e instanceof UserError_1.UserError)
+            if (!(e instanceof InternalError_1.InternalError))
                 throw e;
             var errorMessage = "Service code error in function " + _this.sandbox.currentFunctionName() + " at line " + _this.sandbox.currentServiceCodeLine() + " with message: " + e.message;
             throw new InternalError_1.InternalError(errorMessage);

@@ -1,5 +1,10 @@
 # CloudRail SI Node.JS SDK changelog
   
+* **2.7.0**
+  * BREAKING: The RedirectReceiver's callback function has a Node-style signature now
+  * Added standard implementation for a RedirectReceiver with "electron" framework
+  * Minor bugfixes
+  
 * **2.6.2**
   * Added standard implementation for local RedirectReceiver
   
