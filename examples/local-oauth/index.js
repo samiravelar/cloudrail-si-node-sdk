@@ -12,15 +12,16 @@ let cs = new cloudrail.services.Dropbox(
     "state"
 );
 
+const filePath = "/Image.jpeg"; // Should be a file that exists at the given location in Dropbox
 
-const filePath = "/Image.jpeg";
-let zip = require("zlib").createGzip();
+let hash = require("crypto").createHash("md5");
+hash.setEncoding("hex");
 
 cs.download(filePath, (err, downStream) => {
-    cs.getMetadata(filePath, (err, meta) => {
-        let upStream = downStream.pipe(zip);
-        cs.upload(filePath + ".zip", upStream, meta.size, true, (err) => {
-            console.log("Successfully zipped");
-        });
+    if (err) throw err;
+    let upStream = downStream.pipe(hash);
+    cs.upload(filePath + ".md5", upStream, 32, true, (err) => {
+        if (err) throw err;
+        console.log("Successfully hashed");
     });
 });
