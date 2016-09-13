@@ -6,6 +6,9 @@ var stream = require("stream");
 var url = require("url");
 var http = require("http");
 var https = require("https");
+var Statistics_1 = require("../statistics/Statistics");
+var ErrorType_1 = require("../types/ErrorType");
+var DetailErrors_1 = require("../errors/DetailErrors");
 var Helper = (function () {
     function Helper() {
     }
@@ -122,6 +125,26 @@ var Helper = (function () {
     };
     Helper.upperCaseFirstLetter = function (str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+    Helper.checkSandboxError = function (ip) {
+        var error = ip.sandbox.thrownError;
+        if (error != null) {
+            Statistics_1.Statistics.addError("Box", "upload");
+            switch (error.getErrorType()) {
+                case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
+                    throw new DetailErrors_1.IllegalArgumentError(error.toString());
+                case ErrorType_1.ErrorType.AUTHENTICATION:
+                    throw new DetailErrors_1.AuthenticationError(error.toString());
+                case ErrorType_1.ErrorType.NOT_FOUND:
+                    throw new DetailErrors_1.NotFoundError(error.toString());
+                case ErrorType_1.ErrorType.HTTP:
+                    throw new DetailErrors_1.HttpError(error.toString());
+                case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
+                    throw new DetailErrors_1.ServiceUnavailableError(error.toString());
+                default:
+                    throw new Error(error.toString());
+            }
+        }
     };
     Helper.isArray = Array.isArray;
     return Helper;

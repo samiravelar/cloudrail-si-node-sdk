@@ -1,8 +1,7 @@
 "use strict";
+var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
-var ErrorType_1 = require("../types/ErrorType");
-var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -133,24 +132,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getIdentifier");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -165,24 +147,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getFullName");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -197,24 +162,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getEmail");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -229,24 +177,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getGender");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -261,24 +192,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getDescription");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -293,24 +207,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getDateOfBirth");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -325,24 +222,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getLocale");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -357,24 +237,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "getPictureURL");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -389,24 +252,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "login");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -420,24 +266,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Instagram", "logout");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

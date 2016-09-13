@@ -1,4 +1,5 @@
 const cloudrail = require("cloudrail-si");
+cloudrail.Settings.setKey("[Your CloudRail license key]");
 const {BrowserWindow} = require("electron").remote;
 
 const logoutButton = document.getElementById("logout-button");

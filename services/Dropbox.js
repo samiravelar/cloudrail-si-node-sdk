@@ -1,8 +1,7 @@
 "use strict";
+var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
-var ErrorType_1 = require("../types/ErrorType");
-var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -60,9 +59,9 @@ var SERVICE_CODE = {
         ["callFunc", "validatePath", "$P0", "$P1"],
         ["callFunc", "checkNull", "$P0", "$P2"],
         ["callFunc", "checkPositive", "$P0", "$P3"],
+        ["callFunc", "checkAuthentication", "$P0"],
         ["if==than", "$P4", 0, 1],
         ["callFunc", "checkFileExists", "$P0", "$P1"],
-        ["callFunc", "checkAuthentication", "$P0"],
         ["callFunc", "checkParentPathExists", "$P0", "$P1"],
         ["if<=than", "$P3", 10000000, 2],
         ["callFunc", "simpleUpload", "$P0", "$P2", "$P1", "$P4"],
@@ -151,7 +150,7 @@ var SERVICE_CODE = {
         ["if<than", "$L4.code", 429, 5],
         ["json.parse", "$L0", "$L4.responseBody"],
         ["string.indexOf", "$L1", "$L0.error_summary", "not_found"],
-        ["if!=than", "$L4", -1, 2],
+        ["if!=than", "$L1", -1, 2],
         ["set", "$P1", 0],
         ["return"],
         ["callFunc", "validateResponse", "$P0", "$L4"]
@@ -160,6 +159,8 @@ var SERVICE_CODE = {
         ["callFunc", "checkAuthentication", "$P0"]
     ],
     "Authenticating:logout": [
+        ["if==than", "$S0.access_token", null, 1],
+        ["return"],
         ["create", "$L0", "Object"],
         ["set", "$L0.url", "https://api.dropboxapi.com/2/auth/token/revoke"],
         ["set", "$L0.method", "POST"],
@@ -475,24 +476,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "download");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -507,24 +491,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "upload");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -538,24 +505,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "move");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -569,24 +519,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "delete");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -600,24 +533,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "copy");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -631,24 +547,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "createFolder");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -662,24 +561,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "getMetadata");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -694,24 +576,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "getChildren");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -726,24 +591,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "getUserLogin");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -758,24 +606,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "getUserName");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -790,24 +621,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "createShareLink");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -822,24 +636,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "getAllocation");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -854,24 +651,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:exists", this.interpreterStorage, null, path).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "exists");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -886,24 +666,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "login");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -917,24 +680,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("Dropbox", "logout");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

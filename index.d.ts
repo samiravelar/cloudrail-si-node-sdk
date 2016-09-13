@@ -762,11 +762,55 @@ declare module 'cloudrail-si/servicecode/Sandbox' {
 	}
 
 }
+declare module 'cloudrail-si/Settings' {
+	export class Settings {
+	    static licenseKey: string;
+	    static setKey(key: string): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/InitSelfTest' {
+	import * as Promise from "bluebird";
+	export class InitSelfTest {
+	    private static testedServices;
+	    static initTest(servicename: string): boolean;
+	    static execute(servicename: string): boolean;
+	    static getMac(): Promise<string>;
+	    static getNameVersion(): {
+	        name: string;
+	        version: string;
+	    };
+	    static getOS(): string;
+	}
+
+}
+declare module 'cloudrail-si/statistics/Statistics' {
+	export class Statistics {
+	    private static CR_VERSION;
+	    private static SERVER_URL;
+	    private static DELAY;
+	    private static timer;
+	    private static data;
+	    private static next;
+	    private static count;
+	    private static entryID;
+	    private static callSyncPromise;
+	    private static sendStatSyncPromise;
+	    static addCall(service: string, method: string): void;
+	    static addError(service: string, method: string): void;
+	    private static sendStatistics();
+	    private static getMethodCalls(service, method);
+	    private static hashString(str);
+	    private static getCRVer();
+	}
+
+}
 declare module 'cloudrail-si/helpers/Helper' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
 	import stream = require("stream");
 	import http = require("http");
+	import { Interpreter } from 'cloudrail-si/servicecode/Interpreter';
 	export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 	export type ObjectMap<T> = {
 	    [key: string]: T;
@@ -792,6 +836,7 @@ declare module 'cloudrail-si/helpers/Helper' {
 	    static makeRequest(urlString: string, headers: ObjectMap<string>, body: stream.Readable, method: HttpMethod): Promise<http.IncomingMessage>;
 	    static lowerCaseFirstLetter(str: string): string;
 	    static upperCaseFirstLetter(str: string): string;
+	    static checkSandboxError(ip: Interpreter): void;
 	}
 
 }
@@ -904,49 +949,6 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	     * @return True if the file/folder exists, else false
 	     */
 	    exists: (path: string, callback: NodeCallback<boolean>) => void;
-	}
-
-}
-declare module 'cloudrail-si/servicecode/InitSelfTest' {
-	import * as Promise from "bluebird";
-	export class InitSelfTest {
-	    private static testedServices;
-	    static initTest(servicename: string): boolean;
-	    static execute(servicename: string): boolean;
-	    static getMac(): Promise<string>;
-	    static getNameVersion(): {
-	        name: string;
-	        version: string;
-	    };
-	    static getOS(): string;
-	}
-
-}
-declare module 'cloudrail-si/Settings' {
-	export class Settings {
-	    static licenseKey: string;
-	    static setKey(key: string): void;
-	}
-
-}
-declare module 'cloudrail-si/statistics/Statistics' {
-	export class Statistics {
-	    private static CR_VERSION;
-	    private static SERVER_URL;
-	    private static DELAY;
-	    private static timer;
-	    private static data;
-	    private static next;
-	    private static count;
-	    private static entryID;
-	    private static callSyncPromise;
-	    private static sendStatSyncPromise;
-	    static addCall(service: string, method: string): void;
-	    static addError(service: string, method: string): void;
-	    private static sendStatistics();
-	    private static getMethodCalls(service, method);
-	    private static hashString(str);
-	    private static getCRVer();
 	}
 
 }
@@ -1816,7 +1818,8 @@ declare module 'cloudrail-si/RedirectReceivers' {
 	export class RedirectReceivers {
 	    static getLocalAuthenticator(port?: number, respHtml?: string): RedirectReceiver;
 	    /**
-	     * A RedirectReceiver implementation for users of the "electron" framework
+	     * A RedirectReceiver implementation for users of the "electron" framework using a BrowserWindow
+	     *
 	     * @param BrowserWindow The BrowserWindow constructor
 	     * @param redirectUrl The redirect URL that will receive the code(s)
 	     * @return The RedirectReceiver

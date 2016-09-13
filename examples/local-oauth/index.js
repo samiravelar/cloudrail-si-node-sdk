@@ -1,5 +1,6 @@
 const http = require("http");
 const cloudrail = require("cloudrail-si");
+cloudrail.Settings.setKey("[Your CloudRail license key]");
 
 const port = 12345; // or any other free port on the local machine
 

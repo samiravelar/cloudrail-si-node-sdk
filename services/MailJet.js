@@ -1,8 +1,7 @@
 "use strict";
+var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
-var ErrorType_1 = require("../types/ErrorType");
-var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -151,24 +150,7 @@ var MailJet = (function () {
         Statistics_1.Statistics.addCall("MailJet", "sendEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("sendMJEMail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("MailJet", "sendEmail");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

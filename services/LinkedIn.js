@@ -1,8 +1,7 @@
 "use strict";
+var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
-var ErrorType_1 = require("../types/ErrorType");
-var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -157,24 +156,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIIdentifier", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getIdentifier");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -189,24 +171,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIFullName", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getFullName");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -221,24 +186,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIEmail", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getEmail");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -253,24 +201,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIGender", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getGender");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -285,24 +216,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIDescription", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getDescription");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -317,24 +231,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIDateOfBirth", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getDateOfBirth");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -349,24 +246,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLILocale", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getLocale");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -381,24 +261,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIPictureURL", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "getPictureURL");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -413,24 +276,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("loginLI", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "login");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -444,24 +290,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("logoutLI", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("LinkedIn", "logout");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

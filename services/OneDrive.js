@@ -1,8 +1,7 @@
 "use strict";
+var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
-var ErrorType_1 = require("../types/ErrorType");
-var DetailErrors_1 = require("../errors/DetailErrors");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -231,13 +230,30 @@ var SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L4"],
         ["create", "$L5", "Object"],
         ["json.parse", "$L5", "$L4.responseBody"],
+        ["set", "$L16", "$L5.value"],
+        ["get", "$L15", "$L5", "@odata.nextLink"],
+        ["if!=than", "$L15", null, 14],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.url", "$L15"],
+        ["set", "$L0.method", "GET"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["json.parse", "$L5", "$L4.responseBody"],
+        ["size", "$L6", "$L5.value"],
+        ["create", "$L7", "Number"],
+        ["if<than", "$L7", "$L6", 4],
+        ["get", "$L8", "$L5.value", "$L7"],
+        ["push", "$L16", "$L8"],
+        ["math.add", "$L7", "$L7", 1],
+        ["jumpRel", -5],
+        ["jumpRel", -16],
         ["create", "$L6", "Array"],
         ["create", "$L7", "Number", 0],
         ["create", "$L8", "Number", 0],
-        ["size", "$L8", "$L5.value"],
+        ["size", "$L8", "$L16"],
         ["if<than", "$L7", "$L8", 18],
         ["create", "$L9", "CloudMetaData"],
-        ["get", "$L10", "$L5.value", "$L7"],
+        ["get", "$L10", "$L16", "$L7"],
         ["set", "$L9.Name", "$L10.name"],
         ["set", "$L9.Size", "$L10.size"],
         ["if!=than", "$L10.lastModifiedDateTime", null, 2],
@@ -605,24 +621,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadSC", this.interpreterStorage, null, filePath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "download");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -637,24 +636,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("uploadSC", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "upload");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -668,24 +650,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("moveSC", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "move");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -699,24 +664,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteSC", this.interpreterStorage, filePath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "delete");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -730,24 +678,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("copySC", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "copy");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -761,24 +692,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createFolderSC", this.interpreterStorage, folderPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "createFolder");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -792,24 +706,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getMetadataSC", this.interpreterStorage, null, filePath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "getMetadata");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -824,24 +721,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getChildrenSC", this.interpreterStorage, null, folderPath).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "getChildren");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -856,24 +736,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "getUserLogin");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -888,24 +751,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "getUserName");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -920,24 +766,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "createShareLink");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -952,24 +781,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "getAllocation");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -984,24 +796,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("exists", this.interpreterStorage, null, path).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "exists");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -1016,24 +811,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "login");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1047,24 +825,7 @@ var OneDrive = (function () {
         Statistics_1.Statistics.addCall("OneDrive", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            var error = ip.sandbox.thrownError;
-            if (error != null) {
-                Statistics_1.Statistics.addError("OneDrive", "logout");
-                switch (error.getErrorType()) {
-                    case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
-                        throw new DetailErrors_1.IllegalArgumentError(error.toString());
-                    case ErrorType_1.ErrorType.AUTHENTICATION:
-                        throw new DetailErrors_1.AuthenticationError(error.toString());
-                    case ErrorType_1.ErrorType.NOT_FOUND:
-                        throw new DetailErrors_1.NotFoundError(error.toString());
-                    case ErrorType_1.ErrorType.HTTP:
-                        throw new DetailErrors_1.HttpError(error.toString());
-                    case ErrorType_1.ErrorType.SERVICE_UNAVAILABLE:
-                        throw new DetailErrors_1.ServiceUnavailableError(error.toString());
-                    default:
-                        throw new Error(error.toString());
-                }
-            }
+            Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

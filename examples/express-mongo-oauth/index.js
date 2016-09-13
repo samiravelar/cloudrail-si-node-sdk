@@ -17,7 +17,9 @@ const MONGO_ADDRESS = "mongodb://localhost:27017/test-db";
 
 mongoose.connect(MONGO_ADDRESS);
 
-const Instagram = require("cloudrail-si").services.Instagram;
+const cloudrail = require("cloudrail-si");
+cloudrail.Settings.setKey("[Your CloudRail license key]");
+const Instagram = cloudrail.services.Instagram;
 
 const INSTAGRAM_CLIENT_ID = "xxx"; // Replace with a valid client id
 const INSTAGRAM_CLIENT_SECRET = "xxx"; // Replace with a valid client secret

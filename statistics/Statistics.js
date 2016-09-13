@@ -9,6 +9,9 @@ var Statistics = (function () {
     function Statistics() {
     }
     Statistics.addCall = function (service, method) {
+        var keyMatch = /^[a-f\d]{24}$/i;
+        if (!keyMatch.test(Settings_1.Settings.licenseKey))
+            throw new Error("A valid CloudRail license key is required. You can get one for free at https://developers.cloudrail.com");
         Statistics.callSyncPromise = Statistics.callSyncPromise.then(function () {
             function schedule() {
                 Statistics.timer = setTimeout(function () {
@@ -119,7 +122,7 @@ var Statistics = (function () {
         return ver ? ver : "?";
     };
     Statistics.CR_VERSION = Statistics.getCRVer();
-    Statistics.SERVER_URL = "https://keys.cloudrail.com/api/entries";
+    Statistics.SERVER_URL = "https://developers.cloudrail.com/api/entries";
     Statistics.DELAY = 300000;
     Statistics.data = {};
     Statistics.next = 1;

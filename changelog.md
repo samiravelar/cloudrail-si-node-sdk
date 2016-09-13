@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
   
+* **2.8.0**
+  * BREAKING: License key is now mandatory
+  * Bugfixes for Box and Dropbox integrations
+
 * **2.7.0**
   * BREAKING: The RedirectReceiver's callback function has a Node-style signature now
   * Added standard implementation for a RedirectReceiver with "electron" framework
