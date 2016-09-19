@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
   
+* **2.8.1**
+  * Fixed an issue where an Error was thrown when logging out an already logged out instance of Box
+  
 * **2.8.0**
   * BREAKING: License key is now mandatory
   * Bugfixes for Box and Dropbox integrations

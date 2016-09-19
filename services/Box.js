@@ -270,6 +270,8 @@ var SERVICE_CODE = {
         ["callFunc", "checkAuthentication", "$P0"]
     ],
     "Authenticating:logout": [
+        ["if==than", "$S0.access_token", null, 1],
+        ["return"],
         ["create", "$L0", "Object"],
         ["set", "$L0.url", "https://api.box.com/oauth2/revoke"],
         ["set", "$L0.method", "POST"],
