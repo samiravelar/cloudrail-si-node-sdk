@@ -399,6 +399,21 @@ var SERVICE_CODE = {
         ["return"],
         ["set", "$P1", 0]
     ],
+    "getThumbnail": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["callFunc", "resolvePath", "$P0", "$L0", "$P2"],
+        ["callFunc", "getRawMetadataByID", "$P0", "$L1", "$L0"],
+        ["get", "$L0", "$L1.thumbnailLink"],
+        ["if==than", "$L0", null, 1],
+        ["return"],
+        ["create", "$L1", "Object"],
+        ["set", "$L1.url", "$L0"],
+        ["set", "$L1.method", "GET"],
+        ["http.requestCall", "$L2", "$L1"],
+        ["callFunc", "validateResponse", "$P0", "$L2"],
+        ["set", "$P1", "$L2.responseBody"]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
     ],
@@ -611,7 +626,12 @@ var SERVICE_CODE = {
         ["if==than", "$L0.mimeType", "application/vnd.google-apps.folder", 2],
         ["set", "$P1.Folder", 1],
         ["return"],
-        ["set", "$P1.Folder", 0]
+        ["set", "$P1.Folder", 0],
+        ["if!=than", "$L0.imageMediaMetadata", null, 4],
+        ["get", "$L2", "$L0.imageMediaMetadata.height"],
+        ["get", "$L3", "$L0.imageMediaMetadata.width"],
+        ["create", "$L4", "ImageMetaData", "$L2", "$L3"],
+        ["set", "$P1.imageMetaData", "$L4"]
     ],
     "getRawMetadataByID": [
         ["create", "$L0", "Object"],
@@ -1010,6 +1030,21 @@ var GoogleDrive = (function () {
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    GoogleDrive.prototype.getThumbnail = function (path, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "getThumbnail");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

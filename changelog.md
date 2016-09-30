@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
   
+* **2.9.0**
+  * The services in the CloudStorage interface now have an additional method to get thumbnails
+  * The CloudMetaData objects now have additional dimension information for images
+  
 * **2.8.1**
   * Fixed an issue where an Error was thrown when logging out an already logged out instance of Box
   

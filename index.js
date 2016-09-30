@@ -34,6 +34,7 @@ var SubscriptionPlan_1 = require("./types/SubscriptionPlan");
 var SpaceAllocation_1 = require("./types/SpaceAllocation");
 var Settings_1 = require("./Settings");
 var RedirectReceivers_1 = require("./RedirectReceivers");
+var ImageMetaData_1 = require("./types/ImageMetaData");
 module.exports = {
     "services": {
         "Box": Box_1.Box,
@@ -70,7 +71,8 @@ module.exports = {
         "Refund": Refund_1.Refund,
         "Subscription": Subscription_1.Subscription,
         "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan,
-        "SpaceAllocation": SpaceAllocation_1.SpaceAllocation
+        "SpaceAllocation": SpaceAllocation_1.SpaceAllocation,
+        "ImageMetaData": ImageMetaData_1.ImageMetaData
     },
     "Settings": Settings_1.Settings,
     "RedirectReceivers": RedirectReceivers_1.RedirectReceivers

@@ -39,7 +39,9 @@ var Statistics = (function () {
             if (Statistics.count === 0)
                 return;
             var body = {
-                data: Statistics.data
+                data: Statistics.data,
+                appKey: Settings_1.Settings.licenseKey,
+                platform: Statistics.PLATFORM
             };
             var promise = Promise.resolve();
             if (Statistics.entryID) {
@@ -57,12 +59,11 @@ var Statistics = (function () {
                     delete client.mac;
                     body.app = app;
                     body.client = client;
-                    if (Settings_1.Settings.licenseKey != null)
-                        body.appKey = Settings_1.Settings.licenseKey;
+                    body.appKey = Settings_1.Settings.licenseKey;
                     body.libraryVersion = Statistics.CR_VERSION;
                     body.appHash = appHash;
                     body.clientHash = clientHash;
-                    body.platform = "Node.js";
+                    body.platform = Statistics.PLATFORM;
                 });
             }
             return promise.then(function () {
@@ -122,6 +123,7 @@ var Statistics = (function () {
         return ver ? ver : "?";
     };
     Statistics.CR_VERSION = Statistics.getCRVer();
+    Statistics.PLATFORM = "Node.js";
     Statistics.SERVER_URL = "https://developers.cloudrail.com/api/entries";
     Statistics.DELAY = 300000;
     Statistics.data = {};

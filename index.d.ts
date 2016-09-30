@@ -65,14 +65,32 @@ declare module 'cloudrail-si/types/DateOfBirth' {
 	}
 
 }
+declare module 'cloudrail-si/types/ImageMetaData' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	/**
+	 * This class contains metadata about an image such as height and width. It is used as an optional
+	 * property in {@link CloudMetaData}. It is immutable since it is received from the cloud service and
+	 * should thus not be modified.
+	 */
+	export class ImageMetaData extends SandboxObject {
+	    private _height;
+	    private _width;
+	    constructor(_height: number, _width: number);
+	    height: number;
+	    width: number;
+	}
+
+}
 declare module 'cloudrail-si/types/CloudMetaData' {
 	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	import { ImageMetaData } from 'cloudrail-si/types/ImageMetaData';
 	export class CloudMetaData extends SandboxObject {
 	    path: string;
 	    name: string;
 	    size: number;
 	    private _folder;
 	    modifiedAt: number;
+	    imageMetaData: ImageMetaData;
 	    folder: boolean;
 	    toString(): string;
 	}
@@ -787,6 +805,7 @@ declare module 'cloudrail-si/servicecode/InitSelfTest' {
 declare module 'cloudrail-si/statistics/Statistics' {
 	export class Statistics {
 	    private static CR_VERSION;
+	    private static PLATFORM;
 	    private static SERVER_URL;
 	    private static DELAY;
 	    private static timer;
@@ -949,6 +968,12 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	     * @return True if the file/folder exists, else false
 	     */
 	    exists: (path: string, callback: NodeCallback<boolean>) => void;
+	    /**
+	     * @param path The path to the image
+	     *
+	     * @return The thumbnail as a stream
+	     */
+	    getThumbnail: (path: string, callback: NodeCallback<stream.Readable>) => void;
 	}
 
 }
@@ -977,6 +1002,7 @@ declare module 'cloudrail-si/services/Box' {
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1056,6 +1082,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1216,6 +1243,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1443,6 +1471,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    saveAsString(): string;
@@ -1863,7 +1892,8 @@ declare module 'cloudrail-si/index' {
 	import { SubscriptionPlan } from 'cloudrail-si/types/SubscriptionPlan';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { Settings } from 'cloudrail-si/Settings';
-	import { RedirectReceivers } from 'cloudrail-si/RedirectReceivers'; var _default: {
+	import { RedirectReceivers } from 'cloudrail-si/RedirectReceivers';
+	import { ImageMetaData } from 'cloudrail-si/types/ImageMetaData'; var _default: {
 	    "services": {
 	        "Box": typeof Box;
 	        "Dropbox": typeof Dropbox;
@@ -1900,6 +1930,7 @@ declare module 'cloudrail-si/index' {
 	        "Subscription": typeof Subscription;
 	        "SubscriptionPlan": typeof SubscriptionPlan;
 	        "SpaceAllocation": typeof SpaceAllocation;
+	        "ImageMetaData": typeof ImageMetaData;
 	    };
 	    "Settings": typeof Settings;
 	    "RedirectReceivers": typeof RedirectReceivers;

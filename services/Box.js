@@ -332,6 +332,22 @@ var SERVICE_CODE = {
         ["return"],
         ["set", "$P1", 1]
     ],
+    "getThumbnail": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "resolvePath", "$P0", "$L0", "$P2"],
+        ["create", "$L1", "Object"],
+        ["string.concat", "$L1.url", "https://api.box.com/2.0/files/", "$L0.id", "/thumbnail.jpg?min_height=128&min_width=128"],
+        ["set", "$L1.method", "GET"],
+        ["create", "$L2", "Object"],
+        ["string.concat", "$L2.Authorization", "Bearer ", "$S0.access_token"],
+        ["set", "$L1.requestHeaders", "$L2"],
+        ["http.requestCall", "$L3", "$L1"],
+        ["if==than", "$L3.code", 404, 1],
+        ["return"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L3", "get thumbnail", 200],
+        ["set", "$P1", "$L3.responseBody"]
+    ],
     "checkAuthentication": [
         ["create", "$L0", "Date"],
         ["if==than", "$S0.access_token", null, 2],
@@ -734,6 +750,21 @@ var Box = (function () {
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Box.prototype.getThumbnail = function (path, callback) {
+        Statistics_1.Statistics.addCall("Box", "getThumbnail");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

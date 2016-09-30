@@ -111,6 +111,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L0", "Object"],
         ["set", "$L0.path", "$P2"],
+        ["set", "$L0.include_media_info", true],
         ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/files/get_metadata"],
         ["callFunc", "makeMeta", "$P0", "$P1", "$L1"]
     ],
@@ -201,6 +202,32 @@ var SERVICE_CODE = {
         ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"],
         ["set", "$P1", "$L1.url"]
     ],
+    "CloudStorage:getThumbnail": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "CloudStorage:exists", "$P0", "$L0", "$P2"],
+        ["if==than", "$L0", 0, 2],
+        ["create", "$L0", "Error", "File does not exist.", "NotFound"],
+        ["throwError", "$L0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.url", "https://content.dropboxapi.com/2/files/get_thumbnail"],
+        ["set", "$L0.method", "POST"],
+        ["create", "$L1", "Object"],
+        ["set", "$L1.path", "$P2"],
+        ["set", "$L1.format", "jpeg"],
+        ["set", "$L1.size", "w128h128"],
+        ["json.stringify", "$L1", "$L1"],
+        ["create", "$L2", "Object"],
+        ["string.concat", "$L2.Authorization", "Bearer ", "$S0.access_token"],
+        ["set", "$L2", "$L1", "Dropbox-API-Arg"],
+        ["set", "$L0.requestHeaders", "$L2"],
+        ["create", "$L3", "Object"],
+        ["http.requestCall", "$L3", "$L0"],
+        ["if==than", "$L3.code", 409, 1],
+        ["return"],
+        ["callFunc", "validateResponse", "$P0", "$L3"],
+        ["set", "$P1", "$L3.responseBody"]
+    ],
     "checkAuthentication": [
         ["if!=than", null, "$S0.access_token", 1],
         ["return"],
@@ -249,7 +276,14 @@ var SERVICE_CODE = {
         ["jumpRel", 2],
         ["set", "$P1.folder", 0],
         ["set", "$P1.size", "$P2.size"],
-        ["set", "$P1.path", "$P2.path_display"]
+        ["set", "$P1.path", "$P2.path_display"],
+        ["if!=than", "$P2.media_info", null, 6],
+        ["if!=than", "$P2.media_info.metadata.dimensions", null, 5],
+        ["get", "$L2", "$P2.media_info.metadata.dimensions"],
+        ["get", "$L3", "$L2.width"],
+        ["get", "$L4", "$L2.height"],
+        ["create", "$L5", "ImageMetaData", "$L4", "$L3"],
+        ["set", "$P1.imageMetaData", "$L5"]
     ],
     "processRawMeta": [
         ["set", "$L0", "$P2.entries"],
@@ -655,6 +689,21 @@ var Dropbox = (function () {
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Dropbox.prototype.getThumbnail = function (path, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getThumbnail");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

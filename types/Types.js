@@ -12,6 +12,7 @@ var Refund_1 = require("./Refund");
 var Subscription_1 = require("./Subscription");
 var SubscriptionPlan_1 = require("./SubscriptionPlan");
 var SpaceAllocation_1 = require("./SpaceAllocation");
+var ImageMetaData_1 = require("./ImageMetaData");
 var Types = (function () {
     function Types() {
     }
@@ -29,7 +30,8 @@ var Types = (function () {
         "Refund": Refund_1.Refund,
         "Subscription": Subscription_1.Subscription,
         "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan,
-        "SpaceAllocation": SpaceAllocation_1.SpaceAllocation
+        "SpaceAllocation": SpaceAllocation_1.SpaceAllocation,
+        "ImageMetaData": ImageMetaData_1.ImageMetaData
     };
     return Types;
 }());

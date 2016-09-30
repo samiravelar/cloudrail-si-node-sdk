@@ -329,6 +329,29 @@ var SERVICE_CODE = {
         ["return"],
         ["set", "$P1", 0]
     ],
+    "getThumbnail": [
+        ["callFunc", "checkAuth", "$P0"],
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["string.urlEncode", "$L0", "$P2"],
+        ["string.concat", "$L1", "https://api.onedrive.com/v1.0/drive/root:", "$L0", "?access_token=", "$S0.accessToken"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.url", "$L1"],
+        ["set", "$L2.method", "GET"],
+        ["create", "$L3", "Object"],
+        ["http.requestCall", "$L3", "$L2"],
+        ["callFunc", "validateResponse", "$P0", "$L3"],
+        ["json.parse", "$L4", "$L3.responseBody"],
+        ["get", "$L0", "$L4.id"],
+        ["create", "$L1", "Object"],
+        ["string.concat", "$L1.url", "https://api.onedrive.com/v1.0/drive/items/", "$L0", "/thumbnails/0/medium/content?access_token=", "$S0.accessToken"],
+        ["set", "$L1.method", "GET"],
+        ["create", "$L2", "Object"],
+        ["http.requestCall", "$L2", "$L1"],
+        ["if==than", "$L2.code", 404, 1],
+        ["return"],
+        ["callFunc", "validateResponse", "$P0", "$L2"],
+        ["set", "$P1", "$L2.responseBody"]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuth", "$P0", "$L0"]
     ],
@@ -380,6 +403,11 @@ var SERVICE_CODE = {
         ["set", "$P1.Folder", 0],
         ["jumpRel", 1],
         ["set", "$P1.Folder", 1],
+        ["if!=than", "$L5.image", null, 4],
+        ["get", "$L11", "$L5.image.height"],
+        ["get", "$L12", "$L5.image.width"],
+        ["create", "$L13", "ImageMetaData", "$L11", "$L12"],
+        ["set", "$P1.ImageMetaData", "$L13"],
         ["set", "$P1.Path", "$P2"]
     ],
     "checkIfPathExists": [
@@ -800,6 +828,21 @@ var OneDrive = (function () {
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    OneDrive.prototype.getThumbnail = function (path, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "getThumbnail");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

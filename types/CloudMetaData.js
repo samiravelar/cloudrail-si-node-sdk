@@ -26,7 +26,8 @@ var CloudMetaData = (function (_super) {
         s += "path -> '" + this.path + "'\n";
         s += "size -> '" + this.size + "'\n";
         s += "folder -> '" + this.folder + "'\n";
-        s += "modifiedAt -> '" + this.modifiedAt + "'";
+        s += "modifiedAt -> '" + this.modifiedAt + "'\n";
+        s += "imageMetaData -> " + JSON.stringify(this.imageMetaData);
         return s;
     };
     return CloudMetaData;
