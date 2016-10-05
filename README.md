@@ -53,6 +53,7 @@ Point of Interest | Google Places, Foursquare, Yelp
 * Get Meta Data of files, folders and perform all standard operations (copy, move, etc) with them.
 * Retrieve user and quota information
 * Generate share links for files and folders
+* Get thumbnails for images
 
 [Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-cloudstorage)
 #### Code Example:
