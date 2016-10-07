@@ -35,10 +35,12 @@ var SpaceAllocation_1 = require("./types/SpaceAllocation");
 var Settings_1 = require("./Settings");
 var RedirectReceivers_1 = require("./RedirectReceivers");
 var ImageMetaData_1 = require("./types/ImageMetaData");
+var Egnyte_1 = require("./services/Egnyte");
 module.exports = {
     "services": {
         "Box": Box_1.Box,
         "Dropbox": Dropbox_1.Dropbox,
+        "Egnyte": Egnyte_1.Egnyte,
         "Facebook": Facebook_1.Facebook,
         "Foursquare": Foursquare_1.Foursquare,
         "GitHub": GitHub_1.GitHub,

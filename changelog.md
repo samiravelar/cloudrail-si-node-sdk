@@ -1,5 +1,12 @@
 # CloudRail SI Node.JS SDK changelog
   
+* **2.9.1**
+  * Added Egnyte as a new service, implementing the CloudStorage interface. 
+    It does not support retrieval of user login, user name, available and 
+    used space or thumbnails since the API exposes no such information yet.
+  * Fixed bugs where GoogleDrive and OneDrive would not return ImageMetaData
+    on elements retrieved through getChildren()
+  
 * **2.9.0**
   * The services in the CloudStorage interface now have an additional method to get thumbnails
   * The CloudMetaData objects now have additional dimension information for images

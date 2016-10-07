@@ -1857,6 +1857,40 @@ declare module 'cloudrail-si/RedirectReceivers' {
 	}
 
 }
+declare module 'cloudrail-si/services/Egnyte' {
+	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class Egnyte implements CloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, domain: string, clientId: string, clientSecret: string, redirectUri: string, state: string);
+	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
+	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
+	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    delete(filePath: string, callback: NodeCallback<void>): void;
+	    copy(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
+	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
+	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getUserLogin(callback: NodeCallback<string>): void;
+	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    login(callback: NodeCallback<void>): void;
+	    logout(callback: NodeCallback<void>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -1893,10 +1927,12 @@ declare module 'cloudrail-si/index' {
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { Settings } from 'cloudrail-si/Settings';
 	import { RedirectReceivers } from 'cloudrail-si/RedirectReceivers';
-	import { ImageMetaData } from 'cloudrail-si/types/ImageMetaData'; var _default: {
+	import { ImageMetaData } from 'cloudrail-si/types/ImageMetaData';
+	import { Egnyte } from 'cloudrail-si/services/Egnyte'; var _default: {
 	    "services": {
 	        "Box": typeof Box;
 	        "Dropbox": typeof Dropbox;
+	        "Egnyte": typeof Egnyte;
 	        "Facebook": typeof Facebook;
 	        "Foursquare": typeof Foursquare;
 	        "GitHub": typeof GitHub;
