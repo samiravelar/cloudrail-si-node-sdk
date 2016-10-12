@@ -66,7 +66,6 @@ cloudrail.Settings.setKey("[CloudRail License Key]");
 // let cs = new cloudrail.services.Box(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 // let cs = new cloudrail.services.OneDrive(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 // let cs = new cloudrail.services.GoogleDrive(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
-// let cs = new cloudrail.services.Egnyte(redirectReceiver, "[domain]", "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 let cs = new cloudrail.services.Dropbox(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 
 cs.createFolder("/TestFolder", (err) => { // <---
