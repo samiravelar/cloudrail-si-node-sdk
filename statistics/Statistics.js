@@ -18,6 +18,7 @@ var Statistics = (function () {
                     Statistics.sendStatistics();
                     schedule();
                 }, Statistics.DELAY);
+                Statistics.timer.unref();
             }
             if (!Statistics.timer)
                 schedule();
@@ -59,11 +60,9 @@ var Statistics = (function () {
                     delete client.mac;
                     body.app = app;
                     body.client = client;
-                    body.appKey = Settings_1.Settings.licenseKey;
                     body.libraryVersion = Statistics.CR_VERSION;
                     body.appHash = appHash;
                     body.clientHash = clientHash;
-                    body.platform = Statistics.PLATFORM;
                 });
             }
             return promise.then(function () {

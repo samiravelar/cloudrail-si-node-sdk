@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
   
+* **2.9.2**
+  * Fixed an issue where a timeout would keep code using the library running indefinitely
+  
 * **2.9.1**
   * Added Egnyte as a new service, implementing the CloudStorage interface. 
     It does not support retrieval of user login, user name, available and 

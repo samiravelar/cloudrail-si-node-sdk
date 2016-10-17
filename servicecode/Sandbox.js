@@ -165,7 +165,7 @@ var Sandbox = (function () {
     Sandbox.prototype.setEntry = function (container, varAddress, value) {
         if (varAddress.length > 1) {
             var nextContainer = this.getEntry(container, varAddress.slice(0, varAddress.length - 1), false);
-            return this.setEntry(nextContainer, varAddress.slice(1, varAddress.length), value);
+            return this.setEntry(nextContainer, varAddress.slice(varAddress.length - 1, varAddress.length), value);
         }
         var varAddressPart = varAddress[0];
         if (Helper_1.Helper.isArray(container)) {
