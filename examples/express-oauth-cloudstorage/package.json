@@ -1,0 +1,9 @@
+{
+  "name": "example-express-oauth-cloudstorage",
+  "version": "0.0.1",
+  "dependencies": {
+    "cloudrail-si": "^2.9.3",
+    "express": "^4.14.0"
+  },
+  "private": true
+}
