@@ -19,7 +19,7 @@ CloudRail is an API integration solution which abstracts multiple APIs from diff
 
 Learn more about CloudRail at https://cloudrail.com
 
-Full documentation can be found at https://documentation.cloudrail.com/nodejs/nodejs/Home
+Full documentation can be found [here](https://documentation.cloudrail.com/nodejs/nodejs/Home)
 
 ---
 ---
@@ -273,7 +273,7 @@ More interfaces are coming soon.
 
 * Switch services instantly: One line of code is needed to set up the service you are using. Changing which service is as simple as changing the name to the one you wish to use.
 
-* Simple Documentation: There is no searching around Stack Overflow for the answer. The CloudRail Wiki at https://documentation.cloudrail.com/nodejs/nodejs/Home is regularly updated, clean, and simple to use.
+* Simple Documentation: There is no searching around Stack Overflow for the answer. The [CloudRail Wiki](https://documentation.cloudrail.com/nodejs/nodejs/Home) is regularly updated, clean, and simple to use.
 
 * No Maintenance Times: The CloudRail Libraries are updated when a provider changes their API.
 
