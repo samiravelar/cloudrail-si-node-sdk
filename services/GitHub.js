@@ -68,6 +68,7 @@ var SERVICE_CODE = {
         ["set", "$L0.url", "https://api.github.com/user"],
         ["create", "$L0.requestHeaders", "Object"],
         ["string.concat", "$L0.requestHeaders.Authorization", "token ", "$S0.accessToken"],
+        ["set", "$L0.requestHeaders.User-Agent", "CloudRailSI"],
         ["create", "$L1", "Object"],
         ["http.requestCall", "$L1", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L1"],
@@ -89,7 +90,7 @@ var SERVICE_CODE = {
     ],
     "authenticate": [
         ["create", "$L0", "String"],
-        ["string.concat", "$L0", "https://github.com/login/oauth/authorize?client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://github.com/login/oauth/authorize?client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret", "&code=", "$L1"],
         ["stream.stringToStream", "$L3", "$L2"],

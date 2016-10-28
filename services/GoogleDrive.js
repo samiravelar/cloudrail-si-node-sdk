@@ -397,6 +397,7 @@ var SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L4"]
     ],
     "exists": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
         ["callFunc", "checkAuthentication", "$P0"],
         ["callFunc", "checkIfPathExists", "$P0", "$L0", "$P2"],
         ["if==than", "$L0", "true", 2],
@@ -725,7 +726,7 @@ var SERVICE_CODE = {
         ["create", "$L3", "Error", "$L2", "Authentication"],
         ["throwError", "$L3"],
         ["if==than", "$P1.code", 403, 2],
-        ["create", "$L3", "Error", "Forbidden - Make sure that the Google Drive API is enabled.", "Http"],
+        ["create", "$L3", "Error", "Forbidden - In case this occurs on every request, make sure that the Google Drive API is enabled. Otherwise, you might hit your Google Drive rate limit and need to make less calls per second.", "Http"],
         ["throwError", "$L3"],
         ["if==than", "$P1.code", 400, 2],
         ["create", "$L3", "Error", "$L2", "Http"],

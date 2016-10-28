@@ -327,6 +327,7 @@ var SERVICE_CODE = {
         ["set", "$P1", "$L5.link.webUrl"]
     ],
     "exists": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
         ["callFunc", "checkAuth", "$P0", "$L12"],
         ["callFunc", "checkIfPathExists", "$P0", "$L0", "$P2"],
         ["if==than", "$L0", "true", 2],

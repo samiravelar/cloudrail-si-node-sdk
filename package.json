@@ -35,7 +35,7 @@
 		"node": ">=4.0.0"
 	},
 	"engineStrict": true,
-	"version": "2.9.2",
+	"version": "2.9.3",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"dependencies": {

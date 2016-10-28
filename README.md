@@ -19,7 +19,7 @@ CloudRail is an API integration solution which abstracts multiple APIs from diff
 
 Learn more about CloudRail at https://cloudrail.com
 
-Full documentation can be found at https://github.com/CloudRail/cloudrail-si-node-sdk/wiki
+Full documentation can be found at https://documentation.cloudrail.com/nodejs/nodejs
 
 ---
 ---
@@ -56,7 +56,7 @@ Point of Interest | Google Places, Foursquare, Yelp
 * Generate share links for files and folders
 * Get thumbnails for images
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-cloudstorage)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-cloudstorage)
 #### Code Example:
 
 ```` javascript
@@ -98,7 +98,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 * Retrieve profile pictures.
 * Login using the Social Network.
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-profile)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-profile)
 #### Code Example:
 
 ```` javascript
@@ -133,7 +133,7 @@ profile.getEmail((err, email) => {
 * Get the IDs of a user's friends/followers. Works well with the Profile interface's "login with" to check if two of your users are friends on a platform
 * Post to a user's wall
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-social)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-social)
 #### Code Example:
 
 ```` javascript
@@ -165,7 +165,7 @@ social.postUpdate("Hello from CloudRail", (err) => {
 * Refund previously made charges
 * Manage subscriptions
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-payment)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-payment)
 #### Code Example
 
 ```` javascript
@@ -191,7 +191,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
 
 * Send Email
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-email)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-email)
 
 #### Code Example
 
@@ -217,7 +217,7 @@ email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"
 
 * Send SMS
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-sms)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-sms)
 
 #### Code Example
 
@@ -245,7 +245,7 @@ sms.sendSMS("CloudRail", "+4912345678", "Hello from CloudRail", (err) => {
 * Get a list of POIs nearby
 * Filter by categories or search term
 
-[Full Documentation](https://github.com/CloudRail/cloudrail-si-node-sdk/wiki/Usage#interfaces-pointsofinterest)
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-pointsofinterest)
 #### Code Example
 
 ```` javascript
@@ -273,7 +273,7 @@ More interfaces are coming soon.
 
 * Switch services instantly: One line of code is needed to set up the service you are using. Changing which service is as simple as changing the name to the one you wish to use.
 
-* Simple Documentation: There is no searching around Stack Overflow for the answer. The CloudRail Wiki at https://github.com/CloudRail/cloudrail-si-node-sdk/wiki is regularly updated, clean, and simple to use.
+* Simple Documentation: There is no searching around Stack Overflow for the answer. The CloudRail Wiki at https://documentation.cloudrail.com/nodejs/nodejs is regularly updated, clean, and simple to use.
 
 * No Maintenance Times: The CloudRail Libraries are updated when a provider changes their API.
 

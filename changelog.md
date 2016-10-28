@@ -1,4 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
+
+* **2.9.3**
+  * Small fixes to error reporting of some services
+  * Facebook integration now uses newest version of the Facebook API
   
 * **2.9.2**
   * Fixed an issue where a timeout would keep code using the library running indefinitely

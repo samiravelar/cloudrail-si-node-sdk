@@ -133,6 +133,7 @@ var SERVICE_CODE = {
         ["jumpRel", -6]
     ],
     "CloudStorage:exists": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
         ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L2", "Object"],
         ["set", "$L2.url", "https://api.dropboxapi.com/2/files/get_metadata"],
