@@ -6,3 +6,4 @@ This folder contains examples on how to use the CloudRail SI node.js library
 It makes sure authentication with OAuth works even when there are mutliple instances of the server running behind the same address and redirects cannot be guaranteed to always land on the instance that started the authentication
 * The folder "typescript-promises" has an example that shows how to use the library with Typescript and how the library's API can be promisified to be used with Promises instead of callbacks
 * The folder "electron" has a tiny app that demonstrates how to use the SDK with the electron framework
+* The folder "express-oauth-cloudstorage" shows a minimalistic exmaple of a real world server setup for authentication
