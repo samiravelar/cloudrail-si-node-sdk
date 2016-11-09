@@ -2,7 +2,7 @@
   "name": "local-oauth",
   "version": "0.0.1",
   "dependencies": {
-    "cloudrail-si": "^2.6.2"
+    "cloudrail-si": "2.x"
   },
   "private": true
 }

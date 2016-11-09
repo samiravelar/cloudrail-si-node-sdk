@@ -10,6 +10,6 @@
     "electron-prebuilt": "^1.2.0"
   },
   "dependencies": {
-    "cloudrail-si": "^2.7.0"
+    "cloudrail-si": "2.x"
   }
 }
