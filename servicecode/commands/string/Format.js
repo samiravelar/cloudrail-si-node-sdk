@@ -32,7 +32,7 @@ var Format = (function () {
 }());
 exports.Format = Format;
 function toTwoCharHex(element) {
-    var hex = element.toString(16).toUpperCase();
+    var hex = element.toString(16);
     if (hex.length === 1)
         hex = "0" + hex;
     return hex;

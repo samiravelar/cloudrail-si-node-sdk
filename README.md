@@ -19,7 +19,7 @@ CloudRail is an API integration solution which abstracts multiple APIs from diff
 
 Learn more about CloudRail at https://cloudrail.com
 
-Full documentation can be found [here](https://documentation.cloudrail.com/nodejs/nodejs/Home)
+Full documentation can be found at https://documentation.cloudrail.com/nodejs/nodejs
 
 ---
 ---
@@ -78,6 +78,44 @@ cs.createFolder("/TestFolder", (err) => { // <---
     });
 });
 
+````
+---
+### Business/Bucket Cloud Storage Interface:
+
+* Amazon Web Services S3
+* Microsoft Azure
+* Rackspace
+* Backblaze
+
+#### Features
+
+* Create, delete and list buckets
+* Upload files
+* Download files
+* List files in a bucket and delete files
+* Get file metadata (last modified, size, etc.)
+
+[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-businesscloudstorage)
+#### Code Example
+
+```` javascript
+const cloudrail = require("cloudrail-si");
+cloudrail.Settings.setKey("[CloudRail License Key]");
+
+// let bcs = new cloudrail.services.AmazonS3(null, "[accessKeyId]", "[secretAccessKey]", "[region]");
+// let bcs = new cloudrail.services.MicrosoftAzure(null, "[accountName]", "[accessKey]");
+// let bcs = new cloudrail.services.Rackspace(null, "[userName]", "[apiKey]", "[region]");
+let bcs = new cloudrail.services.Backblaze(null, "[accountId]", "[appKey]");
+
+bcs.createBucket("myNewBucket", (err, bucket) => {
+    if (err) throw err;
+    let fileStream = fs.createReadStream("UserData.csv");
+    let size = fs.statSync("UserData.csv").size;
+    bcs.upload(bucket, "Data.csv", fileStream, size, (err) => { // <---
+        if (err) throw err;
+        console.log("Upload successfully finished");
+    });
+});
 ````
 ---
 ### Social Profile Interface:
@@ -261,8 +299,8 @@ poi.getNearbyPOIs(49.4557091, 8.5279138, 1000, "restaurant", null, (err, pois) =
     console.log("Amount of locations called 'restaurant' in a 1 km radius around the given coordinates: " + pois.length);
 });
 ````
-
 ---
+
 More interfaces are coming soon.
 
 ## Advantages of Using CloudRail
@@ -273,7 +311,7 @@ More interfaces are coming soon.
 
 * Switch services instantly: One line of code is needed to set up the service you are using. Changing which service is as simple as changing the name to the one you wish to use.
 
-* Simple Documentation: There is no searching around Stack Overflow for the answer. The [CloudRail Wiki](https://documentation.cloudrail.com/nodejs/nodejs/Home) is regularly updated, clean, and simple to use.
+* Simple Documentation: There is no searching around Stack Overflow for the answer. The CloudRail Wiki at https://documentation.cloudrail.com/nodejs/nodejs is regularly updated, clean, and simple to use.
 
 * No Maintenance Times: The CloudRail Libraries are updated when a provider changes their API.
 

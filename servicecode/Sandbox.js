@@ -217,6 +217,12 @@ var Sandbox = (function () {
             }
             entry = container[varAddressPart];
         }
+        else if (container instanceof Helper_1.CaseProxy) {
+            if (!Helper_1.Helper.isString(varAddressPart)) {
+                varAddressPart = varAddressPart.toString();
+            }
+            entry = container.get(varAddressPart);
+        }
         else if (container instanceof SandboxObject_1.SandboxObject) {
             if (!Helper_1.Helper.isString(varAddressPart)) {
                 varAddressPart = varAddressPart.toString();

@@ -66,7 +66,7 @@ var Statistics = (function () {
                 });
             }
             return promise.then(function () {
-                return Helper_1.Helper.makeRequest(Statistics.SERVER_URL, { "Content-Type": "application/json" }, Helper_1.Helper.streamifyString(JSON.stringify(body)), "POST").then(function (res) {
+                return Helper_1.Helper.makeRequest(Statistics.SERVER_URL, { "Content-Type": "application/json" }, Helper_1.Helper.streamify(JSON.stringify(body)), "POST").then(function (res) {
                     if (res.statusCode !== 200)
                         throw Error();
                     return Helper_1.Helper.dumpStream(res);

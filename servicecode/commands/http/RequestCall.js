@@ -22,7 +22,7 @@ var RequestCall = (function () {
             var response = {
                 code: res.statusCode,
                 message: res.statusMessage,
-                responseHeaders: capitalizeHeaders(res.headers),
+                responseHeaders: new Helper_1.CaseProxy(res.headers),
                 responseBody: res
             };
             environment.setVariable(resultVar, response);
@@ -31,12 +31,3 @@ var RequestCall = (function () {
     return RequestCall;
 }());
 exports.RequestCall = RequestCall;
-function capitalizeHeaders(headers) {
-    var ret = {};
-    for (var key in headers) {
-        if (headers.hasOwnProperty(key)) {
-            ret[Helper_1.Helper.upperCaseFirstLetter(key)] = headers[key];
-        }
-    }
-    return ret;
-}

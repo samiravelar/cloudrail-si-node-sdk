@@ -12,7 +12,7 @@ var StringToStream = (function () {
         var resultVar = parameters[0];
         var source = Helper_1.Helper.resolve(environment, parameters[1]);
         Helper_1.Helper.assert(Helper_1.Helper.isString(source));
-        environment.setVariable(resultVar, Helper_1.Helper.streamifyString(source));
+        environment.setVariable(resultVar, Helper_1.Helper.streamify(source));
     };
     return StringToStream;
 }());

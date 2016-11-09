@@ -1,5 +1,12 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.10.0**
+  * Introduced new interface called Business Cloud Storage
+  * Amazon S3 has been added as a new service implementing Business Cloud Storage
+  * Microsoft Azure has been added as a new service implementing Business Cloud Storage
+  * Backblaze has been added as a new service implementing Business Cloud Storage
+  * Rackspace has been added as a new service implementing Business Cloud Storage
+
 * **2.9.3**
   * Small fixes to error reporting of some services
   * Facebook integration now uses newest version of the Facebook API

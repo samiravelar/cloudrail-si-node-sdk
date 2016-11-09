@@ -8,8 +8,6 @@ var Clone_1 = require("./commands/Clone");
 var Delete_1 = require("./commands/Delete");
 var Get_1 = require("./commands/Get");
 var Uint8ToBase64_1 = require("./commands/array/Uint8ToBase64");
-var Md5_1 = require("./commands/hash/Md5");
-var Sha1_1 = require("./commands/crypt/hmac/Sha1");
 var Base64Encode_1 = require("./commands/string/Base64Encode");
 var StreamToString_1 = require("./commands/stream/StreamToString");
 var StringToStream_1 = require("./commands/stream/StringToStream");
@@ -43,6 +41,16 @@ var Set_1 = require("./commands/Set");
 var Size_1 = require("./commands/Size");
 var Format_1 = require("./commands/string/Format");
 var Promise = require("bluebird");
+var TypeOf_1 = require("./commands/TypeOf");
+var StreamToData_1 = require("./commands/stream/StreamToData");
+var DataToStream_1 = require("./commands/stream/DataToStream");
+var xmlParse = require("./commands/xml/Parse");
+var xmlStringify = require("./commands/xml/Stringify");
+var Base64Decode_1 = require("./commands/string/Base64Decode");
+var Hash_1 = require("./commands/Hash");
+var Hmac_1 = require("./commands/crypt/Hmac");
+var Uint8ToData_1 = require("./commands/array/Uint8ToData");
+var DataToUint8_1 = require("./commands/array/DataToUint8");
 var Interpreter = (function () {
     function Interpreter(sandbox) {
         this.sandbox = sandbox;
@@ -207,9 +215,13 @@ var COMMAND_LIST = [
     new Size_1.Size(),
     new ThrowError_1.ThrowError(),
     new Uint8ToBase64_1.Uint8ToBase64(),
-    new Sha1_1.Sha1(),
-    new Md5_1.Md5(),
+    new Hash_1.Hash("hash.md5", "md5"),
+    new Hash_1.Hash("hash.sha1", "sha1"),
+    new Hash_1.Hash("hash.sha256", "sha256"),
+    new Hmac_1.Hmac("crypt.hmac.sha1", "sha1"),
+    new Hmac_1.Hmac("crypt.hmac.sha256", "sha256"),
     new Base64Encode_1.Base64Encode(),
+    new Base64Decode_1.Base64Decode(),
     new StreamToString_1.StreamToString(),
     new StringToStream_1.StringToStream(),
     new MakeJoinedStream_1.MakeJoinedStream(),
@@ -244,7 +256,14 @@ var COMMAND_LIST = [
     new StringTransform_1.StringTransform("string.lowerCase", function (str) { return str.toLowerCase(); }),
     new StringTransform_1.StringTransform("string.upperCase", function (str) { return str.toUpperCase(); }),
     new StringTransform_1.StringTransform("string.urlEncode", function (str) { return encodeURIComponent(str).split("%20").join("+"); }),
-    new StringTransform_1.StringTransform("string.urlDecode", function (str) { return decodeURIComponent(str.split("+").join("%20")); })
+    new StringTransform_1.StringTransform("string.urlDecode", function (str) { return decodeURIComponent(str.split("+").join("%20")); }),
+    new TypeOf_1.TypeOf(),
+    new StreamToData_1.StreamToData(),
+    new DataToStream_1.DataToStream(),
+    new xmlParse.Parse(),
+    new xmlStringify.Stringify(),
+    new Uint8ToData_1.Uint8ToData(),
+    new DataToUint8_1.DataToUint8()
 ];
 var COMMANDS = {};
 for (var _i = 0, COMMAND_LIST_1 = COMMAND_LIST; _i < COMMAND_LIST_1.length; _i++) {

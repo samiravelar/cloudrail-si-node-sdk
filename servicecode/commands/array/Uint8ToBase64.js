@@ -1,7 +1,6 @@
 "use strict";
 var Helper_1 = require("../../../helpers/Helper");
 var VarAddress_1 = require("../../VarAddress");
-var Base64Encode_1 = require("../string/Base64Encode");
 var Uint8ToBase64 = (function () {
     function Uint8ToBase64() {
     }
@@ -16,10 +15,12 @@ var Uint8ToBase64 = (function () {
         if (parameters.length > 2)
             urlSafe = !!Helper_1.Helper.resolve(environment, parameters[2]);
         Helper_1.Helper.assert(Helper_1.Helper.isArray(sourceArray));
-        var buf = (Buffer["from"] && Buffer["from"]["length"] > 1) ? Buffer["from"](sourceArray) : new Buffer(sourceArray);
-        var dataString = buf.toString("binary");
-        var base64String = Base64Encode_1.Base64Encode.encode(dataString, false, urlSafe);
-        environment.setVariable(resultVar, base64String);
+        var str = Helper_1.Helper.makeBuffer(sourceArray).toString("base64");
+        if (urlSafe) {
+            str = str.replace(/\+/g, "-");
+            str = str.replace(/\//g, "_");
+        }
+        environment.setVariable(resultVar, str);
     };
     return Uint8ToBase64;
 }());

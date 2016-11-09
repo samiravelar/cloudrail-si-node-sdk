@@ -13,6 +13,8 @@ var Subscription_1 = require("./Subscription");
 var SubscriptionPlan_1 = require("./SubscriptionPlan");
 var SpaceAllocation_1 = require("./SpaceAllocation");
 var ImageMetaData_1 = require("./ImageMetaData");
+var Bucket_1 = require("./Bucket");
+var BusinessFileMetaData_1 = require("./BusinessFileMetaData");
 var Types = (function () {
     function Types() {
     }
@@ -31,7 +33,9 @@ var Types = (function () {
         "Subscription": Subscription_1.Subscription,
         "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan,
         "SpaceAllocation": SpaceAllocation_1.SpaceAllocation,
-        "ImageMetaData": ImageMetaData_1.ImageMetaData
+        "ImageMetaData": ImageMetaData_1.ImageMetaData,
+        "Bucket": Bucket_1.Bucket,
+        "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData
     };
     return Types;
 }());

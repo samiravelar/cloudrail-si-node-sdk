@@ -36,9 +36,17 @@ var Settings_1 = require("./Settings");
 var RedirectReceivers_1 = require("./RedirectReceivers");
 var ImageMetaData_1 = require("./types/ImageMetaData");
 var Egnyte_1 = require("./services/Egnyte");
+var BusinessFileMetaData_1 = require("./types/BusinessFileMetaData");
+var Bucket_1 = require("./types/Bucket");
+var Backblaze_1 = require("./services/Backblaze");
+var Rackspace_1 = require("./services/Rackspace");
+var MicrosoftAzure_1 = require("./services/MicrosoftAzure");
+var AmazonS3_1 = require("./services/AmazonS3");
 module.exports = {
     "services": {
+        "AmazonS3": AmazonS3_1.AmazonS3,
         "Box": Box_1.Box,
+        "Backblaze": Backblaze_1.Backblaze,
         "Dropbox": Dropbox_1.Dropbox,
         "Egnyte": Egnyte_1.Egnyte,
         "Facebook": Facebook_1.Facebook,
@@ -50,10 +58,12 @@ module.exports = {
         "Instagram": Instagram_1.Instagram,
         "LinkedIn": LinkedIn_1.LinkedIn,
         "MailJet": MailJet_1.MailJet,
+        "MicrosoftAzure": MicrosoftAzure_1.MicrosoftAzure,
         "MicrosoftLive": MicrosoftLive_1.MicrosoftLive,
         "Nexmo": Nexmo_1.Nexmo,
         "OneDrive": OneDrive_1.OneDrive,
         "PayPal": PayPal_1.PayPal,
+        "Rackspace": Rackspace_1.Rackspace,
         "SendGrid": SendGrid_1.SendGrid,
         "Slack": Slack_1.Slack,
         "Stripe": Stripe_1.Stripe,
@@ -74,7 +84,9 @@ module.exports = {
         "Subscription": Subscription_1.Subscription,
         "SubscriptionPlan": SubscriptionPlan_1.SubscriptionPlan,
         "SpaceAllocation": SpaceAllocation_1.SpaceAllocation,
-        "ImageMetaData": ImageMetaData_1.ImageMetaData
+        "ImageMetaData": ImageMetaData_1.ImageMetaData,
+        "Bucket": Bucket_1.Bucket,
+        "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData
     },
     "Settings": Settings_1.Settings,
     "RedirectReceivers": RedirectReceivers_1.RedirectReceivers

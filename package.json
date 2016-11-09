@@ -35,11 +35,12 @@
 		"node": ">=4.0.0"
 	},
 	"engineStrict": true,
-	"version": "2.9.3",
+	"version": "2.10.0",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"dependencies": {
 		"bluebird": "^3.4.1",
-		"opn": "^4.0.2"
+		"opn": "^4.0.2",
+		"xmldoc": "^0.5.1"
 	}
 }

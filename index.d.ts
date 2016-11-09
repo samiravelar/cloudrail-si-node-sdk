@@ -136,6 +136,7 @@ declare module 'cloudrail-si/types/Date' {
 	    getDate(): Date;
 	    time: number;
 	    rfcTime: string;
+	    rfcTime1123: string;
 	    toJSONString(): string;
 	    fromJSONString(jsonString: string): CustomDate;
 	    compareTo(obj: any): number;
@@ -318,6 +319,26 @@ declare module 'cloudrail-si/types/SpaceAllocation' {
 	}
 
 }
+declare module 'cloudrail-si/types/Bucket' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	export class Bucket extends SandboxObject {
+	    name: string;
+	    identifier: string;
+	    constructor(name: string, identifier: string);
+	}
+
+}
+declare module 'cloudrail-si/types/BusinessFileMetaData' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	export class BusinessFileMetaData extends SandboxObject {
+	    fileName: string;
+	    fileID: string;
+	    size: number;
+	    lastModified: number;
+	    constructor(fileName: string, fileID: string, size: number, lastModified: number);
+	}
+
+}
 declare module 'cloudrail-si/types/Types' {
 	import { ObjectMap } from 'cloudrail-si/helpers/Helper';
 	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
@@ -369,16 +390,6 @@ declare module 'cloudrail-si/servicecode/commands/Get' {
 	}
 
 }
-declare module 'cloudrail-si/servicecode/commands/string/Base64Encode' {
-	import { Command } from 'cloudrail-si/servicecode/Command';
-	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
-	export class Base64Encode implements Command {
-	    getIdentifier(): string;
-	    execute(environment: Sandbox, parameters: any[]): void;
-	    static encode(s: String, lineBreak: boolean, webSafe: boolean): string;
-	}
-
-}
 declare module 'cloudrail-si/servicecode/commands/array/Uint8ToBase64' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
@@ -388,21 +399,14 @@ declare module 'cloudrail-si/servicecode/commands/array/Uint8ToBase64' {
 	}
 
 }
-declare module 'cloudrail-si/servicecode/commands/hash/Md5' {
+declare module 'cloudrail-si/servicecode/commands/string/Base64Encode' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
-	export class Md5 implements Command {
+	import { Buffer } from "buffer";
+	export class Base64Encode implements Command {
 	    getIdentifier(): string;
 	    execute(environment: Sandbox, parameters: any[]): void;
-	}
-
-}
-declare module 'cloudrail-si/servicecode/commands/crypt/hmac/Sha1' {
-	import { Command } from 'cloudrail-si/servicecode/Command';
-	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
-	export class Sha1 implements Command {
-	    getIdentifier(): string;
-	    execute(environment: Sandbox, parameters: any[]): void;
+	    static encode(s: string | Buffer, lineBreak: boolean, webSafe: boolean): string;
 	}
 
 }
@@ -726,6 +730,104 @@ declare module 'cloudrail-si/servicecode/commands/string/Format' {
 	}
 
 }
+declare module 'cloudrail-si/servicecode/commands/TypeOf' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class TypeOf implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/stream/StreamToData' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class StreamToData implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): Promise<void>;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/stream/DataToStream' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class DataToStream implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/xml/Parse' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	import * as Promise from "bluebird";
+	export class Parse implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/xml/Stringify' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	import * as Promise from "bluebird";
+	export class Stringify implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/string/Base64Decode' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class Base64Decode implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/Hash' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class Hash implements Command {
+	    private identifier;
+	    private hashMethod;
+	    constructor(identifier: string, hashMethod: string);
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/crypt/Hmac' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class Hmac implements Command {
+	    private identifier;
+	    private hashMethod;
+	    constructor(identifier: string, hashMethod: string);
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/array/Uint8ToData' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class Uint8ToData implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/array/DataToUint8' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class DataToUint8 implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
 declare module 'cloudrail-si/servicecode/Interpreter' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
@@ -828,13 +930,43 @@ declare module 'cloudrail-si/helpers/Helper' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
 	import stream = require("stream");
+	import { Buffer } from "buffer";
 	import http = require("http");
 	import { Interpreter } from 'cloudrail-si/servicecode/Interpreter';
-	export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+	/**
+	 * Valid Http methods
+	 */
+	export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "HEAD" | "OPTIONS" | "TRACE";
+	/**
+	 * A typed object
+	 */
 	export type ObjectMap<T> = {
 	    [key: string]: T;
 	};
+	/**
+	 * Signature of a Node.js style callback
+	 */
 	export type NodeCallback<T> = (err: Error, data?: T) => void;
+	/**
+	 * Structure of XML elements in service code
+	 */
+	export type XMLElement = {
+	    attributes: ObjectMap<string>;
+	    text: string;
+	    name: string;
+	    children: XMLElement[];
+	};
+	/**
+	 * A wrapper for objects that can be accessed in a case-insensitive way
+	 */
+	export class CaseProxy {
+	    private obj;
+	    constructor(obj: ObjectMap<string>);
+	    get(key: string): string;
+	}
+	/**
+	 * Diverse helper functions used in many places in the code
+	 */
 	export class Helper {
 	    static addAll<T>(target: T[], source: T[]): void;
 	    static putAll<T>(target: ObjectMap<T>, source: ObjectMap<T>): void;
@@ -847,15 +979,18 @@ declare module 'cloudrail-si/helpers/Helper' {
 	    static isBoolean(object: any): boolean;
 	    static isNumberString(obj: any): boolean;
 	    static isStream(obj: any): boolean;
+	    static isData(obj: any): boolean;
 	    static assert(expression: boolean): void;
 	    static resolve(environment: Sandbox, value: any, checkExistence?: boolean): any;
 	    static compare<T>(aObj: T, bObj: T): number;
-	    static dumpStream(stream: stream.Readable, targetEncoding?: string): Promise<string>;
-	    static streamifyString(string: string, sourceEncoding?: string): stream.Readable;
+	    static dumpStream(stream: stream.Readable, targetEncoding?: string, toBuffer?: boolean): Promise<string | Buffer>;
+	    static streamify(val: any, sourceEncoding?: string): stream.Readable;
 	    static makeRequest(urlString: string, headers: ObjectMap<string>, body: stream.Readable, method: HttpMethod): Promise<http.IncomingMessage>;
 	    static lowerCaseFirstLetter(str: string): string;
 	    static upperCaseFirstLetter(str: string): string;
 	    static checkSandboxError(ip: Interpreter): void;
+	    static makeBuffer(data: any, encoding?: string): Buffer;
+	    static bufferToUint8Array(buf: Buffer): number[];
 	}
 
 }
@@ -1891,6 +2026,188 @@ declare module 'cloudrail-si/services/Egnyte' {
 	}
 
 }
+declare module 'cloudrail-si/interfaces/BusinessCloudStorage' {
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	/**
+	 * This interface provides methods for backend storage services. Unlike the {@link CloudStorage}
+	 * interface this interface does not require a user to authenticate since it is intended for the
+	 * use in a backend where only the owner of the backend wants to store data to his own account.
+	 */
+	export interface BusinessCloudStorage {
+	    /**
+	     * Get a list of all buckets within your account.
+	     *
+	     * @return List of buckets. This might be an empty list if there are no buckets.
+	     */
+	    listBuckets: (callback: NodeCallback<Bucket[]>) => void;
+	    /**
+	     * Creates a new empty bucket.
+	     *
+	     * @param name The name of the new bucket.
+	     * @return The newly created bucket.
+	     * @error IllegalArgumentError Is set if a bucket with the same name already exists.
+	     */
+	    createBucket: (name: string, callback?: NodeCallback<Bucket>) => void;
+	    /**
+	     * Deletes the specified bucket with all its content.
+	     *
+	     * @param bucket The bucket which will be deleted.
+	     * @error NotFoundError Is set if the bucket does not exist.
+	     */
+	    deleteBucket: (bucket: Bucket, callback?: NodeCallback<void>) => void;
+	    /**
+	     * Get a list of files contained in the specified bucket.
+	     *
+	     * @param bucket The bucket containing the files.
+	     * @error NotFoundError Is set if the specified bucket does not exist.
+	     */
+	    listFiles: (bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>) => void;
+	    /**
+	     * Uploads a new file into a bucket or replaces the file if it is already present.
+	     *
+	     * @param bucket  The bucket into which the file shall be put.
+	     * @param name    The name of the file.
+	     * @param content The file content as a readable stream.
+	     * @param size    The amount of bytes that the file contains.
+	     */
+	    uploadFile: (bucket: Bucket, name: string, content: stream.Readable, size: number, callback?: NodeCallback<void>) => void;
+	    /**
+	     * Deletes a file within a bucket.
+	     *
+	     * @param bucket   The bucket that contains the file.
+	     * @param fileName The name of the file.
+	     * @error NotFoundError Is set if there is no file with the given
+	     *                      name inside the bucket.
+	     */
+	    deleteFile: (fileName: string, bucket: Bucket, callback?: NodeCallback<void>) => void;
+	    /**
+	     * Downloads a file from a bucket.
+	     *
+	     * @param bucket   The bucket which contains the file.
+	     * @param fileName The name of the file.
+	     * @return The content of the file as a readable stream.
+	     * @error NotFoundError Is set if there is no file with the given
+	     *                      name inside the bucket.
+	     */
+	    downloadFile: (fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>) => void;
+	    /**
+	     * Get metadata of a file containing the name, the size and the last
+	     * modified date.
+	     *
+	     * @param bucket   The bucket where the file is located.
+	     * @param fileName The name of the file.
+	     */
+	    getFileMetadata: (bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>) => void;
+	}
+
+}
+declare module 'cloudrail-si/services/Backblaze' {
+	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class Backblaze implements BusinessCloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, accountID: string, appKey: string);
+	    createBucket(bucketName: string, callback: NodeCallback<Bucket>): void;
+	    listBuckets(callback: NodeCallback<Bucket[]>): void;
+	    deleteBucket(bucket: Bucket, callback: NodeCallback<void>): void;
+	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
+	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
+	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
+	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
+declare module 'cloudrail-si/services/Rackspace' {
+	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class Rackspace implements BusinessCloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, username: string, apiKey: string, region: string);
+	    createBucket(bucketName: string, callback: NodeCallback<Bucket>): void;
+	    listBuckets(callback: NodeCallback<Bucket[]>): void;
+	    deleteBucket(bucket: Bucket, callback: NodeCallback<void>): void;
+	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
+	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
+	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
+	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
+declare module 'cloudrail-si/services/MicrosoftAzure' {
+	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class MicrosoftAzure implements BusinessCloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, accountName: string, accessKey: string);
+	    createBucket(bucketName: string, callback: NodeCallback<Bucket>): void;
+	    listBuckets(callback: NodeCallback<Bucket[]>): void;
+	    deleteBucket(bucket: Bucket, callback: NodeCallback<void>): void;
+	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
+	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
+	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
+	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
+declare module 'cloudrail-si/services/AmazonS3' {
+	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class AmazonS3 implements BusinessCloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, accessKeyId: string, secretAccessKey: string, region: string);
+	    createBucket(bucketName: string, callback: NodeCallback<Bucket>): void;
+	    listBuckets(callback: NodeCallback<Bucket[]>): void;
+	    deleteBucket(bucket: Bucket, callback: NodeCallback<void>): void;
+	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
+	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
+	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
+	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -1928,9 +2245,17 @@ declare module 'cloudrail-si/index' {
 	import { Settings } from 'cloudrail-si/Settings';
 	import { RedirectReceivers } from 'cloudrail-si/RedirectReceivers';
 	import { ImageMetaData } from 'cloudrail-si/types/ImageMetaData';
-	import { Egnyte } from 'cloudrail-si/services/Egnyte'; var _default: {
+	import { Egnyte } from 'cloudrail-si/services/Egnyte';
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	import { Backblaze } from 'cloudrail-si/services/Backblaze';
+	import { Rackspace } from 'cloudrail-si/services/Rackspace';
+	import { MicrosoftAzure } from 'cloudrail-si/services/MicrosoftAzure';
+	import { AmazonS3 } from 'cloudrail-si/services/AmazonS3'; var _default: {
 	    "services": {
+	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
+	        "Backblaze": typeof Backblaze;
 	        "Dropbox": typeof Dropbox;
 	        "Egnyte": typeof Egnyte;
 	        "Facebook": typeof Facebook;
@@ -1942,10 +2267,12 @@ declare module 'cloudrail-si/index' {
 	        "Instagram": typeof Instagram;
 	        "LinkedIn": typeof LinkedIn;
 	        "MailJet": typeof MailJet;
+	        "MicrosoftAzure": typeof MicrosoftAzure;
 	        "MicrosoftLive": typeof MicrosoftLive;
 	        "Nexmo": typeof Nexmo;
 	        "OneDrive": typeof OneDrive;
 	        "PayPal": typeof PayPal;
+	        "Rackspace": typeof Rackspace;
 	        "SendGrid": typeof SendGrid;
 	        "Slack": typeof Slack;
 	        "Stripe": typeof Stripe;
@@ -1967,6 +2294,8 @@ declare module 'cloudrail-si/index' {
 	        "SubscriptionPlan": typeof SubscriptionPlan;
 	        "SpaceAllocation": typeof SpaceAllocation;
 	        "ImageMetaData": typeof ImageMetaData;
+	        "Bucket": typeof Bucket;
+	        "BusinessFileMetaData": typeof BusinessFileMetaData;
 	    };
 	    "Settings": typeof Settings;
 	    "RedirectReceivers": typeof RedirectReceivers;

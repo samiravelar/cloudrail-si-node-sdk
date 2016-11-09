@@ -3,12 +3,27 @@ var VarAddress_1 = require("../servicecode/VarAddress");
 var InternalError_1 = require("../errors/InternalError");
 var Promise = require("bluebird");
 var stream = require("stream");
+var buffer_1 = require("buffer");
 var url = require("url");
 var http = require("http");
 var https = require("https");
 var Statistics_1 = require("../statistics/Statistics");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
+var CaseProxy = (function () {
+    function CaseProxy(obj) {
+        this.obj = {};
+        for (var _i = 0, _a = Object.keys(obj); _i < _a.length; _i++) {
+            var key = _a[_i];
+            this.obj[key.toLowerCase()] = obj[key];
+        }
+    }
+    CaseProxy.prototype.get = function (key) {
+        return this.obj[key.toLowerCase()];
+    };
+    return CaseProxy;
+}());
+exports.CaseProxy = CaseProxy;
 var Helper = (function () {
     function Helper() {
     }
@@ -45,6 +60,9 @@ var Helper = (function () {
     Helper.isStream = function (obj) {
         return obj instanceof stream.Readable;
     };
+    Helper.isData = function (obj) {
+        return obj instanceof buffer_1.Buffer;
+    };
     Helper.assert = function (expression) {
         if (!expression)
             throw new InternalError_1.InternalError("Assertion failed");
@@ -66,7 +84,8 @@ var Helper = (function () {
         else
             throw new InternalError_1.InternalError("Compare compares incomparable values");
     };
-    Helper.dumpStream = function (stream, targetEncoding) {
+    Helper.dumpStream = function (stream, targetEncoding, toBuffer) {
+        if (toBuffer === void 0) { toBuffer = false; }
         return new Promise(function (resolve, reject) {
             var buffers = [], length = 0;
             stream.on("data", function (chunk) {
@@ -74,18 +93,23 @@ var Helper = (function () {
                 length += chunk.length;
             });
             stream.on("end", function () {
-                var buf = Buffer.concat(buffers, length);
-                var str = buf.toString(targetEncoding);
-                resolve(str);
+                var buf = buffer_1.Buffer.concat(buffers, length);
+                if (toBuffer) {
+                    resolve(buf);
+                }
+                else {
+                    var str = buf.toString(targetEncoding);
+                    resolve(str);
+                }
             });
             stream.on("error", function (err) { return reject(err); });
         });
     };
-    Helper.streamifyString = function (string, sourceEncoding) {
+    Helper.streamify = function (val, sourceEncoding) {
         var resStream = new stream.Readable();
         resStream._read = function () {
         };
-        resStream.push(string, sourceEncoding);
+        resStream.push(val, sourceEncoding);
         resStream.push(null);
         return resStream;
     };
@@ -145,6 +169,23 @@ var Helper = (function () {
                     throw new Error(error.toString());
             }
         }
+    };
+    Helper.makeBuffer = function (data, encoding) {
+        var buf;
+        if (buffer_1.Buffer.from && buffer_1.Buffer.from.length > 1) {
+            buf = buffer_1.Buffer.from(data, encoding);
+        }
+        else {
+            buf = new buffer_1.Buffer(data, encoding);
+        }
+        return buf;
+    };
+    Helper.bufferToUint8Array = function (buf) {
+        var numberArray = [];
+        for (var i = 0; i < buf.length; i++) {
+            numberArray.push(buf.readUInt8(i));
+        }
+        return numberArray;
     };
     Helper.isArray = Array.isArray;
     return Helper;
