@@ -19,7 +19,7 @@ CloudRail is an API integration solution which abstracts multiple APIs from diff
 
 Learn more about CloudRail at https://cloudrail.com
 
-Full documentation can be found at https://documentation.cloudrail.com/nodejs/nodejs
+Full documentation can be found [here](https://documentation.cloudrail.com/nodejs/nodejs/Home)
 
 ---
 ---
@@ -60,7 +60,7 @@ Point of Interest | Google Places, Foursquare, Yelp
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-cloudstorage)
 #### Code Example:
 
-```` javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -78,8 +78,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
         console.log("Upload successfully finished");
     });
 });
-
-````
+```
 ---
 ### Business/Bucket Cloud Storage Interface:
 
@@ -99,7 +98,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-businesscloudstorage)
 #### Code Example
 
-```` javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -117,7 +116,7 @@ bcs.createBucket("myNewBucket", (err, bucket) => {
         console.log("Upload successfully finished");
     });
 });
-````
+```
 ---
 ### Social Profile Interface:
 
@@ -140,7 +139,7 @@ bcs.createBucket("myNewBucket", (err, bucket) => {
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-profile)
 #### Code Example:
 
-```` javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -160,7 +159,7 @@ profile.getEmail((err, email) => {
     if (err) throw err;
     console.log("User's email address is " + email);
 });
-````
+```
 ---
 ### Social Interaction Interface:
 
@@ -175,7 +174,7 @@ profile.getEmail((err, email) => {
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-social)
 #### Code Example:
 
-```` javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -191,7 +190,7 @@ social.postUpdate("Hello from CloudRail", (err) => {
     if (err) throw err;
     console.log("Update posted");
 });
-````
+```
 ---
 ### Payment Interface:
 
@@ -207,7 +206,7 @@ social.postUpdate("Hello from CloudRail", (err) => {
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-payment)
 #### Code Example
 
-```` javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -219,7 +218,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
     if (err) throw err;
     console.log("Successfully charged " + charge.amount + " " + charge.currency);
 });
-````
+```
 ---
 ### Email Interface:
 
@@ -234,7 +233,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
 
 #### Code Example
 
-````javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -245,7 +244,7 @@ email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"
     if (err) throw err;
     console.log("Email successfully sent");
 });
-````
+```
 ---
 ### SMS Interface:
 
@@ -260,7 +259,7 @@ email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"
 
 #### Code Example
 
-````javascript
+```javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -271,7 +270,7 @@ sms.sendSMS("CloudRail", "+4912345678", "Hello from CloudRail", (err) => {
     if (err) throw err;
     console.log("SMS successfully sent");
 });
-````
+```
 ---
 ### Points of Interest Interface:
 
@@ -287,7 +286,7 @@ sms.sendSMS("CloudRail", "+4912345678", "Hello from CloudRail", (err) => {
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-pointsofinterest)
 #### Code Example
 
-```` javascript
+``` javascript
 const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
@@ -299,7 +298,7 @@ poi.getNearbyPOIs(49.4557091, 8.5279138, 1000, "restaurant", null, (err, pois) =
     if (err) throw err;
     console.log("Amount of locations called 'restaurant' in a 1 km radius around the given coordinates: " + pois.length);
 });
-````
+```
 ---
 
 More interfaces are coming soon.
@@ -312,7 +311,7 @@ More interfaces are coming soon.
 
 * Switch services instantly: One line of code is needed to set up the service you are using. Changing which service is as simple as changing the name to the one you wish to use.
 
-* Simple Documentation: There is no searching around Stack Overflow for the answer. The CloudRail Wiki at https://documentation.cloudrail.com/nodejs/nodejs is regularly updated, clean, and simple to use.
+* Simple Documentation: There is no searching around Stack Overflow for the answer. The [CloudRail Wiki](https://documentation.cloudrail.com/nodejs/nodejs/Home) is regularly updated, clean, and simple to use.
 
 * No Maintenance Times: The CloudRail Libraries are updated when a provider changes their API.
 
@@ -320,9 +319,9 @@ More interfaces are coming soon.
 
 ## NPM
 
-````
+```
 npm install cloudrail-si
-````
+```
 
 ## Typescript
 
@@ -330,7 +329,7 @@ npm install cloudrail-si
 
 The package includes an *index.d.ts* file. To use the typings provided, include services and types like so:
 
-```` javascript
+```javascript
 /// <reference path="node_modules/cloudrail-si/index.d.ts" />
 
 import {PointsOfInterest} from "cloudrail-si/interfaces/PointsOfInterest";
@@ -343,7 +342,7 @@ poi.getNearbyPOIs(49.4557091, 8.5279138, 1000, "restaurant", null, (err:Error, p
     if (err) console.log(err);
     console.log("Amount of locations called 'restaurant' in a 1 km radius around the given coordinates: " + pois.length);
 });
-````
+```
 
 ## Examples
 
