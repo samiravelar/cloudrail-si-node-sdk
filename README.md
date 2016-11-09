@@ -32,6 +32,7 @@ This means that, for example, upload() works in exactly the same way for Dropbox
 Interface | Included Services
 --- | ---
 Cloud Storage | Dropbox, Google Drive, OneDrive, Box, Egnyte
+Business Cloud Storage | Amazon S3, Microsoft Azure, Rackspace, Backblaze
 Social Profile | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram
 Social Interaction | Facebook, Twitter
 Payment | PayPal, Stripe
