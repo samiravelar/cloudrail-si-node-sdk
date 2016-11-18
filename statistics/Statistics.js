@@ -71,9 +71,12 @@ var Statistics = (function () {
                         throw Error();
                     return Helper_1.Helper.dumpStream(res);
                 }).then(function (resStr) {
+                    var obj = JSON.parse(resStr);
                     if (!Statistics.entryID) {
-                        var obj = JSON.parse(resStr);
                         Statistics.entryID = obj.id;
+                    }
+                    if (obj.block) {
+                        Settings_1.Settings.block = true;
                     }
                     Statistics.data = {};
                     Statistics.count = 0;

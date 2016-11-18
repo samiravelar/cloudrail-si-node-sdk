@@ -51,6 +51,7 @@ var Hash_1 = require("./commands/Hash");
 var Hmac_1 = require("./commands/crypt/Hmac");
 var Uint8ToData_1 = require("./commands/array/Uint8ToData");
 var DataToUint8_1 = require("./commands/array/DataToUint8");
+var Settings_1 = require("../Settings");
 var Interpreter = (function () {
     function Interpreter(sandbox) {
         this.sandbox = sandbox;
@@ -60,11 +61,14 @@ var Interpreter = (function () {
         for (var _i = 1; _i < arguments.length; _i++) {
             parameters[_i - 1] = arguments[_i];
         }
+        if (Settings_1.Settings.block) {
+            return Promise.reject(new Error("Your CloudRail license has expired. Please visit https://developers.cloudrail.com to upgrade or contact support@cloudrail.com"));
+        }
         this.sandbox.createNewStackLevel(functionName, 0);
         Helper_1.Helper.addAll(this.sandbox.currentParameters(), parameters);
         if (this.sandbox.currentFunctionCode() == null) {
             var errorMessage = "Service code error: function '" + functionName + "' not found";
-            throw new InternalError_1.InternalError(errorMessage);
+            return Promise.reject(new InternalError_1.InternalError(errorMessage));
         }
         return this.run();
     };

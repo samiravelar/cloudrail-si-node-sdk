@@ -668,7 +668,7 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P1", "accessToken", 4],
-        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&suppress_webview_warning=true"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],

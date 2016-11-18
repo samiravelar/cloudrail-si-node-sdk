@@ -42,6 +42,7 @@ var Backblaze_1 = require("./services/Backblaze");
 var Rackspace_1 = require("./services/Rackspace");
 var MicrosoftAzure_1 = require("./services/MicrosoftAzure");
 var AmazonS3_1 = require("./services/AmazonS3");
+var Heroku_1 = require("./services/Heroku");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -55,6 +56,7 @@ module.exports = {
         "GoogleDrive": GoogleDrive_1.GoogleDrive,
         "GooglePlaces": GooglePlaces_1.GooglePlaces,
         "GooglePlus": GooglePlus_1.GooglePlus,
+        "Heroku": Heroku_1.Heroku,
         "Instagram": Instagram_1.Instagram,
         "LinkedIn": LinkedIn_1.LinkedIn,
         "MailJet": MailJet_1.MailJet,

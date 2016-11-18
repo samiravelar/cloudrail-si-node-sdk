@@ -6,7 +6,9 @@
 		"url": "https://github.com/CloudRail/cloudrail-si-node-sdk"
 	},
 	"keywords": [
+		"AmazonS3",
 		"Box",
+		"Backblaze",
 		"Dropbox",
 		"Egnyte",
 		"Facebook",
@@ -15,13 +17,16 @@
 		"GoogleDrive",
 		"GooglePlaces",
 		"GooglePlus",
+		"Heroku",
 		"Instagram",
 		"LinkedIn",
 		"MailJet",
+		"MicrosoftAzure",
 		"MicrosoftLive",
 		"Nexmo",
 		"OneDrive",
 		"PayPal",
+		"Rackspace",
 		"SendGrid",
 		"Slack",
 		"Stripe",
@@ -30,12 +35,12 @@
 		"Yahoo",
 		"Yelp"
 	],
-	"description": "The CloudRail SI SDK for Node.JS, a simple, universal, unified API for the most popular cloud services. Supports: Box, Dropbox, Egnyte, Facebook, Foursquare, GitHub, GoogleDrive, GooglePlaces, GooglePlus, Instagram, LinkedIn, MailJet, MicrosoftLive, Nexmo, OneDrive, PayPal, SendGrid, Slack, Stripe, Twilio, Twitter, Yahoo, Yelp",
+	"description": "The CloudRail SI SDK for Node.JS, a simple, universal, unified API for the most popular cloud services. Supports: AmazonS3, Box, Backblaze, Dropbox, Egnyte, Facebook, Foursquare, GitHub, GoogleDrive, GooglePlaces, GooglePlus, Heroku, Instagram, LinkedIn, MailJet, MicrosoftAzure, MicrosoftLive, Nexmo, OneDrive, PayPal, Rackspace, SendGrid, Slack, Stripe, Twilio, Twitter, Yahoo, Yelp",
 	"engines": {
 		"node": ">=4.0.0"
 	},
 	"engineStrict": true,
-	"version": "2.10.0",
+	"version": "2.10.1",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"dependencies": {

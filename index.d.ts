@@ -828,6 +828,14 @@ declare module 'cloudrail-si/servicecode/commands/array/DataToUint8' {
 	}
 
 }
+declare module 'cloudrail-si/Settings' {
+	export class Settings {
+	    static licenseKey: string;
+	    static block: boolean;
+	    static setKey(key: string): void;
+	}
+
+}
 declare module 'cloudrail-si/servicecode/Interpreter' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
@@ -879,13 +887,6 @@ declare module 'cloudrail-si/servicecode/Sandbox' {
 	    saveStateToString(): string;
 	    loadStateFromString(savedState: string): void;
 	    getParameter(idx: number, stacklevel: number): any;
-	}
-
-}
-declare module 'cloudrail-si/Settings' {
-	export class Settings {
-	    static licenseKey: string;
-	    static setKey(key: string): void;
 	}
 
 }
@@ -2208,6 +2209,32 @@ declare module 'cloudrail-si/services/AmazonS3' {
 	}
 
 }
+declare module 'cloudrail-si/services/Heroku' {
+	import { Profile } from 'cloudrail-si/interfaces/Profile';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class Heroku implements Profile {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    getIdentifier(callback: NodeCallback<string>): void;
+	    getFullName(callback: NodeCallback<string>): void;
+	    getEmail(callback: NodeCallback<string>): void;
+	    getGender(callback: NodeCallback<string>): void;
+	    getDescription(callback: NodeCallback<string>): void;
+	    getDateOfBirth(callback: NodeCallback<DateOfBirth>): void;
+	    getLocale(callback: NodeCallback<string>): void;
+	    getPictureURL(callback: NodeCallback<string>): void;
+	    login(callback: NodeCallback<void>): void;
+	    logout(callback: NodeCallback<void>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -2251,7 +2278,8 @@ declare module 'cloudrail-si/index' {
 	import { Backblaze } from 'cloudrail-si/services/Backblaze';
 	import { Rackspace } from 'cloudrail-si/services/Rackspace';
 	import { MicrosoftAzure } from 'cloudrail-si/services/MicrosoftAzure';
-	import { AmazonS3 } from 'cloudrail-si/services/AmazonS3'; var _default: {
+	import { AmazonS3 } from 'cloudrail-si/services/AmazonS3';
+	import { Heroku } from 'cloudrail-si/services/Heroku'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -2264,6 +2292,7 @@ declare module 'cloudrail-si/index' {
 	        "GoogleDrive": typeof GoogleDrive;
 	        "GooglePlaces": typeof GooglePlaces;
 	        "GooglePlus": typeof GooglePlus;
+	        "Heroku": typeof Heroku;
 	        "Instagram": typeof Instagram;
 	        "LinkedIn": typeof LinkedIn;
 	        "MailJet": typeof MailJet;

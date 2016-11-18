@@ -9,62 +9,27 @@ var SERVICE_CODE = {
         ["callFunc", "checkAuthentication", "$P0"]
     ],
     "Authenticating:logout": [
-        ["create", "$L0", "Object"],
-        ["string.concat", "$L0.url", "https://accounts.google.com/o/oauth2/revoke?token=", "$S0.accessToken"],
-        ["set", "$L0.method", "GET"],
-        ["http.requestCall", "$L1", "$L0"],
-        ["callFunc", "validateResponse", "$P0", "$L1"],
         ["set", "$S0.accessToken", null],
         ["set", "$P0.userInfo", null]
     ],
     "Profile:getIdentifier": [
         ["callFunc", "checkUserInfo", "$P0"],
-        ["string.concat", "$P1", "googleplus-", "$P0.userInfo.id"]
+        ["string.concat", "$P1", "heroku-", "$P0.userInfo.id"]
     ],
     "Profile:getFullName": [
         ["callFunc", "checkUserInfo", "$P0"],
-        ["if!=than", "$P0.userInfo.displayName", null, 1],
-        ["set", "$P1", "$P0.userInfo.displayName"]
+        ["if!=than", "$P0.userInfo.name", null, 1],
+        ["set", "$P1", "$P0.userInfo.name"]
     ],
     "Profile:getEmail": [
         ["callFunc", "checkUserInfo", "$P0"],
-        ["get", "$P1", "$P0.userInfo.emails", 0, "value"]
+        ["set", "$P1", "$P0.userInfo.email"]
     ],
-    "Profile:getGender": [
-        ["callFunc", "checkUserInfo", "$P0"],
-        ["if!=than", "$P0.userInfo.gender", null, 1],
-        ["set", "$P1", "$P0.userInfo.gender"]
-    ],
-    "Profile:getDescription": [
-        ["callFunc", "checkUserInfo", "$P0"],
-        ["if!=than", "$P0.userInfo.aboutMe", null, 1],
-        ["set", "$P1", "$P0.userInfo.aboutMe"]
-    ],
-    "Profile:getDateOfBirth": [
-        ["callFunc", "checkUserInfo", "$P0"],
-        ["create", "$P1", "DateOfBirth"],
-        ["if!=than", "$P0.userInfo.birthday", null, 10],
-        ["string.split", "$L0", "$P0.userInfo.birthday", "-"],
-        ["get", "$L1", "$L0", 0],
-        ["if!=than", "$L1", "0000", 1],
-        ["math.add", "$P1.year", "$L1", 0],
-        ["get", "$L1", "$L0", 1],
-        ["if!=than", "$L1", "00", 1],
-        ["math.add", "$P1.month", "$L1", 0],
-        ["get", "$L1", "$L0", 2],
-        ["if!=than", "$L1", "00", 1],
-        ["math.add", "$P1.day", "$L1", 0]
-    ],
-    "Profile:getLocale": [
-        ["callFunc", "checkUserInfo", "$P0"],
-        ["if!=than", "$P0.userInfo.language", null, 1],
-        ["set", "$P1", "$P0.userInfo.language"]
-    ],
-    "Profile:getPictureURL": [
-        ["callFunc", "checkUserInfo", "$P0"],
-        ["if!=than", "$P0.userInfo.image.url", null, 1],
-        ["set", "$P1", "$P0.userInfo.image.url"]
-    ],
+    "Profile:getGender": [],
+    "Profile:getDescription": [],
+    "Profile:getDateOfBirth": [],
+    "Profile:getLocale": [],
+    "Profile:getPictureURL": [],
     "checkUserInfo": [
         ["create", "$L0", "Date"],
         ["if!=than", "$P0.userInfo", null, 2],
@@ -72,9 +37,10 @@ var SERVICE_CODE = {
         ["return"],
         ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L2", "Object"],
-        ["set", "$L2.url", "https://www.googleapis.com/plus/v1/people/me"],
+        ["set", "$L2.url", "https://api.heroku.com/account"],
         ["create", "$L2.requestHeaders", "Object"],
         ["string.concat", "$L2.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["set", "$L2.requestHeaders.Accept", "application/vnd.heroku+json; version=3"],
         ["set", "$L2.method", "GET"],
         ["http.requestCall", "$L3", "$L2"],
         ["callFunc", "validateResponse", "$P0", "$L3"],
@@ -93,18 +59,20 @@ var SERVICE_CODE = {
         ["callFunc", "authenticate", "$P0", "refreshToken"]
     ],
     "authenticate": [
-        ["create", "$L2", "String"],
         ["if==than", "$P1", "accessToken", 4],
-        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fplus.me+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&suppress_webview_warning=true"],
+        ["string.concat", "$L0", "https://id.heroku.com/oauth/authorize?client_id=", "$P0.clientID", "&scope=identity&response_type=code&state=", "$P0.state"],
         ["awaitCodeRedirect", "$L1", "$L0"],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
+        ["string.concat", "$L2", "grant_type=authorization_code&code=", "$L1", "&client_secret=", "$P0.clientSecret"],
         ["jumpRel", 1],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
+        ["string.concat", "$L2", "grant_type=refresh_token&refresh_token=", "$S0.refreshToken", "&client_secret=", "$P0.clientSecret"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
-        ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
+        ["set", "$L4.Content-Type", "application/x-www-form-urlencoded"],
+        ["size", "$L5", "$L2"],
+        ["string.concat", "$L4.Content-Length", "$L5"],
+        ["set", "$L4.User-Agent", "CloudRailSI"],
         ["create", "$L5", "Object"],
-        ["set", "$L5.url", "https://www.googleapis.com/oauth2/v4/token"],
+        ["set", "$L5.url", "https://id.heroku.com/oauth/token"],
         ["set", "$L5.method", "POST"],
         ["set", "$L5.requestBody", "$L3"],
         ["set", "$L5.requestHeaders", "$L4"],
@@ -121,36 +89,29 @@ var SERVICE_CODE = {
         ["set", "$S0.expireIn", "$L9"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 19],
-        ["stream.streamToString", "$L2", "$P1.responseBody"],
+        ["if>=than", "$P1.code", 400, 12],
+        ["json.parse", "$L2", "$P1.responseBody"],
         ["if==than", "$P1.code", 401, 2],
-        ["create", "$L3", "Error", "$L2", "Authentication"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 400, 2],
-        ["create", "$L3", "Error", "$L2", "Http"],
-        ["throwError", "$L3"],
-        ["if>=than", "$P1.code", 402, 5],
-        ["if<=than", "$P1.code", 509, 4],
-        ["if!=than", "$P1.code", 503, 3],
-        ["if!=than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "Http"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 503, 2],
-        ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
+        ["create", "$L3", "Error", "$L2.message", "Authentication"],
         ["throwError", "$L3"],
         ["if==than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "NotFound"],
+        ["create", "$L3", "Error", "$L2.message", "NotFound"],
+        ["throwError", "$L3"],
+        ["if==than", "$P1.code", 503, 2],
+        ["create", "$L3", "Error", "$L2.message", "ServiceUnavailable"],
+        ["throwError", "$L3"],
+        ["create", "$L3", "Error", "$L2.message", "Http"],
         ["throwError", "$L3"]
     ]
 };
-var GooglePlus = (function () {
-    function GooglePlus(redirectReceiver, clientID, clientSecret, redirectUri, state) {
+var Heroku = (function () {
+    function Heroku(redirectReceiver, clientID, clientSecret, redirectUri, state) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
-        InitSelfTest_1.InitSelfTest.initTest("GooglePlus");
+        InitSelfTest_1.InitSelfTest.initTest("Heroku");
         this.interpreterStorage["clientID"] = clientID;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
@@ -160,8 +121,8 @@ var GooglePlus = (function () {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    GooglePlus.prototype.getIdentifier = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getIdentifier");
+    Heroku.prototype.getIdentifier = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -175,8 +136,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getFullName = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getFullName");
+    Heroku.prototype.getFullName = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -190,8 +151,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getEmail = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getEmail");
+    Heroku.prototype.getEmail = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -205,8 +166,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getGender = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getGender");
+    Heroku.prototype.getGender = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -220,8 +181,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getDescription = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getDescription");
+    Heroku.prototype.getDescription = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -235,8 +196,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getDateOfBirth = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getDateOfBirth");
+    Heroku.prototype.getDateOfBirth = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -250,8 +211,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getLocale = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getLocale");
+    Heroku.prototype.getLocale = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -265,8 +226,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.getPictureURL = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "getPictureURL");
+    Heroku.prototype.getPictureURL = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -280,8 +241,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.login = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "login");
+    Heroku.prototype.login = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -294,8 +255,8 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.logout = function (callback) {
-        Statistics_1.Statistics.addCall("GooglePlus", "logout");
+    Heroku.prototype.logout = function (callback) {
+        Statistics_1.Statistics.addCall("Heroku", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
@@ -308,22 +269,22 @@ var GooglePlus = (function () {
                 callback(err);
         });
     };
-    GooglePlus.prototype.saveAsString = function () {
+    Heroku.prototype.saveAsString = function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
-    GooglePlus.prototype.loadAsString = function (savedState) {
+    Heroku.prototype.loadAsString = function (savedState) {
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
-    GooglePlus.prototype.resumeLogin = function (executionState, callback) {
+    Heroku.prototype.resumeLogin = function (executionState, callback) {
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.resumeFunction("Authenticating:login", this.interpreterStorage).then(function () { return callback(undefined); }, function (err) { return callback(err); });
     };
-    return GooglePlus;
+    return Heroku;
 }());
-exports.GooglePlus = GooglePlus;
+exports.Heroku = Heroku;

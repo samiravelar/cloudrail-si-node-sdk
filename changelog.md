@@ -1,5 +1,10 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.10.1**
+  * Heroku has been added as a new service implementing Profile. 
+  It supports the retrieval of a unique ID, the full name and the email address.
+  It is still in Beta and not officially listed or documented.
+
 * **2.10.0**
   * Introduced new interface called Business Cloud Storage
   * Amazon S3 has been added as a new service implementing Business Cloud Storage

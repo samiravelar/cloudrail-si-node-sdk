@@ -5,6 +5,7 @@ var Settings = (function () {
     Settings.setKey = function (key) {
         Settings.licenseKey = key;
     };
+    Settings.block = false;
     return Settings;
 }());
 exports.Settings = Settings;
