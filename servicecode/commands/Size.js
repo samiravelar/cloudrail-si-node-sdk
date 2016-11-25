@@ -12,7 +12,7 @@ var Size = (function () {
         var targetVar = parameters[0];
         var container = environment.getVariable(parameters[1]);
         var size = -1;
-        if (Helper_1.Helper.isArray(container) || Helper_1.Helper.isString(container))
+        if (Helper_1.Helper.isArray(container) || Helper_1.Helper.isString(container) || Helper_1.Helper.isData(container))
             size = container.length;
         else if (Helper_1.Helper.isObject(container))
             size = Object.keys(container).length;

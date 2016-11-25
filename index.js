@@ -43,6 +43,7 @@ var Rackspace_1 = require("./services/Rackspace");
 var MicrosoftAzure_1 = require("./services/MicrosoftAzure");
 var AmazonS3_1 = require("./services/AmazonS3");
 var Heroku_1 = require("./services/Heroku");
+var OneDriveBusiness_1 = require("./services/OneDriveBusiness");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -64,6 +65,7 @@ module.exports = {
         "MicrosoftLive": MicrosoftLive_1.MicrosoftLive,
         "Nexmo": Nexmo_1.Nexmo,
         "OneDrive": OneDrive_1.OneDrive,
+        "OneDriveBusiness": OneDriveBusiness_1.OneDriveBusiness,
         "PayPal": PayPal_1.PayPal,
         "Rackspace": Rackspace_1.Rackspace,
         "SendGrid": SendGrid_1.SendGrid,

@@ -247,18 +247,49 @@ var SERVICE_CODE = {
         ["callFunc", "validatePath", "$P0", "$P2"],
         ["callFunc", "checkAuthentication", "$P0"],
         ["callFunc", "resolvePath", "$P0", "$L0", "$P2"],
-        ["create", "$L2", "Object"],
-        ["string.concat", "$L3", "https://api.box.com/2.0/folders/", "$L0.id", "/items?fields=name,size,type,modified_at"],
-        ["set", "$L2.url", "$L3"],
-        ["set", "$L2.method", "GET"],
-        ["create", "$L2.requestHeaders", "Object"],
-        ["string.concat", "$L2.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
-        ["http.requestCall", "$L5", "$L2"],
+        ["create", "$L21", "Number", 500],
+        ["create", "$L1", "Number", 0],
+        ["create", "$L2", "Number", 0],
+        ["create", "$P1", "Array"],
+        ["create", "$L20", "Object"],
+        ["string.concat", "$L3", "https://api.box.com/2.0/folders/", "$L0.id", "/items?fields=name,size,type,modified_at&limit=", "$L21", "&offset=", "$L1"],
+        ["set", "$L20.url", "$L3"],
+        ["set", "$L20.method", "GET"],
+        ["create", "$L20.requestHeaders", "Object"],
+        ["string.concat", "$L20.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["http.requestCall", "$L5", "$L20"],
         ["callFunc", "checkHttpErrors", "$P0", "$L5", "children metadata retrieval", 200],
         ["json.parse", "$L4", "$L5.responseBody"],
         ["size", "$L6", "$L4.entries"],
         ["set", "$L7", 0],
+        ["if<than", "$L7", "$L6", 5],
+        ["get", "$L8", "$L4.entries", "$L7"],
+        ["callFunc", "makeMeta", "$P0", "$L9", "$L8", "$P2"],
+        ["push", "$P1", "$L9"],
+        ["math.add", "$L7", "$L7", 1],
+        ["jumpRel", -6],
+        ["if==than", "$L2", 0, 1],
+        ["set", "$L2", "$L4.total_count"],
+        ["math.add", "$L1", "$L1", "$L21"],
+        ["if<than", "$L1", "$L2", 1],
+        ["jumpRel", -22]
+    ],
+    "getChildrenPage": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "resolvePath", "$P0", "$L0", "$P2"],
         ["create", "$P1", "Array"],
+        ["create", "$L20", "Object"],
+        ["string.concat", "$L3", "https://api.box.com/2.0/folders/", "$L0.id", "/items?fields=name,size,type,modified_at&limit=", "$P4", "&offset=", "$P3"],
+        ["set", "$L20.url", "$L3"],
+        ["set", "$L20.method", "GET"],
+        ["create", "$L20.requestHeaders", "Object"],
+        ["string.concat", "$L20.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["http.requestCall", "$L5", "$L20"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L5", "children metadata retrieval", 200],
+        ["json.parse", "$L4", "$L5.responseBody"],
+        ["size", "$L6", "$L4.entries"],
+        ["set", "$L7", 0],
         ["if<than", "$L7", "$L6", 5],
         ["get", "$L8", "$L4.entries", "$L7"],
         ["callFunc", "makeMeta", "$P0", "$L9", "$L8", "$P2"],
@@ -671,6 +702,21 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Box.prototype.getChildrenPage = function (path, offset, limit, callback) {
+        Statistics_1.Statistics.addCall("Box", "getChildrenPage");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

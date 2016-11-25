@@ -113,9 +113,19 @@ var Helper = (function () {
         resStream.push(null);
         return resStream;
     };
+    Helper.safeAscii = function (str) {
+        return str.toString().replace(/[\u007f-\uffff]/g, function (c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); });
+    };
     Helper.makeRequest = function (urlString, headers, body, method) {
         var urlParsed = url.parse(urlString, true);
         var request = urlParsed.protocol === "http:" ? http : https;
+        if (headers) {
+            for (var _i = 0, _a = Object.keys(headers); _i < _a.length; _i++) {
+                var headerName = _a[_i];
+                if (headers[headerName])
+                    headers[headerName] = Helper.safeAscii(headers[headerName]);
+            }
+        }
         var options = {
             hostname: urlParsed.hostname,
             port: parseInt(urlParsed.port),

@@ -1,5 +1,11 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.11.0**
+  * Added OneDrive for Business as a new service to the Cloud Storage interface
+  * Bugfixes to OneDrive and Dropbox concerning files and folders with special characters
+  * Fixed an issue where Box would return maximally 100 children of a folder
+  * Added a function to retrieve children in chunks to all Cloud Storage services
+
 * **2.10.1**
   * Heroku has been added as a new service implementing Profile. 
   It supports the retrieval of a unique ID, the full name and the email address.

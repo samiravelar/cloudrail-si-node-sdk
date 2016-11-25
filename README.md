@@ -31,7 +31,7 @@ This means that, for example, upload() works in exactly the same way for Dropbox
 ## Current Interfaces
 Interface | Included Services
 --- | ---
-Cloud Storage | Dropbox, Google Drive, OneDrive, Box, Egnyte
+Cloud Storage | Dropbox, Google Drive, OneDrive, OneDrive Business, Box, Egnyte
 Business Cloud Storage | Amazon S3, Microsoft Azure, Rackspace, Backblaze
 Social Profile | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram
 Social Interaction | Facebook, Twitter
@@ -46,6 +46,7 @@ Point of Interest | Google Places, Foursquare, Yelp
 * Box
 * Google Drive
 * Microsoft OneDrive
+* Microsoft OneDrive for Business
 * Egnyte
 
 #### Features:
@@ -66,6 +67,7 @@ cloudrail.Settings.setKey("[CloudRail License Key]");
 
 // let cs = new cloudrail.services.Box(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 // let cs = new cloudrail.services.OneDrive(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+// let cs = new cloudrail.services.OneDriveBusiness(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 // let cs = new cloudrail.services.GoogleDrive(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 let cs = new cloudrail.services.Dropbox(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 

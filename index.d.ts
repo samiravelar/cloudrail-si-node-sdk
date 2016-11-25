@@ -986,6 +986,7 @@ declare module 'cloudrail-si/helpers/Helper' {
 	    static compare<T>(aObj: T, bObj: T): number;
 	    static dumpStream(stream: stream.Readable, targetEncoding?: string, toBuffer?: boolean): Promise<string | Buffer>;
 	    static streamify(val: any, sourceEncoding?: string): stream.Readable;
+	    static safeAscii(str: string): string;
 	    static makeRequest(urlString: string, headers: ObjectMap<string>, body: stream.Readable, method: HttpMethod): Promise<http.IncomingMessage>;
 	    static lowerCaseFirstLetter(str: string): string;
 	    static upperCaseFirstLetter(str: string): string;
@@ -1076,9 +1077,18 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	    /**
 	     * Gets the metadata of this folder's children, throws an exception if the path is invalid or does not exist
 	     * @param folderPath The path to the file from the root folder and including the name
-	     * @return A container for metadata
+	     * @return A list of containers for metadata
 	     */
 	    getChildren: (folderPath: string, callback: NodeCallback<CloudMetaData[]>) => void;
+	    /**
+	     * Gets the metadata of this folder's children in chunks, throws an exception if the path is invalid or does not exist
+	     * Returns an empty array if offset or limit get out of bounds of existing children
+	     * @param folderPath The path to the file from the root folder and including the name
+	     * @param offset The offset for the children
+	     * @param limit The amount of children returned
+	     * @return A list of containers for metadata
+	     */
+	    getChildrenPage: (folderPath: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>) => void;
 	    /**
 	     * @return The currently logged in user's login identifier (name/email/...)
 	     */
@@ -1133,6 +1143,7 @@ declare module 'cloudrail-si/services/Box' {
 	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
 	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
@@ -1213,6 +1224,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
 	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
@@ -1374,6 +1386,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
 	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
@@ -1602,6 +1615,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
 	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
@@ -2013,6 +2027,7 @@ declare module 'cloudrail-si/services/Egnyte' {
 	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
 	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
 	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
 	    getUserLogin(callback: NodeCallback<string>): void;
 	    getUserName(callback: NodeCallback<string>): void;
 	    createShareLink(path: string, callback: NodeCallback<string>): void;
@@ -2235,6 +2250,41 @@ declare module 'cloudrail-si/services/Heroku' {
 	}
 
 }
+declare module 'cloudrail-si/services/OneDriveBusiness' {
+	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class OneDriveBusiness implements CloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
+	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
+	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    delete(filePath: string, callback: NodeCallback<void>): void;
+	    copy(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
+	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
+	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
+	    getUserLogin(callback: NodeCallback<string>): void;
+	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    login(callback: NodeCallback<void>): void;
+	    logout(callback: NodeCallback<void>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -2279,7 +2329,8 @@ declare module 'cloudrail-si/index' {
 	import { Rackspace } from 'cloudrail-si/services/Rackspace';
 	import { MicrosoftAzure } from 'cloudrail-si/services/MicrosoftAzure';
 	import { AmazonS3 } from 'cloudrail-si/services/AmazonS3';
-	import { Heroku } from 'cloudrail-si/services/Heroku'; var _default: {
+	import { Heroku } from 'cloudrail-si/services/Heroku';
+	import { OneDriveBusiness } from 'cloudrail-si/services/OneDriveBusiness'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -2300,6 +2351,7 @@ declare module 'cloudrail-si/index' {
 	        "MicrosoftLive": typeof MicrosoftLive;
 	        "Nexmo": typeof Nexmo;
 	        "OneDrive": typeof OneDrive;
+	        "OneDriveBusiness": typeof OneDriveBusiness;
 	        "PayPal": typeof PayPal;
 	        "Rackspace": typeof Rackspace;
 	        "SendGrid": typeof SendGrid;

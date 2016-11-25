@@ -5,6 +5,12 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["create", "$P0.paginationCache", "Object"],
+        ["create", "$P0.paginationCache.offset", "Number", 0],
+        ["create", "$P0.paginationCache.path", "String", "grgerfefrgerhggerger"],
+        ["create", "$P0.paginationCache.metaCache", "Array"]
+    ],
     "CloudStorage:getUserLogin": [
         ["callFunc", "User:about", "$P0"],
         ["set", "$P1", "$P0.userInfo.emailAddress"]
@@ -131,6 +137,54 @@ var SERVICE_CODE = {
         ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L2", "https://api.dropboxapi.com/2/files/list_folder/continue"],
         ["callFunc", "processRawMeta", "$P0", "$P1", "$L1"],
         ["jumpRel", -6]
+    ],
+    "getChildrenPage": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["if==than", "$P2", "/", 1],
+        ["set", "$P2", ""],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$P1", "Array"],
+        ["if!=than", "$P0.paginationCache.path", "$P2", 11],
+        ["jumpRel", 1],
+        ["if<than", "$P3", "$P0.paginationCache.offset", 9],
+        ["set", "$P0.paginationCache.path", "$P2"],
+        ["set", "$P0.P0.paginationCache.offset", 0],
+        ["create", "$P0.paginationCache.metaCache", "Array"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.path", "$P2"],
+        ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/files/list_folder"],
+        ["callFunc", "processRawMeta", "$P0", "$P0.paginationCache.metaCache", "$L1"],
+        ["set", "$P0.paginationCache.cursor", "$L1.cursor"],
+        ["jumpRel", -12],
+        ["create", "$L0", "Number"],
+        ["size", "$L0", "$P0.paginationCache.metaCache"],
+        ["math.add", "$L0", "$L0", "$P0.paginationCache.offset"],
+        ["if<than", "$P3", "$L0", 13],
+        ["math.multiply", "$L1", "$P0.paginationCache.offset", -1],
+        ["math.add", "$L1", "$L1", "$P3"],
+        ["size", "$L0", "$P1"],
+        ["if<than", "$L0", "$P4", 9],
+        ["get", "$L2", "$P0.paginationCache.metaCache", "$L1"],
+        ["push", "$P1", "$L2"],
+        ["math.add", "$L1", "$L1", 1],
+        ["size", "$L3", "$P0.paginationCache.metaCache"],
+        ["if==than", "$L3", "$L1", 3],
+        ["size", "$L4", "$P0.paginationCache.metaCache"],
+        ["math.add", "$P3", "$L4", "$P0.paginationCache.offset"],
+        ["jumpRel", 2],
+        ["jumpRel", -11],
+        ["return"],
+        ["if==than", "$P0.paginationCache.cursor", null, 1],
+        ["return"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.cursor", "$P0.paginationCache.cursor"],
+        ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/files/list_folder/continue"],
+        ["size", "$L2", "$P0.paginationCache.metaCache"],
+        ["math.add", "$P0.paginationCache.offset", "$P0.paginationCache.offset", "$L2"],
+        ["create", "$P0.paginationCache.metaCache", "Array"],
+        ["callFunc", "processRawMeta", "$P0", "$P0.paginationCache.metaCache", "$L1"],
+        ["set", "$P0.paginationCache.cursor", "$L1.cursor"],
+        ["jumpRel", -41]
     ],
     "CloudStorage:exists": [
         ["callFunc", "validatePath", "$P0", "$P2"],
@@ -611,6 +665,21 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Dropbox.prototype.getChildrenPage = function (path, offset, limit, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "getChildrenPage");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

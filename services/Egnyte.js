@@ -159,6 +159,41 @@ var SERVICE_CODE = {
         ["math.add", "$L6", "$L6", 1],
         ["jumpRel", -6]
     ],
+    "getChildrenPage": [
+        ["callFunc", "validatePath", "$P0", "$P2"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "encodePath", "$P0", "$L12", "$P2"],
+        ["create", "$L2", "Object"],
+        ["string.concat", "$L2.url", "https://", "$P0.domain", ".egnyte.com/pubapi/v1/fs", "$L12", "?offset=", "$P3", "&count=", "$P4"],
+        ["set", "$L2.method", "GET"],
+        ["create", "$L2.requestHeaders", "Object"],
+        ["string.concat", "$L2.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
+        ["http.requestCall", "$L3", "$L2"],
+        ["callFunc", "validateResponse", "$P0", "$L3"],
+        ["json.parse", "$L4", "$L3.responseBody"],
+        ["if==than", "$L4.is_folder", 0, 2],
+        ["create", "$L5", "Error", "Only folders have children, the given path points to a file", "IllegalArgument"],
+        ["throwError", "$L5"],
+        ["create", "$P1", "Array"],
+        ["if!=than", "$L4.folders", null, 8],
+        ["size", "$L5", "$L4.folders"],
+        ["set", "$L6", 0],
+        ["if<than", "$L6", "$L5", 5],
+        ["get", "$L7", "$L4.folders", "$L6"],
+        ["callFunc", "extractMeta", "$P0", "$L8", "$L7"],
+        ["push", "$P1", "$L8"],
+        ["math.add", "$L6", "$L6", 1],
+        ["jumpRel", -6],
+        ["if!=than", "$L4.files", null, 8],
+        ["size", "$L5", "$L4.files"],
+        ["set", "$L6", 0],
+        ["if<than", "$L6", "$L5", 5],
+        ["get", "$L7", "$L4.files", "$L6"],
+        ["callFunc", "extractMeta", "$P0", "$L8", "$L7"],
+        ["push", "$P1", "$L8"],
+        ["math.add", "$L6", "$L6", 1],
+        ["jumpRel", -6]
+    ],
     "CloudStorage:exists": [
         ["callFunc", "validatePath", "$P0", "$P2"],
         ["callFunc", "checkAuthentication", "$P0"],
@@ -511,6 +546,21 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Egnyte.prototype.getChildrenPage = function (path, offset, limit, callback) {
+        Statistics_1.Statistics.addCall("Egnyte", "getChildrenPage");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
