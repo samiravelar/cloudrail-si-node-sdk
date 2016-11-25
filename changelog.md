@@ -5,6 +5,7 @@
   * Bugfixes to OneDrive and Dropbox concerning files and folders with special characters
   * Fixed an issue where Box would return maximally 100 children of a folder
   * Added a function to retrieve children in chunks to all Cloud Storage services
+  * Updated Google Drive from API version 2 to 3
 
 * **2.10.1**
   * Heroku has been added as a new service implementing Profile. 
