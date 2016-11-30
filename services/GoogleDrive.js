@@ -610,7 +610,8 @@ var SERVICE_CODE = {
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
         ["create", "$L1", "String"],
-        ["string.concat", "$L1", "name = '", "$P2", "'"],
+        ["callFunc", "replace", "$P0", "$L20", "$P2", "'", "\\'"],
+        ["string.concat", "$L1", "name = '", "$L20", "'"],
         ["string.urlEncode", "$L1", "$L1"],
         ["create", "$L10", "String"],
         ["string.concat", "$L10", "&files(createdTime,imageMediaMetadata(height,width),mimeType,modifiedTime,name,parents,size,trashed,id),kind"],
@@ -969,6 +970,20 @@ var SERVICE_CODE = {
         ["json.parse", "$L5", "$L4.responseBody"],
         ["set", "$S0.rootID", "$L5.id"],
         ["set", "$P1", "$L5.id"]
+    ],
+    "replace": [
+        ["string.split", "$L0", "$P2", "$P3"],
+        ["size", "$L1", "$L0"],
+        ["set", "$L2", 0],
+        ["if<than", "$L2", "$L1", 7],
+        ["get", "$L5", "$L0", "$L2"],
+        ["if==than", "$L2", 0, 2],
+        ["set", "$L4", "$L5"],
+        ["jumpRel", 1],
+        ["string.concat", "$L4", "$L4", "$P4", "$L5"],
+        ["math.add", "$L2", "$L2", 1],
+        ["jumpRel", -8],
+        ["set", "$P1", "$L4"]
     ]
 };
 var GoogleDrive = (function () {

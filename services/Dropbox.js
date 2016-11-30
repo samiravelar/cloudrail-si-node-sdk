@@ -254,8 +254,16 @@ var SERVICE_CODE = {
         ["callFunc", "checkParentPathExists", "$P0", "$P2"],
         ["create", "$L0", "Object"],
         ["set", "$L0.path", "$P2"],
+        ["set", "$L0.direct_only", true],
+        ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/sharing/list_shared_links"],
+        ["size", "$L2", "$L1.links"],
+        ["if==than", "$L2", 0, 5],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.path", "$P2"],
         ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"],
-        ["set", "$P1", "$L1.url"]
+        ["set", "$P1", "$L1.url"],
+        ["return"],
+        ["get", "$P1", "$L1", "links", 0, "url"]
     ],
     "CloudStorage:getThumbnail": [
         ["callFunc", "validatePath", "$P0", "$P2"],

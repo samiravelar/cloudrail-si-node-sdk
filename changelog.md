@@ -1,5 +1,10 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.11.1**
+  * Fixed an issue where Box would return incorrect lastModified timestamps
+  * Fixed an issue with file/folder names containing single quotes on Google Drive
+  * Dropbox now returns an already created share link 
+
 * **2.11.0**
   * Added OneDrive for Business as a new service to the Cloud Storage interface
   * Bugfixes to OneDrive and Dropbox concerning files and folders with special characters
