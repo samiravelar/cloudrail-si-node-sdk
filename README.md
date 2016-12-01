@@ -86,6 +86,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 
 * Amazon Web Services S3
 * Microsoft Azure
+* Google Cloud Services
 * Rackspace
 * Backblaze
 
@@ -106,6 +107,7 @@ cloudrail.Settings.setKey("[CloudRail License Key]");
 
 // let bcs = new cloudrail.services.AmazonS3(null, "[accessKeyId]", "[secretAccessKey]", "[region]");
 // let bcs = new cloudrail.services.MicrosoftAzure(null, "[accountName]", "[accessKey]");
+// let bcs = new cloudrail.services.GoogleCloudServices(null, "[clientEmail]", "[privateKey]", "[projectId]");
 // let bcs = new cloudrail.services.Rackspace(null, "[userName]", "[apiKey]", "[region]");
 let bcs = new cloudrail.services.Backblaze(null, "[accountId]", "[appKey]");
 
