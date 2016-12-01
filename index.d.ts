@@ -836,6 +836,18 @@ declare module 'cloudrail-si/Settings' {
 	}
 
 }
+declare module 'cloudrail-si/servicecode/commands/crypt/Sign' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class Sign implements Command {
+	    private identifier;
+	    private signMethod;
+	    constructor(identifier: string, signMethod: string);
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
 declare module 'cloudrail-si/servicecode/Interpreter' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
@@ -2285,6 +2297,32 @@ declare module 'cloudrail-si/services/OneDriveBusiness' {
 	}
 
 }
+declare module 'cloudrail-si/services/GoogleCloudPlatform' {
+	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Bucket } from 'cloudrail-si/types/Bucket';
+	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
+	export class GoogleCloudPlatform implements BusinessCloudStorage {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, clientEmail: string, privateKey: string, projectId: string);
+	    createBucket(bucketName: string, callback: NodeCallback<Bucket>): void;
+	    listBuckets(callback: NodeCallback<Bucket[]>): void;
+	    deleteBucket(bucket: Bucket, callback: NodeCallback<void>): void;
+	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
+	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
+	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
+	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -2330,7 +2368,8 @@ declare module 'cloudrail-si/index' {
 	import { MicrosoftAzure } from 'cloudrail-si/services/MicrosoftAzure';
 	import { AmazonS3 } from 'cloudrail-si/services/AmazonS3';
 	import { Heroku } from 'cloudrail-si/services/Heroku';
-	import { OneDriveBusiness } from 'cloudrail-si/services/OneDriveBusiness'; var _default: {
+	import { OneDriveBusiness } from 'cloudrail-si/services/OneDriveBusiness';
+	import { GoogleCloudPlatform } from 'cloudrail-si/services/GoogleCloudPlatform'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -2340,6 +2379,7 @@ declare module 'cloudrail-si/index' {
 	        "Facebook": typeof Facebook;
 	        "Foursquare": typeof Foursquare;
 	        "GitHub": typeof GitHub;
+	        "GoogleCloudPlatform": typeof GoogleCloudPlatform;
 	        "GoogleDrive": typeof GoogleDrive;
 	        "GooglePlaces": typeof GooglePlaces;
 	        "GooglePlus": typeof GooglePlus;

@@ -52,6 +52,7 @@ var Hmac_1 = require("./commands/crypt/Hmac");
 var Uint8ToData_1 = require("./commands/array/Uint8ToData");
 var DataToUint8_1 = require("./commands/array/DataToUint8");
 var Settings_1 = require("../Settings");
+var Sign_1 = require("./commands/crypt/Sign");
 var Interpreter = (function () {
     function Interpreter(sandbox) {
         this.sandbox = sandbox;
@@ -224,6 +225,7 @@ var COMMAND_LIST = [
     new Hash_1.Hash("hash.sha256", "sha256"),
     new Hmac_1.Hmac("crypt.hmac.sha1", "sha1"),
     new Hmac_1.Hmac("crypt.hmac.sha256", "sha256"),
+    new Sign_1.Sign("crypt.rsa.sha256", "RSA-SHA256"),
     new Base64Encode_1.Base64Encode(),
     new Base64Decode_1.Base64Decode(),
     new StreamToString_1.StreamToString(),

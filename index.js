@@ -44,6 +44,7 @@ var MicrosoftAzure_1 = require("./services/MicrosoftAzure");
 var AmazonS3_1 = require("./services/AmazonS3");
 var Heroku_1 = require("./services/Heroku");
 var OneDriveBusiness_1 = require("./services/OneDriveBusiness");
+var GoogleCloudPlatform_1 = require("./services/GoogleCloudPlatform");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -54,6 +55,7 @@ module.exports = {
         "Facebook": Facebook_1.Facebook,
         "Foursquare": Foursquare_1.Foursquare,
         "GitHub": GitHub_1.GitHub,
+        "GoogleCloudPlatform": GoogleCloudPlatform_1.GoogleCloudPlatform,
         "GoogleDrive": GoogleDrive_1.GoogleDrive,
         "GooglePlaces": GooglePlaces_1.GooglePlaces,
         "GooglePlus": GooglePlus_1.GooglePlus,

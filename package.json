@@ -14,6 +14,7 @@
 		"Facebook",
 		"Foursquare",
 		"GitHub",
+		"GoogleCloudPlatform",
 		"GoogleDrive",
 		"GooglePlaces",
 		"GooglePlus",
@@ -36,12 +37,12 @@
 		"Yahoo",
 		"Yelp"
 	],
-	"description": "The CloudRail SI SDK for Node.JS, a simple, universal, unified API for the most popular cloud services. Supports: AmazonS3, Box, Backblaze, Dropbox, Egnyte, Facebook, Foursquare, GitHub, GoogleDrive, GooglePlaces, GooglePlus, Heroku, Instagram, LinkedIn, MailJet, MicrosoftAzure, MicrosoftLive, Nexmo, OneDrive, OneDriveBusiness, PayPal, Rackspace, SendGrid, Slack, Stripe, Twilio, Twitter, Yahoo, Yelp",
+	"description": "The CloudRail SI SDK for Node.JS, a simple, universal, unified API for the most popular cloud services. Supports: AmazonS3, Box, Backblaze, Dropbox, Egnyte, Facebook, Foursquare, GitHub, GoogleCloudPlatform, GoogleDrive, GooglePlaces, GooglePlus, Heroku, Instagram, LinkedIn, MailJet, MicrosoftAzure, MicrosoftLive, Nexmo, OneDrive, OneDriveBusiness, PayPal, Rackspace, SendGrid, Slack, Stripe, Twilio, Twitter, Yahoo, Yelp",
 	"engines": {
 		"node": ">=4.0.0"
 	},
 	"engineStrict": true,
-	"version": "2.11.1",
+	"version": "2.12.0",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"dependencies": {

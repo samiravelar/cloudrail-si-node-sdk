@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.12.0**
+  * Google Cloud Services added as a new integration in the Business Cloud Storage interface
+  * Fixed an issue with Google Drive reauthentication
+
 * **2.11.1**
   * Fixed an issue where Box would return incorrect lastModified timestamps
   * Fixed an issue with file/folder names containing single quotes on Google Drive

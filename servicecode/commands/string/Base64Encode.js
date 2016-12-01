@@ -24,7 +24,9 @@ var Base64Encode = (function () {
     Base64Encode.encode = function (s, lineBreak, webSafe) {
         var str = Helper_1.Helper.makeBuffer(s).toString("base64");
         if (lineBreak) {
-            str = str.match(/.{3}/g).join("\r\n");
+            var newStr = str.match(/.{64}/g).join("\r\n");
+            newStr += "\r\n" + str.slice(-(str.length % 64));
+            str = newStr;
         }
         if (webSafe) {
             str = str.replace(/\+/g, "-");
