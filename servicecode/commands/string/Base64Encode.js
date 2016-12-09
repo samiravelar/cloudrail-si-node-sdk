@@ -14,10 +14,12 @@ var Base64Encode = (function () {
         Helper_1.Helper.assert(Helper_1.Helper.isString(source) || Helper_1.Helper.isData(source));
         var lineBreak = false;
         var webSafe = false;
-        if (parameters.length >= 3)
+        if (parameters.length >= 3) {
             lineBreak = !!Helper_1.Helper.resolve(environment, parameters[2]);
-        if (parameters.length >= 4)
+        }
+        if (parameters.length >= 4) {
             webSafe = !!Helper_1.Helper.resolve(environment, parameters[3]);
+        }
         var resultString = Base64Encode.encode(source, lineBreak, webSafe);
         environment.setVariable(resultVar, resultString);
     };

@@ -16,8 +16,9 @@ var RedirectReceivers = (function () {
                     res.setHeader("Content-Type", "text/html");
                     res.end(respHtml);
                     server_1.close(function () { return callback(undefined, req.url); });
-                    for (var socketId in sockets_1)
+                    for (var socketId in sockets_1) {
                         sockets_1[socketId].destroy();
+                    }
                 });
                 server_1.on("connection", function (socket) {
                     var socketId = nextSocketId_1++;

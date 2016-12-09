@@ -115,16 +115,19 @@ var Twilio = (function () {
         });
     };
     Twilio.prototype.saveAsString = function () {
+        Statistics_1.Statistics.addCall("Twilio", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
     Twilio.prototype.loadAsString = function (savedState) {
+        Statistics_1.Statistics.addCall("Twilio", "loadAsString");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
     Twilio.prototype.resumeLogin = function (executionState, callback) {
+        Statistics_1.Statistics.addCall("Twilio", "resumeLogin");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);

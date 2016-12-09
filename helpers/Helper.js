@@ -116,7 +116,7 @@ var Helper = (function () {
     Helper.safeAscii = function (str) {
         return str.toString().replace(/[\u007f-\uffff]/g, function (c) { return '\\u' + ('000' + c.charCodeAt(0).toString(16)).slice(-4); });
     };
-    Helper.makeRequest = function (urlString, headers, body, method) {
+    Helper.makeRequest = function (urlString, headers, body, method, timeout) {
         var urlParsed = url.parse(urlString, true);
         var request = urlParsed.protocol === "http:" ? http : https;
         if (headers) {
@@ -132,7 +132,8 @@ var Helper = (function () {
             path: urlParsed.path,
             method: method,
             headers: headers,
-            auth: urlParsed.auth
+            auth: urlParsed.auth,
+            timeout: timeout
         };
         return new Promise(function (resolve, reject) {
             var req = request.request(options, function (res) {

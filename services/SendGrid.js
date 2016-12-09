@@ -139,16 +139,19 @@ var SendGrid = (function () {
         });
     };
     SendGrid.prototype.saveAsString = function () {
+        Statistics_1.Statistics.addCall("SendGrid", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
     SendGrid.prototype.loadAsString = function (savedState) {
+        Statistics_1.Statistics.addCall("SendGrid", "loadAsString");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
     SendGrid.prototype.resumeLogin = function (executionState, callback) {
+        Statistics_1.Statistics.addCall("SendGrid", "resumeLogin");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);

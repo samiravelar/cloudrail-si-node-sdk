@@ -516,8 +516,8 @@ var SERVICE_CODE = {
         ["size", "$L2", "$L1"],
         ["if==than", "$L2", 2, 10],
         ["get", "$L3", "$L1", 1],
-        ["string.slit", "$L4", "$L3", ":"],
-        ["get", "$L5", "$l4", 0],
+        ["string.split", "$L4", "$L3", ":"],
+        ["get", "$L5", "$L4", 0],
         ["get", "$L10", "$L1", 0],
         ["string.concat", "$L10", "$L10", "Z"],
         ["create", "$L11", "Date", "$L10"],
@@ -847,16 +847,19 @@ var Box = (function () {
         });
     };
     Box.prototype.saveAsString = function () {
+        Statistics_1.Statistics.addCall("Box", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
     Box.prototype.loadAsString = function (savedState) {
+        Statistics_1.Statistics.addCall("Box", "loadAsString");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
     Box.prototype.resumeLogin = function (executionState, callback) {
+        Statistics_1.Statistics.addCall("Box", "resumeLogin");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);

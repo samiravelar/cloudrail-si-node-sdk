@@ -501,6 +501,14 @@ declare module 'cloudrail-si/errors/UserError' {
 	}
 
 }
+declare module 'cloudrail-si/Settings' {
+	export class Settings {
+	    static licenseKey: string;
+	    static block: boolean;
+	    static setKey(key: string): void;
+	}
+
+}
 declare module 'cloudrail-si/servicecode/commands/AwaitCodeRedirect' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
@@ -760,20 +768,24 @@ declare module 'cloudrail-si/servicecode/commands/stream/DataToStream' {
 declare module 'cloudrail-si/servicecode/commands/xml/Parse' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	import { XMLElement } from 'cloudrail-si/helpers/Helper';
 	import * as Promise from "bluebird";
 	export class Parse implements Command {
 	    getIdentifier(): string;
 	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
+	    static parse(input: string): XMLElement;
 	}
 
 }
 declare module 'cloudrail-si/servicecode/commands/xml/Stringify' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	import { XMLElement } from 'cloudrail-si/helpers/Helper';
 	import * as Promise from "bluebird";
 	export class Stringify implements Command {
 	    getIdentifier(): string;
 	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
+	    static stringify(input: XMLElement): string;
 	}
 
 }
@@ -825,14 +837,6 @@ declare module 'cloudrail-si/servicecode/commands/array/DataToUint8' {
 	export class DataToUint8 implements Command {
 	    getIdentifier(): string;
 	    execute(environment: Sandbox, parameters: any[]): void;
-	}
-
-}
-declare module 'cloudrail-si/Settings' {
-	export class Settings {
-	    static licenseKey: string;
-	    static block: boolean;
-	    static setKey(key: string): void;
 	}
 
 }
@@ -999,7 +1003,7 @@ declare module 'cloudrail-si/helpers/Helper' {
 	    static dumpStream(stream: stream.Readable, targetEncoding?: string, toBuffer?: boolean): Promise<string | Buffer>;
 	    static streamify(val: any, sourceEncoding?: string): stream.Readable;
 	    static safeAscii(str: string): string;
-	    static makeRequest(urlString: string, headers: ObjectMap<string>, body: stream.Readable, method: HttpMethod): Promise<http.IncomingMessage>;
+	    static makeRequest(urlString: string, headers: ObjectMap<string>, body: stream.Readable, method: HttpMethod, timeout?: number): Promise<http.IncomingMessage>;
 	    static lowerCaseFirstLetter(str: string): string;
 	    static upperCaseFirstLetter(str: string): string;
 	    static checkSandboxError(ip: Interpreter): void;
@@ -1304,6 +1308,7 @@ declare module 'cloudrail-si/interfaces/Social' {
 	import { Authenticating } from 'cloudrail-si/interfaces/basic/Authenticating';
 	import { Persistable } from 'cloudrail-si/interfaces/platformSpecific/Persistable';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	/**
 	 * Interface for interaction with social networks
 	 */
@@ -1320,6 +1325,26 @@ declare module 'cloudrail-si/interfaces/Social' {
 	     * @return A (possibly empty) list of IDs
 	     */
 	    getConnections: (callback: NodeCallback<string[]>) => void;
+	    /**
+	     * Creates a new post/update to the currently logged in user's wall/stream/etc posting an
+	     * image and a message.
+	     * Error is set if the message is too long for the service instance.
+	     *
+	     * @param message The message that shall be posted together with the image.
+	     * @param image Stream containing the image content.
+	     */
+	    postImage: (message: string, image: stream.Readable, callback: NodeCallback<void>) => void;
+	    /**
+	     * Creates a new post/update to the currently logged in user's wall/stream/etc posting a
+	     * video and a message.
+	     * Error is set if the message is too long for the service instance.
+	     *
+	     * @param message The message that shall be posted together with the video.
+	     * @param video Stream containing the video content.
+	     * @param size The size of the video in bytes.
+	     * @param mimeType The mime type of the video, for instance video/mp4.
+	     */
+	    postVideo: (message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>) => void;
 	}
 
 }
@@ -1329,6 +1354,7 @@ declare module 'cloudrail-si/services/Facebook' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
 	export class Facebook implements Profile, Social {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -1345,6 +1371,8 @@ declare module 'cloudrail-si/services/Facebook' {
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    postUpdate(content: string, callback: NodeCallback<void>): void;
+	    postImage(message: string, image: stream.Readable, callback: NodeCallback<void>): void;
+	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
 	    getConnections(callback: NodeCallback<string[]>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -1938,6 +1966,7 @@ declare module 'cloudrail-si/services/Twitter' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	import stream = require("stream");
 	export class Twitter implements Profile, Social {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -1954,6 +1983,8 @@ declare module 'cloudrail-si/services/Twitter' {
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    postUpdate(content: string, callback: NodeCallback<void>): void;
+	    postImage(message: string, image: stream.Readable, callback: NodeCallback<void>): void;
+	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
 	    getConnections(callback: NodeCallback<string[]>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;

@@ -22,12 +22,19 @@ var SERVICE_CODE = {
         ["create", "$L0", "Error", "The status is not allowed to contain more than 140 characters.", "IllegalArgument"],
         ["throwError", "$L0"],
         ["callFunc", "checkAuthentication", "$P0"],
-        ["create", "$L3", "String"],
-        ["string.urlEncode", "$L3", "$P1"],
-        ["callFunc", "urlEncode", "$P0", "$L5", "$L3"],
+        ["callFunc", "post", "$P0", "$P1"]
+    ],
+    "Social:postImage": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L0", "Error", "The message is not allowed to be null", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["if==than", "$P2", null, 2],
+        ["create", "$L0", "Error", "The image is not allowed to be null", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "POST"],
-        ["string.concat", "$L0.url", "https://api.twitter.com/1.1/statuses/update.json"],
+        ["set", "$L0.url", "https://upload.twitter.com/1.1/media/upload.json"],
         ["create", "$L1", "Array"],
         ["push", "$L1", "oauth_consumer_key"],
         ["push", "$L1", "oauth_nonce"],
@@ -35,15 +42,34 @@ var SERVICE_CODE = {
         ["push", "$L1", "oauth_timestamp"],
         ["push", "$L1", "oauth_token"],
         ["push", "$L1", "oauth_version"],
-        ["push", "$L1", "status"],
-        ["create", "$L4", "Object"],
-        ["set", "$L4.status", "$P1"],
-        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L4"],
-        ["string.concat", "$L21", "status=", "$L5"],
-        ["stream.stringToStream", "$L0.requestBody", "$L21"],
-        ["set", "$L0.requestHeaders.Content-Type", "application/x-www-form-urlencoded"],
-        ["http.requestCall", "$L1", "$L0"],
-        ["callFunc", "validateResponse", "$P0", "$L1"]
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1"],
+        ["create", "$L2", "String", "AaB03xh3u2hfiugiuhuo34gwhoughugheruighui34giuwrgh"],
+        ["string.concat", "$L0.requestHeaders.Content-Type", "multipart/form-data; boundary=", "$L2"],
+        ["string.concat", "$L3", "--", "$L2", "\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Disposition: form-data; name=\"media\"\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Type: application/octet-stream\r\n\r\n"],
+        ["stream.stringToStream", "$L3", "$L3"],
+        ["string.concat", "$L4", "\r\n--", "$L2", "--"],
+        ["stream.stringToStream", "$L4", "$L4"],
+        ["stream.makeJoinedStream", "$L0.requestBody", "$L3", "$P2", "$L4"],
+        ["http.requestCall", "$L5", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L5"],
+        ["json.parse", "$L6", "$L5.responseBody"],
+        ["set", "$L7", "$L6.media_id_string"],
+        ["callFunc", "post", "$P0", "$P1", "$L7"]
+    ],
+    "Social:postVideo": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L0", "Error", "The message is not allowed to be null", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["if==than", "$P2", null, 2],
+        ["create", "$L0", "Error", "The image is not allowed to be null", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "initUpload", "$P0", "$L0", "$P3", "$P4"],
+        ["callFunc", "performUpload", "$P0", "$L0", "$P2", "$P3"],
+        ["callFunc", "finishUpload", "$P0", "$L0"],
+        ["callFunc", "post", "$P0", "$P1", "$L0"]
     ],
     "Social:getConnections": [
         ["callFunc", "checkAuthentication", "$P0"],
@@ -145,6 +171,127 @@ var SERVICE_CODE = {
         ["create", "$P0.userInfo.dateOfBirth", "DateOfBirth"],
         ["set", "$P0.userInfo.locale", "$L2.lang"],
         ["set", "$P0.userInfo.pictureURL", "$L2.profile_image_url"]
+    ],
+    "initUpload": [
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["string.concat", "$L0.url", "https://upload.twitter.com/1.1/media/upload.json"],
+        ["create", "$L1", "Array"],
+        ["push", "$L1", "command"],
+        ["push", "$L1", "media_type"],
+        ["push", "$L1", "oauth_consumer_key"],
+        ["push", "$L1", "oauth_nonce"],
+        ["push", "$L1", "oauth_signature_method"],
+        ["push", "$L1", "oauth_timestamp"],
+        ["push", "$L1", "oauth_token"],
+        ["push", "$L1", "oauth_version"],
+        ["push", "$L1", "total_bytes"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.command", "INIT"],
+        ["set", "$L2.media_type", "$P3"],
+        ["string.concat", "$L2.total_bytes", "$P2", ""],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L2"],
+        ["string.urlEncode", "$L3", "$P3"],
+        ["string.concat", "$L3", "command=INIT&media_type=", "$L3", "&total_bytes=", "$P2"],
+        ["stream.stringToStream", "$L0.requestBody", "$L3"],
+        ["set", "$L0.requestHeaders.Content-Type", "application/x-www-form-urlencoded"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["json.parse", "$L5", "$L4.responseBody"],
+        ["set", "$P1", "$L5.media_id_string"]
+    ],
+    "performUpload": [
+        ["create", "$L20", "Number", 2097152],
+        ["create", "$L21", "Number", 0],
+        ["create", "$L22", "Number", 1],
+        ["if<than", "$L22", "$P3", 35],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["string.concat", "$L0.url", "https://upload.twitter.com/1.1/media/upload.json"],
+        ["create", "$L1", "Array"],
+        ["push", "$L1", "oauth_consumer_key"],
+        ["push", "$L1", "oauth_nonce"],
+        ["push", "$L1", "oauth_signature_method"],
+        ["push", "$L1", "oauth_timestamp"],
+        ["push", "$L1", "oauth_token"],
+        ["push", "$L1", "oauth_version"],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1"],
+        ["create", "$L2", "String", "AaB03xh3u2hfiugiuhuo34gwhoughugheruighui34giuwrgh"],
+        ["string.concat", "$L3", "--", "$L2", "\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Disposition: form-data; name=\"command\"\r\n\r\n"],
+        ["string.concat", "$L3", "$L3", "APPEND\r\n"],
+        ["string.concat", "$L3", "$L3", "--", "$L2", "\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Disposition: form-data; name=\"media_id\"\r\n\r\n"],
+        ["string.concat", "$L3", "$L3", "$P1", "\r\n"],
+        ["string.concat", "$L3", "$L3", "--", "$L2", "\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Disposition: form-data; name=\"segment_index\"\r\n\r\n"],
+        ["string.concat", "$L3", "$L3", "$L21", "\r\n"],
+        ["string.concat", "$L3", "$L3", "--", "$L2", "\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Disposition: form-data; name=\"media\"\r\n"],
+        ["string.concat", "$L3", "$L3", "Content-Type: application/octet-stream\r\n\r\n"],
+        ["stream.stringToStream", "$L3", "$L3"],
+        ["stream.makeLimitedStream", "$L23", "$P2", "$L20"],
+        ["string.concat", "$L4", "\r\n--", "$L2", "--"],
+        ["stream.stringToStream", "$L4", "$L4"],
+        ["stream.makeJoinedStream", "$L0.requestBody", "$L3", "$L23", "$L4"],
+        ["string.concat", "$L0.requestHeaders.Content-Type", "multipart/form-data; boundary=", "$L2"],
+        ["http.requestCall", "$L5", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L5"],
+        ["math.add", "$L22", "$L22", "$L20"],
+        ["math.add", "$L21", "$L21", 1],
+        ["jumpRel", -36]
+    ],
+    "finishUpload": [
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["string.concat", "$L0.url", "https://upload.twitter.com/1.1/media/upload.json"],
+        ["create", "$L1", "Array"],
+        ["push", "$L1", "command"],
+        ["push", "$L1", "media_id"],
+        ["push", "$L1", "oauth_consumer_key"],
+        ["push", "$L1", "oauth_nonce"],
+        ["push", "$L1", "oauth_signature_method"],
+        ["push", "$L1", "oauth_timestamp"],
+        ["push", "$L1", "oauth_token"],
+        ["push", "$L1", "oauth_version"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.command", "FINALIZE"],
+        ["set", "$L2.media_id", "$P1"],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L2"],
+        ["string.concat", "$L3", "command=FINALIZE&media_id=", "$P1"],
+        ["stream.stringToStream", "$L0.requestBody", "$L3"],
+        ["set", "$L0.requestHeaders.Content-Type", "application/x-www-form-urlencoded"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"]
+    ],
+    "post": [
+        ["string.urlEncode", "$L3", "$P1"],
+        ["callFunc", "urlEncode", "$P0", "$L5", "$L3"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["string.concat", "$L0.url", "https://api.twitter.com/1.1/statuses/update.json"],
+        ["create", "$L1", "Array"],
+        ["if!=than", "$P2", null, 1],
+        ["push", "$L1", "media_ids"],
+        ["push", "$L1", "oauth_consumer_key"],
+        ["push", "$L1", "oauth_nonce"],
+        ["push", "$L1", "oauth_signature_method"],
+        ["push", "$L1", "oauth_timestamp"],
+        ["push", "$L1", "oauth_token"],
+        ["push", "$L1", "oauth_version"],
+        ["push", "$L1", "status"],
+        ["create", "$L4", "Object"],
+        ["set", "$L4.status", "$P1"],
+        ["if!=than", "$P2", null, 1],
+        ["set", "$L4.media_ids", "$P2"],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L4"],
+        ["string.concat", "$L21", "status=", "$L5"],
+        ["if!=than", "$P2", null, 1],
+        ["string.concat", "$L21", "$L21", "&media_ids=", "$P2"],
+        ["stream.stringToStream", "$L0.requestBody", "$L21"],
+        ["set", "$L0.requestHeaders.Content-Type", "application/x-www-form-urlencoded"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"]
     ],
     "oAuth1:signRequest": [
         ["if==than", "$P1.requestHeaders", null, 1],
@@ -315,14 +462,8 @@ var SERVICE_CODE = {
         ["string.urlDecode", "$S0.oauthTokenSecret", "$L13.oauth_token_secret"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 9],
-        ["if==than", "$P1.code", 401, 2],
-        ["create", "$L3", "Error", "Invalid credentials or access rights. Make sure that your application has read and write permission.", "Authentication"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 503, 2],
-        ["create", "$L3", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
-        ["throwError", "$L3"],
-        ["string.concat", "$L2", "$P1.code", " - ", "$P1.message"],
+        ["if>=than", "$P1.code", 400, 3],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"]
     ]
@@ -505,6 +646,34 @@ var Twitter = (function () {
                 callback(err);
         });
     };
+    Twitter.prototype.postImage = function (message, image, callback) {
+        Statistics_1.Statistics.addCall("Twitter", "postImage");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postImage", this.interpreterStorage, message, image).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Twitter.prototype.postVideo = function (message, video, size, mimeType, callback) {
+        Statistics_1.Statistics.addCall("Twitter", "postVideo");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postVideo", this.interpreterStorage, message, video, size, mimeType).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     Twitter.prototype.getConnections = function (callback) {
         Statistics_1.Statistics.addCall("Twitter", "getConnections");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
@@ -521,16 +690,19 @@ var Twitter = (function () {
         });
     };
     Twitter.prototype.saveAsString = function () {
+        Statistics_1.Statistics.addCall("Twitter", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
     Twitter.prototype.loadAsString = function (savedState) {
+        Statistics_1.Statistics.addCall("Twitter", "loadAsString");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
     Twitter.prototype.resumeLogin = function (executionState, callback) {
+        Statistics_1.Statistics.addCall("Twitter", "resumeLogin");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);

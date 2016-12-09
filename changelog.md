@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.13.0**
+  * Added functions to post pictures and videos to a user's wall to the Social interface, Facebook and Twitter have been extended accordingly
+  * Added FacebookPage as a new service to the Social interface. It allows posting updates/pictures/videos to a Facebook page
+
 * **2.12.0**
   * Google Cloud Services added as a new integration in the Business Cloud Storage interface
   * Fixed an issue with Google Drive reauthentication

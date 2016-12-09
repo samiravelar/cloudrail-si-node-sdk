@@ -16,22 +16,22 @@ var Parse = (function () {
         if (Helper_1.Helper.isStream(input)) {
             return Helper_1.Helper.dumpStream(input).then(function (stringInput) {
                 Helper_1.Helper.assert(Helper_1.Helper.isString(stringInput));
-                var parsed = parse(stringInput);
+                var parsed = Parse.parse(stringInput);
                 environment.setVariable(resultVar, parsed);
             });
         }
         else {
-            var parsed = parse(input);
+            var parsed = Parse.parse(input);
             environment.setVariable(resultVar, parsed);
         }
+    };
+    Parse.parse = function (input) {
+        var element = new xmldoc.XmlDocument(input);
+        return parseElement(element);
     };
     return Parse;
 }());
 exports.Parse = Parse;
-function parse(input) {
-    var element = new xmldoc.XmlDocument(input);
-    return parseElement(element);
-}
 function parseElement(element) {
     return {
         attributes: element.attr,

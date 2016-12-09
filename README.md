@@ -167,13 +167,15 @@ profile.getEmail((err, email) => {
 ---
 ### Social Interaction Interface:
 
-* Facebook
+* Facebook (interacts with a user)
+* Facebook Pages (interacts with a page)
 * Twitter
 
 #### Features
 
 * Get the IDs of a user's friends/followers. Works well with the Profile interface's "login with" to check if two of your users are friends on a platform
-* Post to a user's wall
+* Post messages to a wall/stream
+* Post pictures and videos to a wall/stream
 
 [Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-social)
 #### Code Example:
@@ -183,16 +185,19 @@ const cloudrail = require("cloudrail-si");
 cloudrail.Settings.setKey("[CloudRail License Key]");
 
 // let social = new cloudrail.services.Facebook(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
+// let social = new cloudrail.services.FacebookPage(redirectReceiver, "[pageName]", "[clientIdentifier]", "[clientSecret]", "[redirectUri]", "[state]");
 let social = new cloudrail.services.Twitter(redirectReceiver, "[clientIdentifier]", "[clientSecret]", "[redirectUri]");
-
-social.getConnections((err, connIds) => {
-    if (err) throw err;
-    console.log("User has " + connIds.length + " connections");
-});
 
 social.postUpdate("Hello from CloudRail", (err) => {
     if (err) throw err;
     console.log("Update posted");
+});
+
+let fileStream = fs.createReadStream("video.mp4");
+let size = fs.statSync("video.mp4").size;
+social.postVideo("This is a test video", fileStream, size, "video/mp4", (err) => {
+    if (err) throw err;
+    console.log("Video posted");
 });
 ```
 ---

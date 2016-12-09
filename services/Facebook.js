@@ -5,6 +5,9 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["set", "$P0.boundary", "Amgrmg43ghg3g39glv0k2ldk"]
+    ],
     "Social:postUpdate": [
         ["if==than", "$P1", null, 2],
         ["create", "$L0", "Error", "The content is not allowed to be null.", "IllegalArgument"],
@@ -22,6 +25,63 @@ var SERVICE_CODE = {
         ["create", "$L2", "Object"],
         ["http.requestCall", "$L2", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L2"]
+    ],
+    "Social:postImage": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L0", "Error", "The message is not allowed to be null.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["if==than", "$P2", null, 2],
+        ["create", "$L0", "Error", "The image is not allowed to be null.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["set", "$L0.url", "https://graph.facebook.com/v2.8/me/photos"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Content-Type", "multipart/form-data; boundary=", "$P0.boundary"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["string.concat", "$L1", "--", "$P0.boundary", "\r\n"],
+        ["string.concat", "$L1", "$L1", "Content-Disposition: form-data; name=\"caption\"\r\n\r\n"],
+        ["string.concat", "$L1", "$L1", "$P1", "\r\n"],
+        ["string.concat", "$L1", "$L1", "--", "$P0.boundary", "\r\n"],
+        ["string.concat", "$L1", "$L1", "Content-Disposition: form-data; name=\"source\"; filename=\"somename\"\r\n"],
+        ["string.concat", "$L1", "$L1", "Content-Transfer-Encoding: binary\r\n\r\n"],
+        ["stream.stringToStream", "$L1", "$L1"],
+        ["string.concat", "$L2", "\r\n--", "$P0.boundary", "--"],
+        ["stream.stringToStream", "$L2", "$L2"],
+        ["stream.makeJoinedStream", "$L0.requestBody", "$L1", "$P2", "$L2"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"]
+    ],
+    "Social:postVideo": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L0", "Error", "The message is not allowed to be null.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["if==than", "$P2", null, 2],
+        ["create", "$L0", "Error", "The image is not allowed to be null.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["set", "$L0.url", "https://graph-video.facebook.com/v2.8/me/videos"],
+        ["string.indexOf", "$L20", "$P4", "/"],
+        ["math.add", "$L20", "$L20", 1],
+        ["string.substring", "$L21", "$P4", "$L20"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Content-Type", "multipart/form-data; boundary=", "$P0.boundary"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["string.concat", "$L1", "--", "$P0.boundary", "\r\n"],
+        ["string.concat", "$L1", "$L1", "Content-Disposition: form-data; name=\"description\"\r\n\r\n"],
+        ["string.concat", "$L1", "$L1", "$P1", "\r\n"],
+        ["string.concat", "$L1", "$L1", "--", "$P0.boundary", "\r\n"],
+        ["string.concat", "$L1", "$L1", "Content-Disposition: form-data; name=\"source\"; filename=\"somename.", "$L21", "\"\r\n"],
+        ["string.concat", "$L1", "$L1", "Content-Transfer-Encoding: binary\r\n\r\n"],
+        ["stream.stringToStream", "$L1", "$L1"],
+        ["string.concat", "$L2", "\r\n--", "$P0.boundary", "--"],
+        ["stream.stringToStream", "$L2", "$L2"],
+        ["stream.makeJoinedStream", "$L0.requestBody", "$L1", "$P2", "$L2"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"]
     ],
     "Social:getConnections": [
         ["callFunc", "checkAuthentication", "$P0"],
@@ -168,7 +228,7 @@ var SERVICE_CODE = {
         ["create", "$L0", "String"],
         ["create", "$L1", "String"],
         ["string.urlEncode", "$L3", "$P0.redirectUri"],
-        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=public_profile%2Cemail%2Cuser_birthday%2Cuser_about_me%2Cpublish_actions%2Cuser_friends"],
+        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=public_profile%2Cemail%2Cuser_birthday%2Cuser_about_me%2Cpublish_actions%2Cuser_friends%2Cuser_photos"],
         ["awaitCodeRedirect", "$L2", "$L0"],
         ["string.concat", "$L1", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
         ["create", "$L5", "Object"],
@@ -179,24 +239,21 @@ var SERVICE_CODE = {
         ["stream.streamToString", "$L7", "$L6.responseBody"],
         ["json.parse", "$L8", "$L7"],
         ["set", "$S0.accessToken", "$L8.access_token"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["string.concat", "$L0.url", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret", "&grant_type=fb_exchange_token&fb_exchange_token=", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["set", "$S0.accessToken", "$L2.access_token"],
         ["create", "$L10", "Date"],
-        ["math.multiply", "$L9", "$L8.expires_in", 1000],
+        ["math.multiply", "$L9", "$L2.expires_in", 1000],
         ["math.add", "$L9", "$L9", "$L10.time", -60000],
         ["set", "$S0.expireIn", "$L9"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 13],
-        ["json.parse", "$L0", "$P1.responseBody"],
-        ["set", "$L2", "$L0.error_user_msg"],
-        ["if==than", "$P1.code", 401, 2],
-        ["create", "$L3", "Error", "$L2", "Authentication"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 404, 2],
-        ["create", "$L3", "Error", "$L2", "NotFound"],
-        ["throwError", "$L3"],
-        ["if==than", "$P1.code", 503, 2],
-        ["create", "$L3", "Error", "$L2", "ServiceUnavailable"],
-        ["throwError", "$L3"],
+        ["if>=than", "$P1.code", 400, 3],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"]
     ]
@@ -380,6 +437,34 @@ var Facebook = (function () {
                 callback(err);
         });
     };
+    Facebook.prototype.postImage = function (message, image, callback) {
+        Statistics_1.Statistics.addCall("Facebook", "postImage");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postImage", this.interpreterStorage, message, image).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Facebook.prototype.postVideo = function (message, video, size, mimeType, callback) {
+        Statistics_1.Statistics.addCall("Facebook", "postVideo");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Social:postVideo", this.interpreterStorage, message, video, size, mimeType).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     Facebook.prototype.getConnections = function (callback) {
         Statistics_1.Statistics.addCall("Facebook", "getConnections");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
@@ -396,16 +481,19 @@ var Facebook = (function () {
         });
     };
     Facebook.prototype.saveAsString = function () {
+        Statistics_1.Statistics.addCall("Facebook", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
     Facebook.prototype.loadAsString = function (savedState) {
+        Statistics_1.Statistics.addCall("Facebook", "loadAsString");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
     Facebook.prototype.resumeLogin = function (executionState, callback) {
+        Statistics_1.Statistics.addCall("Facebook", "resumeLogin");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);

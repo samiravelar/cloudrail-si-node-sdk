@@ -270,16 +270,19 @@ var Heroku = (function () {
         });
     };
     Heroku.prototype.saveAsString = function () {
+        Statistics_1.Statistics.addCall("Heroku", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         return ip.saveAsString();
     };
     Heroku.prototype.loadAsString = function (savedState) {
+        Statistics_1.Statistics.addCall("Heroku", "loadAsString");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         var ip = new Interpreter_1.Interpreter(sandbox);
         ip.loadAsString(savedState);
         this.persistentStorage = sandbox.persistentStorage;
     };
     Heroku.prototype.resumeLogin = function (executionState, callback) {
+        Statistics_1.Statistics.addCall("Heroku", "resumeLogin");
         var sandbox = new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage);
         sandbox.loadStateFromString(executionState);
         var ip = new Interpreter_1.Interpreter(sandbox);
