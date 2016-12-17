@@ -449,6 +449,30 @@ var SERVICE_CODE = {
     "Authenticating:logout": [
         ["set", "$S0.accessToken", null]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "https://api.onedrive.com/v1.0"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if!=than", "$P2.appendAuthorization", 0, 6],
+        ["callFunc", "checkAuth", "$P0"],
+        ["string.indexOf", "$L2", "$P2.url", "?"],
+        ["if==than", "$L2", -1, 2],
+        ["string.concat", "$L0.url", "$L0.url", "?access_token=", "$S0.accessToken"],
+        ["jumpRel", 1],
+        ["string.concat", "$L0.url", "$L0.url", "&access_token=", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "getParentPath": [
         ["create", "$L0", "Number"],
         ["string.lastIndexOf", "$L0", "$P2", "/"],
@@ -981,6 +1005,21 @@ var OneDrive = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    OneDrive.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

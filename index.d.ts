@@ -339,6 +339,163 @@ declare module 'cloudrail-si/types/BusinessFileMetaData' {
 	}
 
 }
+declare module 'cloudrail-si/servicecode/commands/xml/Stringify' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	import { XMLElement } from 'cloudrail-si/helpers/Helper';
+	import * as Promise from "bluebird";
+	export class Stringify implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
+	    static stringify(input: XMLElement): string;
+	}
+
+}
+declare module 'cloudrail-si/types/AdvancedRequestSpecification' {
+	import { ObjectMap, HttpMethod, XMLElement } from 'cloudrail-si/helpers/Helper';
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	import stream = require("stream");
+	export class AdvancedRequestSpecification extends SandboxObject {
+	    private url;
+	    private method;
+	    private body;
+	    private headers;
+	    private appendAuthorization;
+	    private checkErrors;
+	    private appendBaseUrl;
+	    /**
+	     * Constructs a new advanced request specification
+	     *
+	     * @param url The request's URL
+	     */
+	    constructor(url: string);
+	    /**
+	     * Specify the request's method, default is GET
+	     *
+	     * @param method The HTTP method
+	     */
+	    setMethod(method: HttpMethod): void;
+	    /**
+	     * Specify the body to sent with this request providing a readable stream
+	     *
+	     * @param body The request's body
+	     */
+	    setBodyAsStream(body: stream.Readable): void;
+	    /**
+	     * Specify the body to sent with this request providing a string
+	     *
+	     * @param body The request's body
+	     */
+	    setBodyAsString(body: string): void;
+	    /**
+	     * Specify the body to sent with this request providing an object that will be converted to JSON.
+	     *
+	     * @param body The request's body
+	     */
+	    setBodyStringifyJson(body: any): void;
+	    /**
+	     * Specify the body to sent with this request providing an object that will be converted to XML.
+	     * The object has to have the following structure:
+	     *
+	     * type XMLElement = {
+	     *      attributes: Object<string, string>,
+	     *      text: string,
+	     *      name: string,
+	     *      children: XMLElement[]
+	     * };
+	     *
+	     * @param body The request's body
+	     */
+	    setBodyStringifyXml(body: XMLElement): void;
+	    /**
+	     * Specify the request's (additional) headers
+	     *
+	     * @param headers An object specifying headers
+	     */
+	    setHeaders(headers: ObjectMap<string>): void;
+	    /**
+	     * Disable appending authorization information to the request
+	     */
+	    disableAuthorization(): void;
+	    /**
+	     * Disable checking the request's response for errors
+	     */
+	    disableErrorChecking(): void;
+	    /**
+	     * Disable appending the base URL
+	     */
+	    disableBaseUrl(): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/xml/Parse' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	import { XMLElement } from 'cloudrail-si/helpers/Helper';
+	import * as Promise from "bluebird";
+	export class Parse implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
+	    static parse(input: string): XMLElement;
+	}
+
+}
+declare module 'cloudrail-si/types/AdvancedRequestResponse' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	import stream = require("stream");
+	import { ObjectMap, NodeCallback, XMLElement } from 'cloudrail-si/helpers/Helper';
+	export class AdvancedRequestResponse extends SandboxObject {
+	    private body;
+	    private headers;
+	    private status;
+	    private _stringBody;
+	    /**
+	     * Returns the response's body as a readable stream
+	     *
+	     * @return {stream.Readable} The response's body
+	     */
+	    getBodyAsStream(): stream.Readable;
+	    /**
+	     * Returns the response's body as a string
+	     *
+	     * @return {string} The response's body
+	     */
+	    getBodyAsString(callback: NodeCallback<string>): void;
+	    /**
+	     * Returns the response's body as an object resulting from JSON parsing it.
+	     *
+	     * @return The response's body
+	     */
+	    getBodyJsonParsed(callback: NodeCallback<any>): void;
+	    /**
+	     * Returns the response's body as an object resulting from XML parsing it.
+	     * The object has the following structure:
+	     *
+	     * type XMLElement = {
+	     *      attributes: Object<string, string>,
+	     *      text: string,
+	     *      name: string,
+	     *      children: XMLElement[]
+	     * };
+	     *
+	     * @return The response's body
+	     */
+	    getBodyXmlParsed(callback: NodeCallback<XMLElement>): void;
+	    /**
+	     * Returns the response headers as an object
+	     *
+	     * @return {ObjectMap<string>} The response's headers
+	     */
+	    getHeaders(): ObjectMap<string>;
+	    /**
+	     * Returns the response status code as a number
+	     *
+	     * @return {number} The response's status code
+	     */
+	    getStatus(): number;
+	}
+
+}
 declare module 'cloudrail-si/types/Types' {
 	import { ObjectMap } from 'cloudrail-si/helpers/Helper';
 	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
@@ -765,30 +922,6 @@ declare module 'cloudrail-si/servicecode/commands/stream/DataToStream' {
 	}
 
 }
-declare module 'cloudrail-si/servicecode/commands/xml/Parse' {
-	import { Command } from 'cloudrail-si/servicecode/Command';
-	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
-	import { XMLElement } from 'cloudrail-si/helpers/Helper';
-	import * as Promise from "bluebird";
-	export class Parse implements Command {
-	    getIdentifier(): string;
-	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
-	    static parse(input: string): XMLElement;
-	}
-
-}
-declare module 'cloudrail-si/servicecode/commands/xml/Stringify' {
-	import { Command } from 'cloudrail-si/servicecode/Command';
-	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
-	import { XMLElement } from 'cloudrail-si/helpers/Helper';
-	import * as Promise from "bluebird";
-	export class Stringify implements Command {
-	    getIdentifier(): string;
-	    execute(environment: Sandbox, parameters: any[]): Promise<void> | void;
-	    static stringify(input: XMLElement): string;
-	}
-
-}
 declare module 'cloudrail-si/servicecode/commands/string/Base64Decode' {
 	import { Command } from 'cloudrail-si/servicecode/Command';
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
@@ -954,6 +1087,7 @@ declare module 'cloudrail-si/helpers/Helper' {
 	 * Valid Http methods
 	 */
 	export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "HEAD" | "OPTIONS" | "TRACE";
+	export const httpMethods: string[];
 	/**
 	 * A typed object
 	 */
@@ -1037,6 +1171,15 @@ declare module 'cloudrail-si/interfaces/basic/Authenticating' {
 	}
 
 }
+declare module 'cloudrail-si/interfaces/basic/AdvancedRequestSupporter' {
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	export interface AdvancedRequestSupporter {
+	    advancedRequest: (specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>) => void;
+	}
+
+}
 declare module 'cloudrail-si/interfaces/CloudStorage' {
 	import { Persistable } from 'cloudrail-si/interfaces/platformSpecific/Persistable';
 	import { Authenticating } from 'cloudrail-si/interfaces/basic/Authenticating';
@@ -1044,10 +1187,11 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import stream = require("stream");
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/basic/AdvancedRequestSupporter';
 	/**
 	 * A common interface for cloud storage services, abstracts to the level of paths consistently for all services.
 	 */
-	export interface CloudStorage extends Persistable, Authenticating {
+	export interface CloudStorage extends Persistable, Authenticating, AdvancedRequestSupporter {
 	    /**
 	     * Downloads a file from a cloud storage, throws an exception if the file is not found or the path invalid
 	     * @param filePath The path to the file from the root folder and including the name, e.g /myFolder/myFile.jpg
@@ -1144,6 +1288,8 @@ declare module 'cloudrail-si/services/Box' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class Box implements CloudStorage {
@@ -1168,6 +1314,7 @@ declare module 'cloudrail-si/services/Box' {
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1225,6 +1372,8 @@ declare module 'cloudrail-si/services/Dropbox' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class Dropbox implements CloudStorage {
@@ -1249,6 +1398,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1411,6 +1561,8 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class GoogleDrive implements CloudStorage {
@@ -1435,6 +1587,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1640,6 +1793,8 @@ declare module 'cloudrail-si/services/OneDrive' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class OneDrive implements CloudStorage {
@@ -1664,6 +1819,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2055,6 +2211,8 @@ declare module 'cloudrail-si/services/Egnyte' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class Egnyte implements CloudStorage {
@@ -2079,6 +2237,7 @@ declare module 'cloudrail-si/services/Egnyte' {
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2298,6 +2457,8 @@ declare module 'cloudrail-si/services/OneDriveBusiness' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
 	export class OneDriveBusiness implements CloudStorage {
@@ -2322,6 +2483,7 @@ declare module 'cloudrail-si/services/OneDriveBusiness' {
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2400,7 +2562,9 @@ declare module 'cloudrail-si/index' {
 	import { AmazonS3 } from 'cloudrail-si/services/AmazonS3';
 	import { Heroku } from 'cloudrail-si/services/Heroku';
 	import { OneDriveBusiness } from 'cloudrail-si/services/OneDriveBusiness';
-	import { GoogleCloudPlatform } from 'cloudrail-si/services/GoogleCloudPlatform'; var _default: {
+	import { GoogleCloudPlatform } from 'cloudrail-si/services/GoogleCloudPlatform';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -2448,6 +2612,8 @@ declare module 'cloudrail-si/index' {
 	        "ImageMetaData": typeof ImageMetaData;
 	        "Bucket": typeof Bucket;
 	        "BusinessFileMetaData": typeof BusinessFileMetaData;
+	        "AdvancedRequestSpecification": typeof AdvancedRequestSpecification;
+	        "AdvancedRequestResponse": typeof AdvancedRequestResponse;
 	    };
 	    "Settings": typeof Settings;
 	    "RedirectReceivers": typeof RedirectReceivers;

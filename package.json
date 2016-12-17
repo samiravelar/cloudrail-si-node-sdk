@@ -42,7 +42,7 @@
 		"node": ">=4.0.0"
 	},
 	"engineStrict": true,
-	"version": "2.13.0",
+	"version": "2.14.0",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"dependencies": {

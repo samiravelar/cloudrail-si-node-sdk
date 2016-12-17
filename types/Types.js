@@ -15,6 +15,8 @@ var SpaceAllocation_1 = require("./SpaceAllocation");
 var ImageMetaData_1 = require("./ImageMetaData");
 var Bucket_1 = require("./Bucket");
 var BusinessFileMetaData_1 = require("./BusinessFileMetaData");
+var AdvancedRequestSpecification_1 = require("./AdvancedRequestSpecification");
+var AdvancedRequestResponse_1 = require("./AdvancedRequestResponse");
 var Types = (function () {
     function Types() {
     }
@@ -35,7 +37,9 @@ var Types = (function () {
         "SpaceAllocation": SpaceAllocation_1.SpaceAllocation,
         "ImageMetaData": ImageMetaData_1.ImageMetaData,
         "Bucket": Bucket_1.Bucket,
-        "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData
+        "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData,
+        "AdvancedRequestSpecification": AdvancedRequestSpecification_1.AdvancedRequestSpecification,
+        "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse
     };
     return Types;
 }());

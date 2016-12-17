@@ -10,6 +10,7 @@ var https = require("https");
 var Statistics_1 = require("../statistics/Statistics");
 var ErrorType_1 = require("../types/ErrorType");
 var DetailErrors_1 = require("../errors/DetailErrors");
+exports.httpMethods = ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "TRACE"];
 var CaseProxy = (function () {
     function CaseProxy(obj) {
         this.obj = {};

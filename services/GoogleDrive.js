@@ -545,6 +545,26 @@ var SERVICE_CODE = {
         ["callFunc", "getRawMetadataByID", "$P0", "$L2", "$L0"],
         ["set", "$P1", "$L2.webViewLink"]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "https://www.googleapis.com/drive/v3"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if!=than", "$P2.appendAuthorization", 0, 2],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "resolvePath": [
         ["if==than", "$P2", "/", 2],
         ["set", "$P1", "$S0.rootID"],
@@ -1245,6 +1265,21 @@ var GoogleDrive = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    GoogleDrive.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

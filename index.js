@@ -45,6 +45,8 @@ var AmazonS3_1 = require("./services/AmazonS3");
 var Heroku_1 = require("./services/Heroku");
 var OneDriveBusiness_1 = require("./services/OneDriveBusiness");
 var GoogleCloudPlatform_1 = require("./services/GoogleCloudPlatform");
+var AdvancedRequestSpecification_1 = require("./types/AdvancedRequestSpecification");
+var AdvancedRequestResponse_1 = require("./types/AdvancedRequestResponse");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -92,7 +94,9 @@ module.exports = {
         "SpaceAllocation": SpaceAllocation_1.SpaceAllocation,
         "ImageMetaData": ImageMetaData_1.ImageMetaData,
         "Bucket": Bucket_1.Bucket,
-        "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData
+        "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData,
+        "AdvancedRequestSpecification": AdvancedRequestSpecification_1.AdvancedRequestSpecification,
+        "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse
     },
     "Settings": Settings_1.Settings,
     "RedirectReceivers": RedirectReceivers_1.RedirectReceivers

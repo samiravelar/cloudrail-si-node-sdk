@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.14.0**
+  * Added a new function to make supported raw HTTP requests to the services implementing Cloud Storage (advanced request)
+
 * **2.13.0**
   * Added functions to post pictures and videos to a user's wall to the Social interface, Facebook and Twitter have been extended accordingly
   * Added FacebookPage as a new service to the Social interface. It allows posting updates/pictures/videos to a Facebook page
