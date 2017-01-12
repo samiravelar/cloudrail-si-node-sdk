@@ -985,6 +985,15 @@ declare module 'cloudrail-si/servicecode/commands/crypt/Sign' {
 	}
 
 }
+declare module 'cloudrail-si/servicecode/commands/array/Sort' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class Sort implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
 declare module 'cloudrail-si/servicecode/Interpreter' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
@@ -1410,6 +1419,7 @@ declare module 'cloudrail-si/interfaces/Profile' {
 	import { Persistable } from 'cloudrail-si/interfaces/platformSpecific/Persistable';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/basic/AdvancedRequestSupporter';
 	/**
 	 * An interface that provides access to a diverse range of services that provide user data.
 	 * They all have in common, that they allow you to get a unique identifier for a logged in user,
@@ -1418,7 +1428,7 @@ declare module 'cloudrail-si/interfaces/Profile' {
 	 * information the user has filled out with the respective service.
 	 * To avoid unnecessary requests, information is cached up to one minute.
 	 */
-	export interface Profile extends Authenticating, Persistable {
+	export interface Profile extends Authenticating, Persistable, AdvancedRequestSupporter {
 	    /**
 	     * @return A unique identifier for the authenticated user. All services provide this value. Useful for "Login with ...". Prefixed with the lowercased service name and a minus.
 	     */
@@ -1502,6 +1512,8 @@ declare module 'cloudrail-si/services/Facebook' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
@@ -1520,6 +1532,7 @@ declare module 'cloudrail-si/services/Facebook' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    postUpdate(content: string, callback: NodeCallback<void>): void;
 	    postImage(message: string, image: stream.Readable, callback: NodeCallback<void>): void;
 	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
@@ -1533,6 +1546,8 @@ declare module 'cloudrail-si/services/Facebook' {
 declare module 'cloudrail-si/services/GitHub' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class GitHub implements Profile {
@@ -1550,6 +1565,7 @@ declare module 'cloudrail-si/services/GitHub' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1614,6 +1630,8 @@ declare module 'cloudrail-si/services/GooglePlaces' {
 declare module 'cloudrail-si/services/GooglePlus' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class GooglePlus implements Profile {
@@ -1631,6 +1649,7 @@ declare module 'cloudrail-si/services/GooglePlus' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1640,6 +1659,8 @@ declare module 'cloudrail-si/services/GooglePlus' {
 declare module 'cloudrail-si/services/Instagram' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Instagram implements Profile {
@@ -1657,6 +1678,7 @@ declare module 'cloudrail-si/services/Instagram' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1666,6 +1688,8 @@ declare module 'cloudrail-si/services/Instagram' {
 declare module 'cloudrail-si/services/LinkedIn' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class LinkedIn implements Profile {
@@ -1683,6 +1707,7 @@ declare module 'cloudrail-si/services/LinkedIn' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -1731,6 +1756,8 @@ declare module 'cloudrail-si/services/MailJet' {
 declare module 'cloudrail-si/services/MicrosoftLive' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class MicrosoftLive implements Profile {
@@ -1748,6 +1775,7 @@ declare module 'cloudrail-si/services/MicrosoftLive' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2046,6 +2074,8 @@ declare module 'cloudrail-si/services/SendGrid' {
 declare module 'cloudrail-si/services/Slack' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Slack implements Profile {
@@ -2063,6 +2093,7 @@ declare module 'cloudrail-si/services/Slack' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2120,6 +2151,8 @@ declare module 'cloudrail-si/services/Twitter' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	import stream = require("stream");
@@ -2138,6 +2171,7 @@ declare module 'cloudrail-si/services/Twitter' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    postUpdate(content: string, callback: NodeCallback<void>): void;
 	    postImage(message: string, image: stream.Readable, callback: NodeCallback<void>): void;
 	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
@@ -2151,6 +2185,8 @@ declare module 'cloudrail-si/services/Twitter' {
 declare module 'cloudrail-si/services/Yahoo' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Yahoo implements Profile {
@@ -2168,6 +2204,7 @@ declare module 'cloudrail-si/services/Yahoo' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2429,6 +2466,8 @@ declare module 'cloudrail-si/services/AmazonS3' {
 declare module 'cloudrail-si/services/Heroku' {
 	import { Profile } from 'cloudrail-si/interfaces/Profile';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Heroku implements Profile {
@@ -2446,6 +2485,7 @@ declare module 'cloudrail-si/services/Heroku' {
 	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;

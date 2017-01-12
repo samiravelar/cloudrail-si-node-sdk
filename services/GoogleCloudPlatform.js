@@ -219,6 +219,7 @@ var SERVICE_CODE = {
         ["string.concat", "$L1", "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=", "$P1"],
         ["stream.stringToStream", "$L0.requestBody", "$L1"],
         ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
         ["json.parse", "$L2", "$L1.responseBody"],
         ["set", "$P0.accessToken", "$L2.access_token"],
         ["create", "$L3", "Date"],

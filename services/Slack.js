@@ -5,6 +5,30 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "https://slack.com/api"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if!=than", "$P2.appendAuthorization", 0, 6],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["string.indexOf", "$L2", "$P2.url", "?"],
+        ["if==than", "$L2", -1, 2],
+        ["string.concat", "$L0.url", "$L0.url", "?token=", "$S0.accessToken"],
+        ["jumpRel", 1],
+        ["string.concat", "$L0.url", "$L0.url", "&token=", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
     ],
@@ -47,7 +71,8 @@ var SERVICE_CODE = {
         ["string.concat", "$L2.url", "https://slack.com/api/users.identity?token=", "$S0.accessToken"],
         ["set", "$L2.method", "GET"],
         ["http.requestCall", "$L3", "$L2"],
-        ["callFunc", "validateResponse", "$P0", "$P0.userInfo", "$L3"],
+        ["callFunc", "validateResponse", "$P0", "$L3"],
+        ["callFunc", "parseAndCheckResponse", "$P0", "$P0.userInfo", "$L3.responseBody"],
         ["create", "$P0.expirationTime", "Date"],
         ["math.add", "$P0.expirationTime.time", "$P0.expirationTime.time", 60000]
     ],
@@ -61,23 +86,25 @@ var SERVICE_CODE = {
         ["string.concat", "$L3", "code=", "$L1", "&redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],
         ["string.concat", "$L2.url", "https://slack.com/api/oauth.access?", "$L3"],
         ["http.requestCall", "$L5", "$L2"],
-        ["callFunc", "validateResponse", "$P0", "$L6", "$L5"],
+        ["callFunc", "validateResponse", "$P0", "$L5"],
+        ["callFunc", "parseAndCheckResponse", "$P0", "$L6", "$L5.responseBody"],
         ["set", "$S0.accessToken", "$L6.access_token"]
     ],
     "validateResponse": [
-        ["set", "$L1", "$P2"],
-        ["if>=than", "$L1.code", 400, 10],
-        ["if==than", "$L1.code", 401, 2],
+        ["if>=than", "$P1.code", 400, 10],
+        ["if==than", "$P1.code", 401, 2],
         ["create", "$L3", "Error", "Invalid credentials or access rights. Make sure that your application has read and write permission.", "Authentication"],
         ["throwError", "$L3"],
-        ["if==than", "$L1.code", 503, 2],
+        ["if==than", "$P1.code", 503, 2],
         ["create", "$L3", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
         ["throwError", "$L3"],
-        ["json.parse", "$L0", "$L1.responseBody"],
+        ["json.parse", "$L0", "$P1.responseBody"],
         ["string.concat", "$L2", "$P1.code", " - ", "$L0.error"],
         ["create", "$L3", "Error", "$L2", "Http"],
-        ["throwError", "$L3"],
-        ["json.parse", "$L0", "$L1.responseBody"],
+        ["throwError", "$L3"]
+    ],
+    "parseAndCheckResponse": [
+        ["json.parse", "$L0", "$P2"],
         ["if==than", "$L0.ok", 0, 2],
         ["create", "$L3", "Error", "$L0.error", "Http"],
         ["throwError", "$L3"],
@@ -242,6 +269,21 @@ var Slack = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Slack.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Slack", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

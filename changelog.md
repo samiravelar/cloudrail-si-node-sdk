@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.15.0**
+  * Advanced Request now available for the services implementing the Profile interface
+
 * **2.14.0**
   * Added a new function to make supported raw HTTP requests to the services implementing Cloud Storage (advanced request)
 
