@@ -34,7 +34,7 @@ Interface | Included Services
 Cloud Storage | Dropbox, Google Drive, OneDrive, OneDrive Business, Box, Egnyte
 Business Cloud Storage | Amazon S3, Microsoft Azure, Google Cloud Services, Rackspace, Backblaze
 Social Profile | Facebook, GitHub, Google+, LinkedIn, Slack, Twitter, Windows Live, Yahoo, Instagram, Heroku
-Social Interaction | Facebook, Twitter
+Social Interaction | Facebook, Facebook Page, Twitter
 Payment | PayPal, Stripe
 Email | Maljet, Sendgrid
 SMS | Twilio, Nexmo
