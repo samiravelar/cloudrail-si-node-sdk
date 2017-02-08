@@ -28,6 +28,13 @@ With CloudRail, you can easily integrate external APIs into your application.
 CloudRail provides abstracted interfaces that take several services and then exposes a developer-friendly API that uses common functions between all providers. 
 This means that, for example, upload() works in exactly the same way for Dropbox as it does for Google Drive, OneDrive, and other Cloud Storage Services, and getEmail() works similarly the same way across all social networks.
 
+## NPM
+
+```
+npm install cloudrail-si
+```
+
+
 ## Current Interfaces
 Interface | Included Services
 --- | ---
@@ -368,7 +375,7 @@ Head over to https://developers.cloudrail.com
 
 ## Pricing
 
-CloudRail is free to use as long as your app is free as well. Learn more about our pricing on https://cloudrail.com/cloudrail-pricing/ 
+Learn more about our pricing on https://cloudrail.com/cloudrail-pricing/ 
 
 ## Other Platforms
 
