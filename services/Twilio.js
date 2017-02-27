@@ -5,11 +5,14 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["string.concat", "$P0.baseURL", "https://api.twilio.com/2010-04-01/Accounts/", "$P0.accountSid"]
+    ],
     "sendSMSTW": [
         ["callFunc", "validateUserInput", "$P0", "$P1", "$P2", "$P3"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "POST"],
-        ["string.concat", "$L0.url", "https://api.twilio.com/2010-04-01/Accounts/", "$P0.accountSid", "/Messages.json"],
+        ["string.concat", "$L0.url", "$P0.baseURL", "/Messages.json"],
         ["string.urlEncode", "$P1", "$P1"],
         ["string.urlEncode", "$P2", "$P2"],
         ["string.urlEncode", "$P3", "$P3"],
@@ -26,6 +29,29 @@ var SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L6"],
         ["stream.streamToString", "$L7", "$L6.responseBody"],
         ["debug.out", "$L7"]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseURL", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 3],
+        ["string.concat", "$L4", "$P0.accountSid", ":", "$P0.authToken"],
+        ["string.base64encode", "$L5", "$L4"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Basic ", "$L5"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
     ],
     "validateUserInput": [
         ["if==than", "$P1", null, 2],
@@ -107,6 +133,21 @@ var Twilio = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Twilio.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Twilio", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

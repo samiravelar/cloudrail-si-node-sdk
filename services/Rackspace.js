@@ -176,6 +176,29 @@ var SERVICE_CODE = {
         ["create", "$L3", "Error", "File not found.", "NotFound"],
         ["throwError", "$L3"]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 3],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["string.concat", "$L0.url", "$S0.publicURL", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 2],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["set", "$L0.requestHeaders.X-Auth-Token", "$S0.authorizationToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkHttpErrors", "$P0", "$L1", "advancedRequest"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "checkAuthentication": [
         ["if==than", "$S0.tokenID", null, 2],
         ["callFunc", "authenticate", "$P0"],
@@ -220,6 +243,9 @@ var SERVICE_CODE = {
         ["jumpRel", -14]
     ],
     "checkHttpErrors": [
+        ["if==than", "$P3", null, 2],
+        ["if>=than", "$P1.code", 400, 22],
+        ["jumpRel", 1],
         ["if!=than", "$P1.code", "$P3", 20],
         ["if==than", "$P1.code", 404, 2],
         ["create", "$L3", "Error", "Requested object wasn't found.", "NotFound"],
@@ -432,6 +458,21 @@ var Rackspace = (function () {
         Statistics_1.Statistics.addCall("Rackspace", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:download", this.interpreterStorage, null, fileName, bucket).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Rackspace.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Rackspace", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.16.0**
+  * Advanced Request now available for all services
+
 * **2.15.0**
   * Advanced Request now available for the services implementing the Profile interface
 

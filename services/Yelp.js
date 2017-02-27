@@ -6,6 +6,7 @@ var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
+        ["set", "$P0.baseUrl", "https://api.yelp.com/v2"],
         ["create", "$P0.crToYelp", "Object"],
         ["create", "$P0.yelpToCr", "Object"],
         ["callFunc", "addCategory", "$P0", "airport", "airports"],
@@ -94,7 +95,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkIsEmpty", "$P0", "$P6", "Categories"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["set", "$L0.url", "https://api.yelp.com/v2/search"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/search"],
         ["create", "$L1", "String", "?"],
         ["string.concat", "$L1", "$L1", "ll=", "$P2", "%2C", "$P3"],
         ["string.concat", "$L1", "$L1", "&radius_filter=", "$P4"],
@@ -139,6 +140,62 @@ var SERVICE_CODE = {
         ["push", "$P1", "$L7"],
         ["math.add", "$L4", "$L4", 1],
         ["jumpRel", -6]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 2],
+        ["callFunc", "extractOAuthParameters", "$P0", "$L1", "$L2", "$L0"],
+        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L2"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkHttpResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
+    "extractOAuthParameters": [
+        ["string.split", "$L2", "$P3.url", "\\?", 2],
+        ["size", "$L3", "$L2"],
+        ["create", "$L4", "String"],
+        ["if==than", "$L3", 2, 1],
+        ["get", "$L4", "$L2", 1],
+        ["callFunc", "extractParameters", "$P0", "$L6", "$L4"],
+        ["object.getKeyArray", "$P1", "$L6"],
+        ["push", "$P1", "oauth_consumer_key"],
+        ["push", "$P1", "oauth_nonce"],
+        ["push", "$P1", "oauth_signature_method"],
+        ["push", "$P1", "oauth_timestamp"],
+        ["push", "$P1", "oauth_token"],
+        ["push", "$P1", "oauth_version"],
+        ["array.sort", "$P1", "$P1"],
+        ["set", "$P2", "$L6"]
+    ],
+    "extractParameters": [
+        ["create", "$P1", "Object"],
+        ["size", "$L0", "$P2"],
+        ["if==than", "$L0", 0, 1],
+        ["return"],
+        ["string.split", "$L1", "$P2", "&"],
+        ["size", "$L2", "$L1"],
+        ["set", "$L3", 0],
+        ["if<than", "$L3", "$L2", 7],
+        ["get", "$L4", "$L1", "$L3"],
+        ["string.split", "$L5", "$L4", "=", 2],
+        ["get", "$L6", "$L5", 0],
+        ["get", "$L7", "$L5", 1],
+        ["set", "$P1", "$L7", "$L6"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -8]
     ],
     "checkNull": [
         ["if==than", "$P1", null, 3],
@@ -302,6 +359,21 @@ var Yelp = (function () {
         Statistics_1.Statistics.addCall("Yelp", "getNearbyPOIs");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Yelp.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Yelp", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

@@ -6,6 +6,7 @@ var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
+        ["set", "$P0.baseUrl", "https://maps.googleapis.com/maps/api/place"],
         ["create", "$P0.crToPlaces", "Object"],
         ["create", "$P0.placesToCr", "Object"],
         ["callFunc", "addCategory", "$P0", "airport", "airport"],
@@ -94,7 +95,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkIsEmpty", "$P0", "$P6", "Categories"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["create", "$L1", "String", "https://maps.googleapis.com/maps/api/place/nearbysearch/json?"],
+        ["string.concat", "$L1", "$P0.baseUrl", "/nearbysearch/json?"],
         ["string.concat", "$L1", "$L1", "key=", "$P0.apiKey"],
         ["string.concat", "$L2", "$P2", ",", "$P3"],
         ["string.urlEncode", "$L2", "$L2"],
@@ -109,7 +110,7 @@ var SERVICE_CODE = {
         ["string.concat", "$L1", "$L1", "&types=", "$L2"],
         ["set", "$L0.url", "$L1"],
         ["http.requestCall", "$L2", "$L0"],
-        ["callFunc", "checkHttpResponse", "$P0", "$L3", "$L2"],
+        ["callFunc", "checkHttpResponse", "$P0", "$L3", "$L2", 1],
         ["create", "$P1", "Array"],
         ["create", "$L4", "Number", 0],
         ["size", "$L5", "$L3.results"],
@@ -119,6 +120,32 @@ var SERVICE_CODE = {
         ["push", "$P1", "$L7"],
         ["math.add", "$L4", "$L4", 1],
         ["jumpRel", -6]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 6],
+        ["string.indexOf", "$L1", "$L0.url", "?"],
+        ["if==than", "$L1", -1, 2],
+        ["string.concat", "$L0.url", "$L0.url", "?"],
+        ["jumpRel", 1],
+        ["string.concat", "$L0.url", "$L0.url", "&"],
+        ["string.concat", "$L0.url", "$L0.url", "key=", "$P0.apiKey"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkHttpResponse", "$P0", null, "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
     ],
     "checkNull": [
         ["if==than", "$P1", null, 3],
@@ -157,6 +184,7 @@ var SERVICE_CODE = {
         ["string.concat", "$L2", "$P2.code", " - ", "$L0.status"],
         ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"],
+        ["if!=than", "$P3", null, 9],
         ["json.parse", "$L0", "$P2.responseBody"],
         ["if!=than", "$L0.status", "OK", 6],
         ["if!=than", "$L0.error_message", null, 2],
@@ -226,6 +254,21 @@ var GooglePlaces = (function () {
         Statistics_1.Statistics.addCall("GooglePlaces", "getNearbyPOIs");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    GooglePlaces.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("GooglePlaces", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

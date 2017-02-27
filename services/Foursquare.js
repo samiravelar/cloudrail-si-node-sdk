@@ -6,6 +6,7 @@ var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
+        ["set", "$P0.baseUrl", "https://api.foursquare.com/v2"],
         ["create", "$P0.crToFoursquare", "Object"],
         ["create", "$P0.foursquareToCr", "Object"],
         ["callFunc", "addCategory", "$P0", "airport", "4bf58dd8d48988d1ed931735"],
@@ -95,7 +96,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkIsEmpty", "$P0", "$P6", "Categories"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["set", "$L0.url", "https://api.foursquare.com/v2/venues/search?v=20160614&m=foursquare"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/venues/search?v=20160614&m=foursquare"],
         ["string.concat", "$L1", "$P2", ",", "$P3"],
         ["string.urlEncode", "$L1", "$L1"],
         ["string.concat", "$L0.url", "$L0.url", "&ll=", "$L1"],
@@ -121,6 +122,32 @@ var SERVICE_CODE = {
         ["push", "$P1", "$L7"],
         ["math.add", "$L4", "$L4", 1],
         ["jumpRel", -6]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 6],
+        ["string.indexOf", "$L1", "$L0.url", "?"],
+        ["if==than", "$L1", -1, 2],
+        ["string.concat", "$L0.url", "$L0.url", "?"],
+        ["jumpRel", 1],
+        ["string.concat", "$L0.url", "$L0.url", "&"],
+        ["string.concat", "$L0.url", "$L0.url", "client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkHttpResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
     ],
     "checkNull": [
         ["if==than", "$P1", null, 3],
@@ -231,6 +258,21 @@ var Foursquare = (function () {
         Statistics_1.Statistics.addCall("Foursquare", "getNearbyPOIs");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Foursquare.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Foursquare", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

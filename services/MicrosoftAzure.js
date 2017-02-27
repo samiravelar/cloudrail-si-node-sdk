@@ -85,61 +85,6 @@ var SERVICE_CODE = {
         ["jumpRel", -8],
         ["set", "$P1", "$L14"]
     ],
-    "signedString": [
-        ["set", "$L3", "$P3.x-ms-date"],
-        ["set", "$L4", "$P3.x-ms-version"],
-        ["set", "$L2", ""],
-        ["if!=than", "$P3.x-ms-content-length", null, 1],
-        ["string.concat", "$L2", "$L2", "x-ms-content-length:", "$P3.x-ms-content-length", "\n"],
-        ["string.concat", "$L2", "$L2", "x-ms-date:", "$L3", "\n"],
-        ["if!=than", "$P3.x-ms-range", null, 1],
-        ["string.concat", "$L2", "$L2", "x-ms-range:", "$P3.x-ms-range", "\n"],
-        ["if!=than", "$P3.x-ms-type", null, 1],
-        ["string.concat", "$L2", "$L2", "x-ms-type:", "$P3.x-ms-type", "\n"],
-        ["string.concat", "$L2", "$L2", "x-ms-version:", "$L4"],
-        ["if!=than", "$P3.x-ms-write", null, 1],
-        ["string.concat", "$L2", "$L2", "\nx-ms-write:", "$P3.x-ms-write"],
-        ["set", "$L6", ""],
-        ["set", "$L7", ""],
-        ["size", "$L5", "$P2"],
-        ["if!=than", "$L5", 0, 2],
-        ["callFunc", "generateMD5", "$L6", "$P2"],
-        ["getMimeType", "$L7", "$P2"],
-        ["string.concat", "$L1", "$P1", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["if!=than", "$P3.Content-Length", null, 1],
-        ["string.concat", "$L1", "$L1", "$P3.Content-Length"],
-        ["string.concat", "$L1", "$L1", "\n", "$L6", "\n"],
-        ["string.concat", "$L1", "$L1", "$L7", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "", "\n"],
-        ["string.concat", "$L1", "$L1", "$L2", "\n"],
-        ["string.concat", "$L1", "$L1", "$P4", ""],
-        ["string.base64decode", "$L8", "$P5.accessKey"],
-        ["callFunc", "generateSHA256", "$L10", "$L1", "$L8"],
-        ["set", "$P0", "$L10"]
-    ],
-    "generateMD5": [
-        ["hash.md5", "$L0", "$P1"],
-        ["size", "$L1", "$L0"],
-        ["set", "$L2", 0],
-        ["set", "$P0", ""],
-        ["get", "$L3", "$L0", "$L2"],
-        ["string.format", "$L4", "%02x", "$L3"],
-        ["string.concat", "$P0", "$P0", "$L4"],
-        ["math.add", "$L2", "$L2", 1],
-        ["if>=than", "$L2", "$L1", -5]
-    ],
-    "generateSHA256": [
-        ["crypt.hmac.sha256", "$L0", "$P2", "$P1"],
-        ["array.arrayToData", "$L1", "$L0"],
-        ["string.base64encode", "$P0", "$L1"]
-    ],
     "Storage:upload": [
         ["callFunc", "checkBucket", "$P0", "$P1"],
         ["callFunc", "checkNull", "$P0", "$P2"],
@@ -312,7 +257,121 @@ var SERVICE_CODE = {
         ["http.requestCall", "$L6", "$L5"],
         ["callFunc", "checkHttpErrors", "$P0", "$L6", "authentication", 202]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "https://", "$P0.accountName", ".file.core.windows.net", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 2],
+        ["if==than", "$L0.requestHeaders.x-ms-date", null, 2],
+        ["create", "$L1", "Date"],
+        ["set", "$L0.requestHeaders.x-ms-date", "$L1.rfcTime1123"],
+        ["callFunc", "extractCanonicalResources", "$P0", "$L1", "$L0.url"],
+        ["callFunc", "signedString", "$L1", "$L0.method", "", "$L0.requestHeaders", "$L1", "$P0"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "SharedKey ", "$P0.accountName", ":", "$L1"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkHttpErrors", "$P0", "$L1", "advancedRequest"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
+    "extractCanonicalResources": [
+        ["string.concat", "$P1", "/", "$P0.accountName"],
+        ["string.indexOf", "$L0", "$P2", ".net"],
+        ["string.indexOf", "$L0", "$P2", "/", "$L0"],
+        ["if!=than", "$L0", -1, 10],
+        ["size", "$L1", "$P2"],
+        ["math.add", "$L1", "$L1", -1],
+        ["if!=than", "$L0", "$L1", 7],
+        ["string.indexOf", "$L2", "$P2", "/", "$L1"],
+        ["if==than", "$L2", -1, 5],
+        ["string.substring", "$L3", "$P2", "$L0"],
+        ["string.concat", "$P1", "$P1", "$L3"],
+        ["jumpRel", 2],
+        ["string.substring", "$L3", "$P2", "$L0", "$L2"],
+        ["string.concat", "$P1", "$P1", "$L3"],
+        ["string.split", "$L0", "$P2", "\\?", 2],
+        ["size", "$L1", "$L0"],
+        ["if==than", "$L1", 1, 1],
+        ["return"],
+        ["string.split", "$L1", "$L0.1", "&"],
+        ["size", "$L2", "$L1"],
+        ["create", "$L3", "Number", 0],
+        ["if<than", "$L3", "$L2", 6],
+        ["get", "$L4", "$L1", "$L3"],
+        ["string.split", "$L5", "$L4", "="],
+        ["array.join", "$L6", "$L5", ":"],
+        ["string.concat", "$P1", "$P1", "\n", "$L6"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -7]
+    ],
+    "signedString": [
+        ["object.getKeyArray", "$L0", "$P3"],
+        ["array.sort", "$L0", "$L0"],
+        ["size", "$L1", "$L0"],
+        ["create", "$L2", "String"],
+        ["create", "$L3", "Number"],
+        ["if<than", "$L3", "$L1", 7],
+        ["get", "$L4", "$L0", "$L3"],
+        ["string.indexOf", "$L5", "$L4", "x-ms"],
+        ["if!=than", "$L5", -1, 2],
+        ["get", "$L6", "$P3", "$L4"],
+        ["string.concat", "$L2", "$L2", "$L4", ":", "$L6", "\n"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -8],
+        ["set", "$L6", ""],
+        ["set", "$L7", ""],
+        ["size", "$L5", "$P2"],
+        ["if!=than", "$L5", 0, 2],
+        ["callFunc", "generateMD5", "$L6", "$P2"],
+        ["getMimeType", "$L7", "$P2"],
+        ["string.concat", "$L1", "$P1", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["if!=than", "$P3.Content-Length", null, 1],
+        ["string.concat", "$L1", "$L1", "$P3.Content-Length"],
+        ["string.concat", "$L1", "$L1", "\n", "$L6", "\n"],
+        ["string.concat", "$L1", "$L1", "$L7", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "", "\n"],
+        ["string.concat", "$L1", "$L1", "$L2"],
+        ["string.concat", "$L1", "$L1", "$P4", ""],
+        ["string.base64decode", "$L8", "$P5.accessKey"],
+        ["callFunc", "generateSHA256", "$L10", "$L1", "$L8"],
+        ["set", "$P0", "$L10"]
+    ],
+    "generateMD5": [
+        ["hash.md5", "$L0", "$P1"],
+        ["size", "$L1", "$L0"],
+        ["set", "$L2", 0],
+        ["set", "$P0", ""],
+        ["get", "$L3", "$L0", "$L2"],
+        ["string.format", "$L4", "%02x", "$L3"],
+        ["string.concat", "$P0", "$P0", "$L4"],
+        ["math.add", "$L2", "$L2", 1],
+        ["if>=than", "$L2", "$L1", -5]
+    ],
+    "generateSHA256": [
+        ["crypt.hmac.sha256", "$L0", "$P2", "$P1"],
+        ["array.arrayToData", "$L1", "$L0"],
+        ["string.base64encode", "$P0", "$L1"]
+    ],
     "checkHttpErrors": [
+        ["if==than", "$P3", null, 2],
+        ["if>=than", "$P1.code", 400, 24],
+        ["jumpRel", 1],
         ["if!=than", "$P1.code", "$P3", 20],
         ["set", "$L0", "$P1"],
         ["set", "$L2", "$L0.message"],
@@ -533,6 +592,21 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:download", this.interpreterStorage, null, fileName, bucket).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    MicrosoftAzure.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("MicrosoftAzure", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;

@@ -47,6 +47,7 @@ var OneDriveBusiness_1 = require("./services/OneDriveBusiness");
 var GoogleCloudPlatform_1 = require("./services/GoogleCloudPlatform");
 var AdvancedRequestSpecification_1 = require("./types/AdvancedRequestSpecification");
 var AdvancedRequestResponse_1 = require("./types/AdvancedRequestResponse");
+var FacebookPage_1 = require("./services/FacebookPage");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -55,6 +56,7 @@ module.exports = {
         "Dropbox": Dropbox_1.Dropbox,
         "Egnyte": Egnyte_1.Egnyte,
         "Facebook": Facebook_1.Facebook,
+        "FacebookPage": FacebookPage_1.FacebookPage,
         "Foursquare": Foursquare_1.Foursquare,
         "GitHub": GitHub_1.GitHub,
         "GoogleCloudPlatform": GoogleCloudPlatform_1.GoogleCloudPlatform,

@@ -5,6 +5,9 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["set", "$P0.baseUrl", "https://api.sendgrid.com/v3"]
+    ],
     "sendEmail": [
         ["callFunc", "checkMandatory", "$P0", "$P1", "fromAddress"],
         ["callFunc", "checkMandatory", "$P0", "$P2", "fromName"],
@@ -30,7 +33,7 @@ var SERVICE_CODE = {
         ["throwError", "$L4"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "POST"],
-        ["set", "$L0.url", "https://api.sendgrid.com/v3/mail/send"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/mail/send"],
         ["create", "$L0.requestHeaders", "Object"],
         ["set", "$L0.requestHeaders.Content-Type", "application/json"],
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.apiKey"],
@@ -60,6 +63,27 @@ var SERVICE_CODE = {
         ["stream.stringToStream", "$L0.requestBody", "$L1"],
         ["http.requestCall", "$L0", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L0"]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 1],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.apiKey"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
     ],
     "pushAddresses": [
         ["if==than", "$P2", null, 1],
@@ -131,6 +155,21 @@ var SendGrid = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    SendGrid.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("SendGrid", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

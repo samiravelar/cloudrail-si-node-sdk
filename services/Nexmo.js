@@ -5,6 +5,9 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["set", "$P0.baseUrl", "https://rest.nexmo.com"]
+    ],
     "SendNexmoSMS": [
         ["callFunc", "validateUserInput", "$P0", "$P1", "$P2", "$P3"],
         ["create", "$L0", "Object"],
@@ -14,15 +17,39 @@ var SERVICE_CODE = {
         ["create", "$L4", "String"],
         ["string.urlEncode", "$L3", "$P3"],
         ["string.urlEncode", "$L5", "$P1"],
-        ["string.concat", "$L0.url", "https://rest.nexmo.com/sms/json?api_key=", "$P0.clientID", "&api_secret=", "$P0.clientSecret", "&to=", "$P2", "&from=", "$L5", "&text=", "$L3"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/sms/json?api_key=", "$P0.clientID", "&api_secret=", "$P0.clientSecret", "&to=", "$P2", "&from=", "$L5", "&text=", "$L3"],
         ["set", "$L0.method", "POST"],
         ["set", "$L1.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L1.Content-Length", "0"],
         ["set", "$L0.requestHeaders", "$L1"],
-        ["debug.out", "$L0.url"],
         ["http.requestCall", "$L2", "$L0"],
-        ["debug.out", "$L2"],
-        ["callFunc", "checkError", "$P0", "$L2"]
+        ["callFunc", "checkError", "$P0", "$L2", 1]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 6],
+        ["string.indexOf", "$L1", "$L0.url", "?"],
+        ["if==than", "$L1", -1, 2],
+        ["string.concat", "$L0.url", "$L0.url", "?"],
+        ["jumpRel", 1],
+        ["string.concat", "$L0.url", "$L0.url", "&"],
+        ["string.concat", "$L0.url", "$L0.url", "api_key=", "$P0.clientID", "&api_secret=", "$P0.clientSecret"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkError", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
     ],
     "validateUserInput": [
         ["if==than", "$P1", null, 2],
@@ -73,13 +100,12 @@ var SERVICE_CODE = {
         ["throwError", "$L3"],
         ["create", "$L3", "Error", "$P1.message", "Http"],
         ["throwError", "$L3"],
+        ["if!=than", "$P2", null, 8],
         ["stream.streamToString", "$L11", "$P1.responseBody"],
         ["create", "$L12", "Object"],
         ["json.parse", "$L12", "$L11"],
-        ["debug.out", "$L12"],
         ["set", "$L13", "$L12.messages.0.status"],
         ["set", "$L14", "$L12.messages.0.error-text"],
-        ["debug.out", "$L13"],
         ["if!=than", "$L13", "0", 2],
         ["create", "$L15", "Error", "$L14", "Http"],
         ["throwError", "$L15"]
@@ -107,6 +133,21 @@ var Nexmo = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Nexmo.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Nexmo", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

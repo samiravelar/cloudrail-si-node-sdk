@@ -5,6 +5,9 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["set", "$P0.baseUrl", "https://api.stripe.com/v1"]
+    ],
     "createCharge": [
         ["callFunc", "checkNull", "$P0", "$P2", "Amount"],
         ["callFunc", "checkLessThanZero", "$P0", "$P2", "Amount"],
@@ -17,7 +20,7 @@ var SERVICE_CODE = {
         ["callFunc", "createSource", "$P0", "$L2", "$P4"],
         ["string.concat", "$L0.requestBody", "amount=", "$P2", "&currency=", "$P3", "&", "$L2"],
         ["stream.stringToStream", "$L0.requestBody", "$L0.requestBody"],
-        ["string.concat", "$L0.url", "https://api.stripe.com/v1/charges"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/charges"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L3.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -30,7 +33,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkStringNullOrEmpty", "$P0", "$P2", "Identifier"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["string.concat", "$L1", "https://api.stripe.com/v1/charges/", "$P2"],
+        ["string.concat", "$L1", "$P0.baseUrl", "/charges/", "$P2"],
         ["set", "$L0.url", "$L1"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -72,7 +75,7 @@ var SERVICE_CODE = {
         ["create", "$L1", "String"],
         ["string.concat", "$L0.requestBody", "charge=", "$P2"],
         ["stream.stringToStream", "$L0.requestBody", "$L0.requestBody"],
-        ["string.concat", "$L0.url", "https://api.stripe.com/v1/refunds"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/refunds"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L3.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -90,7 +93,7 @@ var SERVICE_CODE = {
         ["create", "$L1", "String"],
         ["string.concat", "$L0.requestBody", "charge=", "$P2", "&amount=", "$P3"],
         ["stream.stringToStream", "$L0.requestBody", "$L0.requestBody"],
-        ["string.concat", "$L0.url", "https://api.stripe.com/v1/refunds"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/refunds"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L3.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -103,7 +106,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkStringNullOrEmpty", "$P0", "$P2", "Identifier"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["string.concat", "$L1", "https://api.stripe.com/v1/refunds/", "$P2"],
+        ["string.concat", "$L1", "$P0.baseUrl", "/refunds/", "$P2"],
         ["set", "$L0.url", "$L1"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -116,7 +119,7 @@ var SERVICE_CODE = {
         ["callFunc", "checkStringNullOrEmpty", "$P0", "$P2", "Identifier"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["string.concat", "$L1", "https://api.stripe.com/v1/charges/", "$P2"],
+        ["string.concat", "$L1", "$P0.baseUrl", "/charges/", "$P2"],
         ["set", "$L0.url", "$L1"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -152,7 +155,7 @@ var SERVICE_CODE = {
         ["string.urlEncode", "$L10", "$P2"],
         ["string.concat", "$L0.requestBody", "name=", "$L10", "&amount=", "$P3", "&currency=", "$P4", "&statement_descriptor=", "$P5", "&interval=", "$P6", "&interval_count=", "$P7", "&id=", "$L10"],
         ["stream.stringToStream", "$L0.requestBody", "$L0.requestBody"],
-        ["string.concat", "$L0.url", "https://api.stripe.com/v1/plans"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/plans"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L3"],
         ["set", "$L3.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L0.requestHeaders", "$L3"],
@@ -189,7 +192,7 @@ var SERVICE_CODE = {
         ["string.urlEncode", "$L16", "$P3"],
         ["string.concat", "$L3.requestBody", "plan=", "$P2", "&customer=", "$L1", "&", "metadata[description]=", "$L15", "&metadata[name]=", "$L16"],
         ["stream.stringToStream", "$L3.requestBody", "$L3.requestBody"],
-        ["string.concat", "$L3.url", "https://api.stripe.com/v1/subscriptions"],
+        ["string.concat", "$L3.url", "$P0.baseUrl", "/subscriptions"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L4"],
         ["set", "$L4.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L3.requestHeaders", "$L4"],
@@ -203,11 +206,32 @@ var SERVICE_CODE = {
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "DELETE"],
         ["string.urlEncode", "$P1", "$P1"],
-        ["string.concat", "$L0.url", "https://api.stripe.com/v1/subscriptions/", "$P1"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/subscriptions/", "$P1"],
         ["callFunc", "addAuthenticationHeader", "$P0", "$L1"],
         ["set", "$L0.requestHeaders", "$L1"],
         ["http.requestCall", "$L2", "$L0"],
         ["callFunc", "checkHttpErrors", "$P0", "$L2"]
+    ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
+        ["jumpRel", 1],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 1],
+        ["callFunc", "addAuthenticationHeader", "$P0", "$L0.requestHeaders"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "checkHttpErrors", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
     ],
     "checkNull": [
         ["if==than", "$P1", null, 3],
@@ -686,6 +710,21 @@ var Stripe = (function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Stripe.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Stripe", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
             if (callback != null && typeof callback === "function")
                 callback(undefined, res);
         }, function (err) {

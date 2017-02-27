@@ -313,7 +313,71 @@ var SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L2", 200],
         ["set", "$P1", "$L2.responseBody"]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 2],
+        ["create", "$L1", "Error", "Disable base URL appending and provide a full URL."],
+        ["throwError", "$L1"],
+        ["set", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if!=than", "$P2.appendAuthorization", 0, 23],
+        ["callFunc", "extractQuery", "$P0", "$L1", "$L0.url"],
+        ["if!=than", "$L1", null, 2],
+        ["object.getKeyArray", "$L2", "$L1"],
+        ["array.sort", "$L3", "$L2"],
+        ["if==than", "$L0.requestHeaders.x-amz-content-sha256", null, 7],
+        ["if==than", "$P2.body", null, 2],
+        ["set", "$L0.requestHeaders.x-amz-content-sha256", "$P0.empty_body_hash"],
+        ["jumpRel", 4],
+        ["stream.streamToData", "$L4", "$P2.body"],
+        ["hash.sha256", "$L5", "$L4"],
+        ["callFunc", "arrayToHex", "$P0", "$L0.requestHeaders.x-amz-content-sha256", "$L5"],
+        ["stream.dataToStream", "$L0.requestBody", "$L4"],
+        ["if==than", "$L0.requestHeaders.x-amz-date", null, 1],
+        ["callFunc", "getCurrentDate", "$P0", "$L0.requestHeaders.x-amz-date"],
+        ["if==than", "$L0.requestHeaders.host", null, 5],
+        ["string.indexOf", "$L4", "$L0.url", "/", 10],
+        ["if==than", "$L4", -1, 2],
+        ["string.substring", "$L0.requestHeaders.host", "$L0.url", 8],
+        ["jumpRel", 1],
+        ["string.substring", "$L0.requestHeaders.host", "$L0.url", 8, "$L4"],
+        ["object.getKeyArray", "$L4", "$L0.requestHeaders"],
+        ["array.sort", "$L5", "$L4"],
+        ["callFunc", "signRequest", "$P0", "$L0", "$L1", "$L3", "$L5", "$L0.requestHeaders.x-amz-content-sha256"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
+    "extractQuery": [
+        ["string.split", "$L0", "$P2", "\\?", 2],
+        ["size", "$L1", "$L0"],
+        ["if==than", "$L1", 1, 1],
+        ["return"],
+        ["create", "$P1", "Object"],
+        ["string.split", "$L1", "$L0.1", "&"],
+        ["size", "$L2", "$L1"],
+        ["create", "$L3", "Number", 0],
+        ["if<than", "$L3", "$L2", 9],
+        ["get", "$L4", "$L1", "$L3"],
+        ["string.split", "$L5", "$L4", "="],
+        ["size", "$L6", "$L5"],
+        ["if==than", "$L6", 1, 2],
+        ["set", "$P1", "", "$L5.0"],
+        ["jumpRel", 1],
+        ["set", "$P1", "$L5.1", "$L5.0"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -10]
+    ],
     "validateResponse": [
+        ["if==than", "$P2", null, 2],
+        ["if>=than", "$P1.code", 400, 20],
+        ["jumpRel", 1],
         ["if!=than", "$P1.code", "$P2", 18],
         ["if==than", "$P1.code", 404, 2],
         ["create", "$L1", "Error", "File does not exist", "NotFound"],
@@ -647,6 +711,21 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadFile", this.interpreterStorage, null, fileName, bucket).then(function () {
+            Helper_1.Helper.checkSandboxError(ip);
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    AmazonS3.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("AmazonS3", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
             Helper_1.Helper.checkSandboxError(ip);
         }).then(function () {
             var res;
