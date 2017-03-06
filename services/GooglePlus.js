@@ -5,6 +5,21 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["if==than", "$P0.scopes", null, 2],
+        ["set", "$P0.scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fplus.login+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fplus.profile.emails.read"],
+        ["jumpRel", 10],
+        ["create", "$P0.scope", "String"],
+        ["size", "$L0", "$P0.scopes"],
+        ["create", "$L1", "Number", 0],
+        ["if<than", "$L1", "$L0", 7],
+        ["if!=than", "$L1", 0, 1],
+        ["string.concat", "$P0.scope", "$P0.scope", "+"],
+        ["get", "$L2", "$P0.scopes", "$L1"],
+        ["string.concat", "$P0.scope", "$P0.scope", "$L2"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -8]
+    ],
     "AdvancedRequestSupporter:advancedRequest": [
         ["create", "$L0", "Object"],
         ["create", "$L0.url", "String"],
@@ -115,7 +130,7 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P1", "accessToken", 4],
-        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fplus.me+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&suppress_webview_warning=true"],
+        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "$P0.scope", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&suppress_webview_warning=true"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
@@ -164,7 +179,7 @@ var SERVICE_CODE = {
     ]
 };
 var GooglePlus = (function () {
-    function GooglePlus(redirectReceiver, clientID, clientSecret, redirectUri, state) {
+    function GooglePlus(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -175,6 +190,7 @@ var GooglePlus = (function () {
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
+        this.interpreterStorage["scopes"] = scopes;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);

@@ -6,7 +6,21 @@ var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
-        ["set", "$P0.boundary", "Amgrmg43ghg3g39glv0k2ldk"]
+        ["set", "$P0.boundary", "Amgrmg43ghg3g39glv0k2ldk"],
+        ["if==than", "$P0.scopes", null, 2],
+        ["set", "$P0.scope", "manage_pages%2Cpublish_pages%2Cpages_show_list"],
+        ["jumpRel", 10],
+        ["create", "$P0.scope", "String"],
+        ["size", "$L0", "$P0.scopes"],
+        ["create", "$L1", "Number", 0],
+        ["if<than", "$L1", "$L0", 7],
+        ["if!=than", "$L1", 0, 1],
+        ["string.concat", "$P0.scope", "$P0.scope", "%2C"],
+        ["get", "$L2", "$P0.scopes", "$L1"],
+        ["string.urlEncode", "$L2", "$L2"],
+        ["string.concat", "$P0.scope", "$P0.scope", "$L2"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -8]
     ],
     "Social:postUpdate": [
         ["if==than", "$P1", null, 2],
@@ -129,7 +143,7 @@ var SERVICE_CODE = {
         ["create", "$L0", "String"],
         ["create", "$L1", "String"],
         ["string.urlEncode", "$L3", "$P0.redirectUri"],
-        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=manage_pages%2Cpublish_pages%2Cpages_show_list"],
+        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=", "$P0.scope"],
         ["awaitCodeRedirect", "$L2", "$L0"],
         ["string.concat", "$L1", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
         ["create", "$L5", "Object"],
@@ -178,7 +192,7 @@ var SERVICE_CODE = {
     ]
 };
 var FacebookPage = (function () {
-    function FacebookPage(redirectReceiver, pageName, clientID, clientSecret, redirectUri, state) {
+    function FacebookPage(redirectReceiver, pageName, clientID, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -190,6 +204,7 @@ var FacebookPage = (function () {
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
+        this.interpreterStorage["scopes"] = scopes;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);

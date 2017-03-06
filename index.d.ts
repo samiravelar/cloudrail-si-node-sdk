@@ -1526,7 +1526,7 @@ declare module 'cloudrail-si/services/Facebook' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1560,7 +1560,7 @@ declare module 'cloudrail-si/services/GitHub' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1592,7 +1592,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
 	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
 	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
@@ -1650,7 +1650,7 @@ declare module 'cloudrail-si/services/GooglePlus' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1680,7 +1680,7 @@ declare module 'cloudrail-si/services/Instagram' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1710,7 +1710,7 @@ declare module 'cloudrail-si/services/LinkedIn' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1783,7 +1783,7 @@ declare module 'cloudrail-si/services/MicrosoftLive' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1853,7 +1853,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
 	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
 	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
@@ -2115,7 +2115,7 @@ declare module 'cloudrail-si/services/Slack' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -2304,7 +2304,7 @@ declare module 'cloudrail-si/services/Egnyte' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, domain: string, clientId: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, domain: string, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
 	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
 	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
@@ -2539,7 +2539,7 @@ declare module 'cloudrail-si/services/Heroku' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -2638,11 +2638,41 @@ declare module 'cloudrail-si/services/FacebookPage' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, pageName: string, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, pageName: string, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    postUpdate(content: string, callback: NodeCallback<void>): void;
 	    postImage(message: string, image: stream.Readable, callback: NodeCallback<void>): void;
 	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
 	    getConnections(callback: NodeCallback<string[]>): void;
+	    login(callback: NodeCallback<void>): void;
+	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
+declare module 'cloudrail-si/services/ProductHunt' {
+	import { Profile } from 'cloudrail-si/interfaces/Profile';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class ProductHunt implements Profile, AdvancedRequestSupporter {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    getIdentifier(callback: NodeCallback<string>): void;
+	    getFullName(callback: NodeCallback<string>): void;
+	    getEmail(callback: NodeCallback<string>): void;
+	    getGender(callback: NodeCallback<string>): void;
+	    getDescription(callback: NodeCallback<string>): void;
+	    getDateOfBirth(callback: NodeCallback<DateOfBirth>): void;
+	    getLocale(callback: NodeCallback<string>): void;
+	    getPictureURL(callback: NodeCallback<string>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2701,7 +2731,8 @@ declare module 'cloudrail-si/index' {
 	import { GoogleCloudPlatform } from 'cloudrail-si/services/GoogleCloudPlatform';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
-	import { FacebookPage } from 'cloudrail-si/services/FacebookPage'; var _default: {
+	import { FacebookPage } from 'cloudrail-si/services/FacebookPage';
+	import { ProductHunt } from 'cloudrail-si/services/ProductHunt'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -2726,6 +2757,7 @@ declare module 'cloudrail-si/index' {
 	        "OneDrive": typeof OneDrive;
 	        "OneDriveBusiness": typeof OneDriveBusiness;
 	        "PayPal": typeof PayPal;
+	        "ProductHunt": typeof ProductHunt;
 	        "Rackspace": typeof Rackspace;
 	        "SendGrid": typeof SendGrid;
 	        "Slack": typeof Slack;

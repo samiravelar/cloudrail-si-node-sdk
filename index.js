@@ -48,6 +48,7 @@ var GoogleCloudPlatform_1 = require("./services/GoogleCloudPlatform");
 var AdvancedRequestSpecification_1 = require("./types/AdvancedRequestSpecification");
 var AdvancedRequestResponse_1 = require("./types/AdvancedRequestResponse");
 var FacebookPage_1 = require("./services/FacebookPage");
+var ProductHunt_1 = require("./services/ProductHunt");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -73,6 +74,7 @@ module.exports = {
         "OneDrive": OneDrive_1.OneDrive,
         "OneDriveBusiness": OneDriveBusiness_1.OneDriveBusiness,
         "PayPal": PayPal_1.PayPal,
+        "ProductHunt": ProductHunt_1.ProductHunt,
         "Rackspace": Rackspace_1.Rackspace,
         "SendGrid": SendGrid_1.SendGrid,
         "Slack": Slack_1.Slack,

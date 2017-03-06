@@ -5,6 +5,21 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["if==than", "$P0.scopes", null, 2],
+        ["set", "$P0.scope", "wl.signin%20wl.emails%20wl.offline_access%20onedrive.readwrite"],
+        ["jumpRel", 10],
+        ["create", "$P0.scope", "String"],
+        ["size", "$L0", "$P0.scopes"],
+        ["create", "$L1", "Number", 0],
+        ["if<than", "$L1", "$L0", 7],
+        ["if!=than", "$L1", 0, 1],
+        ["string.concat", "$P0.scope", "$P0.scope", "%20"],
+        ["get", "$L2", "$P0.scopes", "$L1"],
+        ["string.concat", "$P0.scope", "$P0.scope", "$L2"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -8]
+    ],
     "CloudStorage:getUserLogin": [
         ["callFunc", "User:about", "$P0"],
         ["set", "$P1", "$P0.userInfo.emailAddress"]
@@ -34,13 +49,6 @@ var SERVICE_CODE = {
         ["set", "$P0.userInfo.lastUpdate", "$L4.Time"],
         ["set", "$P0.userInfo.emailAddress", "$L3.emails.account"],
         ["set", "$P0.userInfo.displayName", "$L3.name"]
-    ],
-    "init": [
-        ["string.urlEncode", "$P0.redirectUri", "$P0.redirectUri"],
-        ["create", "$P0.paginationCache", "Object"],
-        ["create", "$P0.paginationCache.offset", "Number", 0],
-        ["create", "$P0.paginationCache.path", "String", "grgerfefrgerhggerger"],
-        ["create", "$P0.paginationCache.metaCache", "Array"]
     ],
     "uploadSC": [
         ["callFunc", "validatePath", "$P0", "$P1"],
@@ -714,7 +722,7 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P2", "accessToken", 4],
-        ["string.concat", "$L0", "https://login.live.com/oauth20_authorize.srf?client_id=", "$P0.clientID", "&scope=", "wl.signin%20wl.emails%20wl.offline_access%20onedrive.readwrite", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://login.live.com/oauth20_authorize.srf?client_id=", "$P0.clientID", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
@@ -748,7 +756,7 @@ var SERVICE_CODE = {
     ]
 };
 var OneDrive = (function () {
-    function OneDrive(redirectReceiver, clientID, clientSecret, redirectUri, state) {
+    function OneDrive(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -759,6 +767,7 @@ var OneDrive = (function () {
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
+        this.interpreterStorage["scopes"] = scopes;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);

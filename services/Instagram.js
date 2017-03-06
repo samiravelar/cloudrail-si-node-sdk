@@ -5,6 +5,21 @@ var Sandbox_1 = require("../servicecode/Sandbox");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "init": [
+        ["if==than", "$P0.scopes", null, 2],
+        ["set", "$P0.scope", "basic"],
+        ["jumpRel", 10],
+        ["create", "$P0.scope", "String"],
+        ["size", "$L0", "$P0.scopes"],
+        ["create", "$L1", "Number", 0],
+        ["if<than", "$L1", "$L0", 7],
+        ["if!=than", "$L1", 0, 1],
+        ["string.concat", "$P0.scope", "$P0.scope", "+"],
+        ["get", "$L2", "$P0.scopes", "$L1"],
+        ["string.concat", "$P0.scope", "$P0.scope", "$L2"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -8]
+    ],
     "AdvancedRequestSupporter:advancedRequest": [
         ["create", "$L0", "Object"],
         ["create", "$L0.url", "String"],
@@ -67,7 +82,7 @@ var SERVICE_CODE = {
     ],
     "authenticate": [
         ["create", "$L2", "String"],
-        ["string.concat", "$L0", "https://api.instagram.com/oauth/authorize/?client_id=", "$P0.clientID", "&response_type=code&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state"],
+        ["string.concat", "$L0", "https://api.instagram.com/oauth/authorize/?client_id=", "$P0.clientID", "&response_type=code&redirect_uri=", "$P0.redirectUri", "&scope=", "$P0.scope", "&state=", "$P0.state"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "--------------------------c77df4126e3a1dc1\r\n"],
         ["string.concat", "$L2", "$L2", "Content-Disposition: form-data; name=\"client_id\"\r\n\r\n"],
@@ -136,7 +151,7 @@ var SERVICE_CODE = {
     ]
 };
 var Instagram = (function () {
-    function Instagram(redirectReceiver, clientID, clientSecret, redirectUri, state) {
+    function Instagram(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
@@ -147,6 +162,7 @@ var Instagram = (function () {
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
+        this.interpreterStorage["scopes"] = scopes;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
