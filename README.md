@@ -1,7 +1,7 @@
 <p align="center">
   <img width="200px" src="http://cloudrail.github.io/img/cloudrail_logo_github.png"/>
 </p>
-
+[![npm version][npmimg]][npm]
 # CloudRail SI for node.js
 
 Integrate Multiple Services With Just One API
@@ -388,3 +388,6 @@ Get in touch at any time by emailing us: support@cloudrail.com
 or
 
 Tag a question with cloudrail on [StackOverflow](http://stackoverflow.com/questions/tagged/cloudrail)
+
+[npmimg]: https://img.shields.io/npm/v/cloudrail-si.svg
+[npm]: https://www.npmjs.com/package/cloudrail-si
