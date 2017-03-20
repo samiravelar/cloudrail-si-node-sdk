@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.17.1**
+  * Fixed broken Facebook constructor
+  * Small fixes for optional scopes parameter
+
 * **2.17.0**
   * Added Product Hunt as a new service to the Profile interface
   * Added an additional, optional "scopes" constructor parameter to all services doing OAuth with programatically settable scopes

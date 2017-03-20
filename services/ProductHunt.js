@@ -15,13 +15,13 @@ var SERVICE_CODE = {
         ["create", "$P0.scope", "String"],
         ["size", "$L0", "$P0.scopes"],
         ["create", "$L1", "Number", 0],
-        ["if<than", "$L1", "$L0", 7],
+        ["if<than", "$L1", "$L0", 6],
         ["if!=than", "$L1", 0, 1],
         ["string.concat", "$P0.scope", "$P0.scope", "+"],
         ["get", "$L2", "$P0.scopes", "$L1"],
         ["string.concat", "$P0.scope", "$P0.scope", "$L2"],
         ["math.add", "$L1", "$L1", 1],
-        ["jumpRel", -8]
+        ["jumpRel", -7]
     ],
     "Profile:getIdentifier": [
         ["callFunc", "updateUserInfo", "$P0"],

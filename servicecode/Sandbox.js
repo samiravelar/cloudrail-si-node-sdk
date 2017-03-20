@@ -162,12 +162,15 @@ var Sandbox = (function () {
         }
         return decAdr;
     };
-    Sandbox.prototype.setEntry = function (container, varAddress, value) {
+    Sandbox.prototype.setEntry = function (baseContainer, varAddress, value) {
+        var container;
         if (varAddress.length > 1) {
-            var nextContainer = this.getEntry(container, varAddress.slice(0, varAddress.length - 1), false);
-            return this.setEntry(nextContainer, varAddress.slice(varAddress.length - 1, varAddress.length), value);
+            container = this.getEntry(baseContainer, varAddress.slice(0, varAddress.length - 1), false);
         }
-        var varAddressPart = varAddress[0];
+        else {
+            container = baseContainer;
+        }
+        var varAddressPart = varAddress[varAddress.length - 1];
         if (Helper_1.Helper.isArray(container)) {
             if (Helper_1.Helper.isNumberString(varAddressPart)) {
                 varAddressPart = parseInt(varAddressPart);

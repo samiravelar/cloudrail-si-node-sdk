@@ -9,7 +9,7 @@ var SERVICE_CODE = {
         ["set", "$P0.boundary", "Amgrmg43ghg3g39glv0k2ldk"],
         ["if==than", "$P0.scopes", null, 2],
         ["set", "$P0.scope", "public_profile%2Cemail%2Cuser_birthday%2Cuser_about_me%2Cpublish_actions%2Cuser_friends%2Cuser_photos"],
-        ["jumpRel", 10],
+        ["jumpRel", 11],
         ["create", "$P0.scope", "String"],
         ["size", "$L0", "$P0.scopes"],
         ["create", "$L1", "Number", 0],
@@ -153,7 +153,7 @@ var SERVICE_CODE = {
     ],
     "Authenticating:logout": [
         ["set", "$P0.userInfo", null],
-        ["if!=than", "$S0.accessToken", null, 10],
+        ["if!=than", "$S0.accessToken", null, 11],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "DELETE"],
         ["create", "$L1", "String"],
@@ -163,7 +163,8 @@ var SERVICE_CODE = {
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
         ["create", "$L2", "Object"],
         ["http.requestCall", "$L2", "$L0"],
-        ["callFunc", "validateResponse", "$P0", "$L2"]
+        ["callFunc", "validateResponse", "$P0", "$L2"],
+        ["set", "$S0.accessToken", null]
     ],
     "Profile:getIdentifier": [
         ["callFunc", "checkUserInfo", "$P0"],

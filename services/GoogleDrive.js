@@ -12,7 +12,7 @@ var SERVICE_CODE = {
         ["create", "$P0.paginationCache.metaCache", "Array"],
         ["if==than", "$P0.scopes", null, 2],
         ["set", "$P0.scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fdrive"],
-        ["jumpRel", 10],
+        ["jumpRel", 11],
         ["create", "$P0.scope", "String"],
         ["size", "$L0", "$P0.scopes"],
         ["create", "$L1", "Number", 0],
@@ -20,6 +20,7 @@ var SERVICE_CODE = {
         ["if!=than", "$L1", 0, 1],
         ["string.concat", "$P0.scope", "$P0.scope", "+"],
         ["get", "$L2", "$P0.scopes", "$L1"],
+        ["string.urlEncode", "$L2", "$L2"],
         ["string.concat", "$P0.scope", "$P0.scope", "$L2"],
         ["math.add", "$L1", "$L1", 1],
         ["jumpRel", -8]

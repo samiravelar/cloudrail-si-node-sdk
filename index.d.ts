@@ -1037,7 +1037,7 @@ declare module 'cloudrail-si/servicecode/Sandbox' {
 	    deleteVariable(varAddressParts: any[], stacklevel?: number): boolean;
 	    private getStackForAddressPart(part, stacklevel);
 	    static decodeVariableAddress(varAddress: VarAddress): any[];
-	    private setEntry(container, varAddress, value);
+	    private setEntry(baseContainer, varAddress, value);
 	    private getEntry(container, varAddress, emptyIsNull);
 	    private deleteEntry(container, varAddress);
 	    callFunction(functionName: string, parameters: any[]): void;
