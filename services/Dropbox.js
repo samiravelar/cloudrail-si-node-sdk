@@ -593,7 +593,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "download");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -608,7 +608,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "upload");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -622,7 +622,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "move");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -636,7 +636,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "delete");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -650,7 +650,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "copy");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -664,7 +664,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "createFolder");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -678,7 +678,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -693,7 +693,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getChildren");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -708,7 +708,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getChildrenPage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getChildrenPage");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -723,7 +723,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getUserLogin");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -738,7 +738,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getUserName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -753,7 +753,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "createShareLink");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -768,7 +768,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getAllocation");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -783,7 +783,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:exists", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "exists");
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -798,7 +798,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "getThumbnail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getThumbnail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -813,7 +813,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -827,7 +827,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -841,7 +841,7 @@ var Dropbox = (function () {
         Statistics_1.Statistics.addCall("Dropbox", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

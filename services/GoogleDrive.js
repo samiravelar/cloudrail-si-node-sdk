@@ -1043,7 +1043,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadGD", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "download");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1058,7 +1058,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("uploadGD", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "upload");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1072,7 +1072,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("moveGD", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "move");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1086,7 +1086,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteGD", this.interpreterStorage, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "delete");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1100,7 +1100,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("copyGD", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "copy");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1114,7 +1114,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createGDFolder", this.interpreterStorage, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "createFolder");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1128,7 +1128,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGDMetadata", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1143,7 +1143,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGDChildren", this.interpreterStorage, null, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getChildren");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1158,7 +1158,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getChildrenPage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getChildrenPage");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1173,7 +1173,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getUserLogin");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1188,7 +1188,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getUserName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1203,7 +1203,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "createShareLink");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1218,7 +1218,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getAllocation");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1233,7 +1233,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("exists", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "exists");
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -1248,7 +1248,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "getThumbnail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getThumbnail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1263,7 +1263,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1277,7 +1277,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1291,7 +1291,7 @@ var GoogleDrive = (function () {
         Statistics_1.Statistics.addCall("GoogleDrive", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

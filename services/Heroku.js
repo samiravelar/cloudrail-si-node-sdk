@@ -163,7 +163,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -178,7 +178,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -193,7 +193,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -208,7 +208,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -223,7 +223,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -238,7 +238,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -253,7 +253,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -268,7 +268,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -283,7 +283,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -297,7 +297,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -311,7 +311,7 @@ var Heroku = (function () {
         Statistics_1.Statistics.addCall("Heroku", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Heroku", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

@@ -148,7 +148,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -163,7 +163,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -178,7 +178,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -193,7 +193,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -208,7 +208,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -223,7 +223,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -238,7 +238,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -253,7 +253,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -268,7 +268,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -282,7 +282,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -296,7 +296,7 @@ var Slack = (function () {
         Statistics_1.Statistics.addCall("Slack", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Slack", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

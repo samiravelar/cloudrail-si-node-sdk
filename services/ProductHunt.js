@@ -158,7 +158,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -173,7 +173,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -188,7 +188,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -203,7 +203,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -218,7 +218,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -233,7 +233,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -248,7 +248,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -263,7 +263,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -278,7 +278,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -292,7 +292,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -306,7 +306,7 @@ var ProductHunt = (function () {
         Statistics_1.Statistics.addCall("ProductHunt", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "ProductHunt", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

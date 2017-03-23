@@ -192,7 +192,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -207,7 +207,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -222,7 +222,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -237,7 +237,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -252,7 +252,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -267,7 +267,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -282,7 +282,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLILocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -297,7 +297,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getLIPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -312,7 +312,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("loginLI", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -326,7 +326,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("logoutLI", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -340,7 +340,7 @@ var LinkedIn = (function () {
         Statistics_1.Statistics.addCall("LinkedIn", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "LinkedIn", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

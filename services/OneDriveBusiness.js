@@ -816,7 +816,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "download");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -831,7 +831,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "upload");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -845,7 +845,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "move");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -859,7 +859,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "delete");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -873,7 +873,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "copy");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -887,7 +887,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "createFolder");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -901,7 +901,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -916,7 +916,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getChildren");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -931,7 +931,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getChildrenPage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getChildrenPage");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -946,7 +946,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getUserLogin");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -961,7 +961,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getUserName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -976,7 +976,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createShareLink", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "createShareLink");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -991,7 +991,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getAllocation", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getAllocation");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1006,7 +1006,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:exists", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "exists");
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -1021,7 +1021,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "getThumbnail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getThumbnail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -1036,7 +1036,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1050,7 +1050,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -1064,7 +1064,7 @@ var OneDriveBusiness = (function () {
         Statistics_1.Statistics.addCall("OneDriveBusiness", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

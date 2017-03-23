@@ -482,7 +482,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "download");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -497,7 +497,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "upload");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -511,7 +511,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "move");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -525,7 +525,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "delete");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -539,7 +539,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "copy");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -553,7 +553,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "createFolder");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -567,7 +567,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -582,7 +582,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getChildren");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -597,7 +597,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getChildrenPage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getChildrenPage");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -612,7 +612,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getUserLogin");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -627,7 +627,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getUserName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -642,7 +642,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createShareLink", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "createShareLink");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -657,7 +657,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getAllocation", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getAllocation");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -672,7 +672,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:exists", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "exists");
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -687,7 +687,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "getThumbnail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getThumbnail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -702,7 +702,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -716,7 +716,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -730,7 +730,7 @@ var Egnyte = (function () {
         Statistics_1.Statistics.addCall("Egnyte", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

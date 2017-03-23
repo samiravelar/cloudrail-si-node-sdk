@@ -1149,7 +1149,7 @@ declare module 'cloudrail-si/helpers/Helper' {
 	    static makeRequest(urlString: string, headers: ObjectMap<string>, body: stream.Readable, method: HttpMethod, timeout?: number): Promise<http.IncomingMessage>;
 	    static lowerCaseFirstLetter(str: string): string;
 	    static upperCaseFirstLetter(str: string): string;
-	    static checkSandboxError(ip: Interpreter): void;
+	    static checkSandboxError(ip: Interpreter, serviceName: string, methodName: string): void;
 	    static makeBuffer(data: any, encoding?: string): Buffer;
 	    static bufferToUint8Array(buf: Buffer): number[];
 	}

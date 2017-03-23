@@ -553,7 +553,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -568,7 +568,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -583,7 +583,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -598,7 +598,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -613,7 +613,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -628,7 +628,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -643,7 +643,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -658,7 +658,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -673,7 +673,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -687,7 +687,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -701,7 +701,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "postUpdate");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:postUpdate", this.interpreterStorage, content).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "postUpdate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -715,7 +715,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "postImage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:postImage", this.interpreterStorage, message, image).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "postImage");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -729,7 +729,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "postVideo");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:postVideo", this.interpreterStorage, message, video, size, mimeType).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "postVideo");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -743,7 +743,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "getConnections");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:getConnections", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "getConnections");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -758,7 +758,7 @@ var Twitter = (function () {
         Statistics_1.Statistics.addCall("Twitter", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twitter", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

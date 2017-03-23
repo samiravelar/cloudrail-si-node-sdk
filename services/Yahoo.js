@@ -221,7 +221,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -236,7 +236,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -251,7 +251,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -266,7 +266,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -281,7 +281,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -296,7 +296,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -311,7 +311,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYULocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -326,7 +326,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getYUPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -341,7 +341,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("loginYU", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -355,7 +355,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("logoutYU", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -369,7 +369,7 @@ var Yahoo = (function () {
         Statistics_1.Statistics.addCall("Yahoo", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Yahoo", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

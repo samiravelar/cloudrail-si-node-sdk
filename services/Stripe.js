@@ -557,7 +557,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "createCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createCharge", this.interpreterStorage, null, amount, currency, source).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "createCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -572,7 +572,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "getCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getCharge", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "getCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -587,7 +587,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "listCharges");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listCharges", this.interpreterStorage, null, from, to, creditCard).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "listCharges");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -602,7 +602,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "refundCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("refundCharge", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "refundCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -617,7 +617,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "partiallyRefundCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("partiallyRefundCharge", this.interpreterStorage, null, id, amount).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "partiallyRefundCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -632,7 +632,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "getRefund");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getRefund", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "getRefund");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -647,7 +647,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "getRefundsForCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getRefundsForCharge", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "getRefundsForCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -662,7 +662,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "createSubscriptionPlan");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, interval, intervalCount).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "createSubscriptionPlan");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -677,7 +677,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "listSubscriptionPlans");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listSubscriptionPlans", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "listSubscriptionPlans");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -692,7 +692,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "createSubscription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createSubscription", this.interpreterStorage, null, planID, name, description, source).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "createSubscription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -707,7 +707,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "cancelSubscription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("cancelSubscription", this.interpreterStorage, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "cancelSubscription");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -721,7 +721,7 @@ var Stripe = (function () {
         Statistics_1.Statistics.addCall("Stripe", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Stripe", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

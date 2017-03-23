@@ -379,7 +379,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "createBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:createBucket", this.interpreterStorage, null, bucketName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "createBucket");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -394,7 +394,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "listBuckets");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listBuckets", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "listBuckets");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -409,7 +409,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "deleteBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:deleteBucket", this.interpreterStorage, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "deleteBucket");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -423,7 +423,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "deleteFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:deleteFile", this.interpreterStorage, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "deleteFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -437,7 +437,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "getFileMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:getFileMetadata", this.interpreterStorage, null, bucket, fileName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "getFileMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -452,7 +452,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "listFiles");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listFiles", this.interpreterStorage, null, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "listFiles");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -467,7 +467,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "uploadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:upload", this.interpreterStorage, bucket, name, stream, size).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "uploadFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -481,7 +481,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:download", this.interpreterStorage, null, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "downloadFile");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -496,7 +496,7 @@ var Backblaze = (function () {
         Statistics_1.Statistics.addCall("Backblaze", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

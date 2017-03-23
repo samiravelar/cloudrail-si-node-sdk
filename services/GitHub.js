@@ -185,7 +185,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -200,7 +200,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -215,7 +215,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -230,7 +230,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -245,7 +245,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -260,7 +260,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -275,7 +275,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -290,7 +290,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getGHPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -305,7 +305,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("loginGH", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -319,7 +319,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("logoutGH", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -333,7 +333,7 @@ var GitHub = (function () {
         Statistics_1.Statistics.addCall("GitHub", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GitHub", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

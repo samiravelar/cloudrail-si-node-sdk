@@ -254,7 +254,7 @@ var GooglePlaces = (function () {
         Statistics_1.Statistics.addCall("GooglePlaces", "getNearbyPOIs");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlaces", "getNearbyPOIs");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -269,7 +269,7 @@ var GooglePlaces = (function () {
         Statistics_1.Statistics.addCall("GooglePlaces", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlaces", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

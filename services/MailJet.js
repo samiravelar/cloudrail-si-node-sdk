@@ -175,7 +175,7 @@ var MailJet = (function () {
         Statistics_1.Statistics.addCall("MailJet", "sendEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("sendMJEMail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MailJet", "sendEmail");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -189,7 +189,7 @@ var MailJet = (function () {
         Statistics_1.Statistics.addCall("MailJet", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MailJet", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

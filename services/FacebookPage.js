@@ -214,7 +214,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "postUpdate");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:postUpdate", this.interpreterStorage, content).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "postUpdate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -228,7 +228,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "postImage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:postImage", this.interpreterStorage, message, image).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "postImage");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -242,7 +242,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "postVideo");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:postVideo", this.interpreterStorage, message, video, size, mimeType).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "postVideo");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -256,7 +256,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "getConnections");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Social:getConnections", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "getConnections");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -271,7 +271,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -285,7 +285,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -299,7 +299,7 @@ var FacebookPage = (function () {
         Statistics_1.Statistics.addCall("FacebookPage", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "FacebookPage", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

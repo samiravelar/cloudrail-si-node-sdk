@@ -177,7 +177,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -192,7 +192,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -207,7 +207,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -222,7 +222,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -237,7 +237,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -252,7 +252,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -267,7 +267,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -282,7 +282,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -297,7 +297,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -311,7 +311,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -325,7 +325,7 @@ var MicrosoftLive = (function () {
         Statistics_1.Statistics.addCall("MicrosoftLive", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftLive", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

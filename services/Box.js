@@ -622,7 +622,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "download");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:download", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "download");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -637,7 +637,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "upload");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:upload", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "upload");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -651,7 +651,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "move");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:move", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "move");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -665,7 +665,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "delete");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:delete", this.interpreterStorage, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "delete");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -679,7 +679,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "copy");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:copy", this.interpreterStorage, sourcePath, destinationPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "copy");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -693,7 +693,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "createFolder");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:createFolder", this.interpreterStorage, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "createFolder");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -707,7 +707,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getMetadata", this.interpreterStorage, null, filePath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -722,7 +722,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getChildren");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getChildren", this.interpreterStorage, null, folderPath).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getChildren");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -737,7 +737,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getChildrenPage");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getChildrenPage", this.interpreterStorage, null, path, offset, limit).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getChildrenPage");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -752,7 +752,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getUserLogin");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserLogin", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getUserLogin");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -767,7 +767,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getUserName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getUserName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getUserName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -782,7 +782,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "createShareLink");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createShareLink", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "createShareLink");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -797,7 +797,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getAllocation");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getAllocation", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getAllocation");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -812,7 +812,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "exists");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("exists", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "exists");
         }).then(function () {
             var res;
             res = !!ip.getParameter(1);
@@ -827,7 +827,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "getThumbnail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "getThumbnail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -842,7 +842,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -856,7 +856,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -870,7 +870,7 @@ var Box = (function () {
         Statistics_1.Statistics.addCall("Box", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Box", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

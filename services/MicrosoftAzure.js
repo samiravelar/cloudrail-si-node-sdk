@@ -490,7 +490,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "createBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:createBucket", this.interpreterStorage, null, bucketName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "createBucket");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -505,7 +505,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "listBuckets");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listBuckets", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "listBuckets");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -520,7 +520,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "deleteBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:deleteBucket", this.interpreterStorage, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "deleteBucket");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -534,7 +534,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "deleteFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:deleteFile", this.interpreterStorage, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "deleteFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -548,7 +548,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "getFileMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:getFileMetadata", this.interpreterStorage, null, bucket, fileName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "getFileMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -563,7 +563,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "listFiles");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listFiles", this.interpreterStorage, null, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "listFiles");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -578,7 +578,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "uploadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:upload", this.interpreterStorage, bucket, name, stream, size).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "uploadFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -592,7 +592,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:download", this.interpreterStorage, null, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "downloadFile");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -607,7 +607,7 @@ var MicrosoftAzure = (function () {
         Statistics_1.Statistics.addCall("MicrosoftAzure", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

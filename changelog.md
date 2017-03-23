@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.17.2**
+  * Minor fix for an issue where potential errors would be misattributed to another service
+
 * **2.17.1**
   * Fixed broken Facebook constructor
   * Small fixes for optional scopes parameter

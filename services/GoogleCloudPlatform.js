@@ -287,7 +287,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "createBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createBucket", this.interpreterStorage, null, bucketName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "createBucket");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -302,7 +302,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "listBuckets");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listBuckets", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "listBuckets");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -317,7 +317,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "deleteBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteBucket", this.interpreterStorage, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "deleteBucket");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -331,7 +331,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "deleteFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteFile", this.interpreterStorage, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "deleteFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -345,7 +345,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "getFileMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getFileMetadata", this.interpreterStorage, null, bucket, fileName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "getFileMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -360,7 +360,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "listFiles");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listFiles", this.interpreterStorage, null, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "listFiles");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -375,7 +375,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "uploadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("uploadFile", this.interpreterStorage, bucket, name, stream, size).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "uploadFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -389,7 +389,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadFile", this.interpreterStorage, null, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "downloadFile");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -404,7 +404,7 @@ var GoogleCloudPlatform = (function () {
         Statistics_1.Statistics.addCall("GoogleCloudPlatform", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

@@ -741,7 +741,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "createCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createCharge", this.interpreterStorage, null, amount, currency, source).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "createCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -756,7 +756,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "getCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getCharge", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "getCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -771,7 +771,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "listCharges");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listCharges", this.interpreterStorage, null, from, to, creditCard).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "listCharges");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -786,7 +786,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "refundCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("refundCharge", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "refundCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -801,7 +801,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "partiallyRefundCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("partiallyRefundCharge", this.interpreterStorage, null, id, amount).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "partiallyRefundCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -816,7 +816,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "getRefund");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getRefund", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "getRefund");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -831,7 +831,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "getRefundsForCharge");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getRefundsForCharge", this.interpreterStorage, null, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "getRefundsForCharge");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -846,7 +846,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "createSubscriptionPlan");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createSubscriptionPlan", this.interpreterStorage, null, name, amount, currency, description, interval, intervalCount).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "createSubscriptionPlan");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -861,7 +861,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "listSubscriptionPlans");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listSubscriptionPlans", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "listSubscriptionPlans");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -876,7 +876,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "createSubscription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createSubscription", this.interpreterStorage, null, planID, name, description, source).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "createSubscription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -891,7 +891,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "cancelSubscription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("cancelSubscription", this.interpreterStorage, id).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "cancelSubscription");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -905,7 +905,7 @@ var PayPal = (function () {
         Statistics_1.Statistics.addCall("PayPal", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "PayPal", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

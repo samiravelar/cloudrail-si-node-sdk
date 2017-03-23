@@ -200,7 +200,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -215,7 +215,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -230,7 +230,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -245,7 +245,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -260,7 +260,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -275,7 +275,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -290,7 +290,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -305,7 +305,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -320,7 +320,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -334,7 +334,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -348,7 +348,7 @@ var GooglePlus = (function () {
         Statistics_1.Statistics.addCall("GooglePlus", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "GooglePlus", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

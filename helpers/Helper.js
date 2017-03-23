@@ -162,10 +162,10 @@ var Helper = (function () {
     Helper.upperCaseFirstLetter = function (str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
-    Helper.checkSandboxError = function (ip) {
+    Helper.checkSandboxError = function (ip, serviceName, methodName) {
         var error = ip.sandbox.thrownError;
         if (error != null) {
-            Statistics_1.Statistics.addError("Box", "upload");
+            Statistics_1.Statistics.addError(serviceName, methodName);
             switch (error.getErrorType()) {
                 case ErrorType_1.ErrorType.ILLEGAL_ARGUMENT:
                     throw new DetailErrors_1.IllegalArgumentError(error.toString());

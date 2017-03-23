@@ -130,7 +130,7 @@ var Twilio = (function () {
         Statistics_1.Statistics.addCall("Twilio", "sendSMS");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("sendSMSTW", this.interpreterStorage, fromName, toNumber, content).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twilio", "sendSMS");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -144,7 +144,7 @@ var Twilio = (function () {
         Statistics_1.Statistics.addCall("Twilio", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Twilio", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

@@ -172,7 +172,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getIdentifier");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getIdentifier", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getIdentifier");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -187,7 +187,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getFullName");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getFullName", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getFullName");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -202,7 +202,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getEmail", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getEmail");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -217,7 +217,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getGender");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getGender", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getGender");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -232,7 +232,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getDescription");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDescription", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getDescription");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -247,7 +247,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getDateOfBirth");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getDateOfBirth", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getDateOfBirth");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -262,7 +262,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getLocale");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getLocale", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getLocale");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -277,7 +277,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "getPictureURL");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Profile:getPictureURL", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "getPictureURL");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -292,7 +292,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "login");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:login", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "login");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -306,7 +306,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "logout");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "logout");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -320,7 +320,7 @@ var Instagram = (function () {
         Statistics_1.Statistics.addCall("Instagram", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "Instagram", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

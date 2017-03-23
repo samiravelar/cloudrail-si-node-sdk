@@ -609,7 +609,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "createBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("createBucket", this.interpreterStorage, null, bucketName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "createBucket");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -624,7 +624,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "listBuckets");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listBuckets", this.interpreterStorage, null).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "listBuckets");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -639,7 +639,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "deleteBucket");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteBucket", this.interpreterStorage, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "deleteBucket");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -653,7 +653,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "deleteFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("deleteFile", this.interpreterStorage, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "deleteFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -667,7 +667,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "getFileMetadata");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getFileMetadata", this.interpreterStorage, null, bucket, fileName).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "getFileMetadata");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -682,7 +682,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "listFiles");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listFiles", this.interpreterStorage, null, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "listFiles");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -697,7 +697,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "uploadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("uploadFile", this.interpreterStorage, bucket, name, stream, size).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "uploadFile");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")
@@ -711,7 +711,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "downloadFile");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("downloadFile", this.interpreterStorage, null, fileName, bucket).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "downloadFile");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
@@ -726,7 +726,7 @@ var AmazonS3 = (function () {
         Statistics_1.Statistics.addCall("AmazonS3", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip);
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
