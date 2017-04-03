@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.17.3**
+  * Fixed issues with OneDrive for files and folders having whitespace in their names. Caused by an unannounced API change by Microsoft.
+  * Downloading a Google Documents file with Google Drive now downloads an export of the file as PDF.
+
 * **2.17.2**
   * Minor fix for an issue where potential errors would be misattributed to another service
 
