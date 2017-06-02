@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.17.4**
+  * Add Twizo to the SMS interface
+  * Add the Microsoft service which uses the new Microsoft Graph API to access OneDrive
+
 * **2.17.3**
   * Fixed issues with OneDrive for files and folders having whitespace in their names. Caused by an unannounced API change by Microsoft.
   * Downloading a Google Documents file with Google Drive now downloads an export of the file as PDF.

@@ -1801,6 +1801,46 @@ declare module 'cloudrail-si/services/MicrosoftLive' {
 	}
 
 }
+declare module 'cloudrail-si/services/Microsoft' {
+	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
+	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class Microsoft implements CloudStorage, AdvancedRequestSupporter {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
+	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
+	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    delete(filePath: string, callback: NodeCallback<void>): void;
+	    copy(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
+	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
+	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
+	    getUserLogin(callback: NodeCallback<string>): void;
+	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    searchFiles(query: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    login(callback: NodeCallback<void>): void;
+	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/interfaces/SMS' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	/**
@@ -2218,6 +2258,22 @@ declare module 'cloudrail-si/services/Twitter' {
 	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
 	    getConnections(callback: NodeCallback<string[]>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
+declare module 'cloudrail-si/services/Twizo' {
+	import { SMS } from 'cloudrail-si/interfaces/SMS';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class Twizo implements SMS {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, key: string);
+	    sendSMS(fromName: string, toNumber: string, content: string, callback: NodeCallback<void>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2695,6 +2751,7 @@ declare module 'cloudrail-si/index' {
 	import { LinkedIn } from 'cloudrail-si/services/LinkedIn';
 	import { MailJet } from 'cloudrail-si/services/MailJet';
 	import { MicrosoftLive } from 'cloudrail-si/services/MicrosoftLive';
+	import { Microsoft } from 'cloudrail-si/services/Microsoft';
 	import { Nexmo } from 'cloudrail-si/services/Nexmo';
 	import { OneDrive } from 'cloudrail-si/services/OneDrive';
 	import { PayPal } from 'cloudrail-si/services/PayPal';
@@ -2703,6 +2760,7 @@ declare module 'cloudrail-si/index' {
 	import { Stripe } from 'cloudrail-si/services/Stripe';
 	import { Twilio } from 'cloudrail-si/services/Twilio';
 	import { Twitter } from 'cloudrail-si/services/Twitter';
+	import { Twizo } from 'cloudrail-si/services/Twizo';
 	import { Yahoo } from 'cloudrail-si/services/Yahoo';
 	import { Yelp } from 'cloudrail-si/services/Yelp';
 	import { Address } from 'cloudrail-si/types/Address';
@@ -2753,6 +2811,7 @@ declare module 'cloudrail-si/index' {
 	        "MailJet": typeof MailJet;
 	        "MicrosoftAzure": typeof MicrosoftAzure;
 	        "MicrosoftLive": typeof MicrosoftLive;
+	        "Microsoft": typeof Microsoft;
 	        "Nexmo": typeof Nexmo;
 	        "OneDrive": typeof OneDrive;
 	        "OneDriveBusiness": typeof OneDriveBusiness;
@@ -2764,6 +2823,7 @@ declare module 'cloudrail-si/index' {
 	        "Stripe": typeof Stripe;
 	        "Twilio": typeof Twilio;
 	        "Twitter": typeof Twitter;
+	        "Twizo": typeof Twizo;
 	        "Yahoo": typeof Yahoo;
 	        "Yelp": typeof Yelp;
 	    };

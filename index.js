@@ -11,6 +11,7 @@ var Instagram_1 = require("./services/Instagram");
 var LinkedIn_1 = require("./services/LinkedIn");
 var MailJet_1 = require("./services/MailJet");
 var MicrosoftLive_1 = require("./services/MicrosoftLive");
+var Microsoft_1 = require("./services/Microsoft");
 var Nexmo_1 = require("./services/Nexmo");
 var OneDrive_1 = require("./services/OneDrive");
 var PayPal_1 = require("./services/PayPal");
@@ -19,6 +20,7 @@ var Slack_1 = require("./services/Slack");
 var Stripe_1 = require("./services/Stripe");
 var Twilio_1 = require("./services/Twilio");
 var Twitter_1 = require("./services/Twitter");
+var Twizo_1 = require("./services/Twizo");
 var Yahoo_1 = require("./services/Yahoo");
 var Yelp_1 = require("./services/Yelp");
 var Address_1 = require("./types/Address");
@@ -70,6 +72,7 @@ module.exports = {
         "MailJet": MailJet_1.MailJet,
         "MicrosoftAzure": MicrosoftAzure_1.MicrosoftAzure,
         "MicrosoftLive": MicrosoftLive_1.MicrosoftLive,
+        "Microsoft": Microsoft_1.Microsoft,
         "Nexmo": Nexmo_1.Nexmo,
         "OneDrive": OneDrive_1.OneDrive,
         "OneDriveBusiness": OneDriveBusiness_1.OneDriveBusiness,
@@ -81,6 +84,7 @@ module.exports = {
         "Stripe": Stripe_1.Stripe,
         "Twilio": Twilio_1.Twilio,
         "Twitter": Twitter_1.Twitter,
+        "Twizo": Twizo_1.Twizo,
         "Yahoo": Yahoo_1.Yahoo,
         "Yelp": Yelp_1.Yelp
     },
