@@ -21,7 +21,7 @@ CloudRail is an API integration solution which abstracts multiple APIs from diff
 
 Learn more about CloudRail at https://cloudrail.com
 
-Full documentation can be found [here](https://documentation.cloudrail.com/nodejs/nodejs/Home)
+Full documentation can be found [here](https://cloudrail.com/integrations)
 
 ---
 ---
@@ -67,7 +67,7 @@ Point of Interest | Google Places, Foursquare, Yelp
 * Generate share links for files and folders
 * Get thumbnails for images
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-cloudstorage)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/CloudStorage;platformId=Nodejs)
 #### Code Example:
 
 ```javascript
@@ -107,7 +107,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 * List files in a bucket and delete files
 * Get file metadata (last modified, size, etc.)
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-businesscloudstorage)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/BusinessCloudStorage;platformId=Nodejs)
 #### Code Example
 
 ```javascript
@@ -150,7 +150,7 @@ bcs.createBucket("myNewBucket", (err, bucket) => {
 * Retrieve profile pictures.
 * Login using the Social Network.
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-profile)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Profile;platformId=Nodejs)
 #### Code Example:
 
 ```javascript
@@ -187,7 +187,7 @@ profile.getEmail((err, email) => {
 * Post messages to a wall/stream
 * Post pictures and videos to a wall/stream
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-social)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Social;platformId=Nodejs)
 #### Code Example:
 
 ```javascript
@@ -222,7 +222,7 @@ social.postVideo("This is a test video", fileStream, size, "video/mp4", (err) =>
 * Refund previously made charges
 * Manage subscriptions
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-payment)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Payment;platformId=Nodejs)
 #### Code Example
 
 ```javascript
@@ -248,7 +248,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
 
 * Send Email
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-email)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Email;platformId=Nodejs)
 
 #### Code Example
 
@@ -269,12 +269,13 @@ email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"
 
 * Twilio
 * Nexmo
+* Twizo
 
 #### Features
 
 * Send SMS
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-sms)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/SMS;platformId=Nodejs)
 
 #### Code Example
 
@@ -302,7 +303,7 @@ sms.sendSMS("CloudRail", "+4912345678", "Hello from CloudRail", (err) => {
 * Get a list of POIs nearby
 * Filter by categories or search term
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-pointsofinterest)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/PointsOfInterest;platformId=Nodejs)
 #### Code Example
 
 ``` javascript
@@ -330,7 +331,7 @@ More interfaces are coming soon.
 
 * Switch services instantly: One line of code is needed to set up the service you are using. Changing which service is as simple as changing the name to the one you wish to use.
 
-* Simple Documentation: There is no searching around Stack Overflow for the answer. The [CloudRail Wiki](https://documentation.cloudrail.com/nodejs/nodejs/Home) is regularly updated, clean, and simple to use.
+* Simple Documentation: There is no searching around Stack Overflow for the answer. The [CloudRail Portal](https://cloudrail.com/integrations) is regularly updated, clean, and simple to use.
 
 * No Maintenance Times: The CloudRail Libraries are updated when a provider changes their API.
 
@@ -373,11 +374,11 @@ CloudRail provides a developer portal which offers usage insights for the SDKs a
 
 It's free to sign up and generate a key.
 
-Head over to https://developers.cloudrail.com
+Head over to https://cloudrail.com/signup
 
 ## Pricing
 
-Learn more about our pricing on https://cloudrail.com/cloudrail-pricing/ 
+Learn more about our pricing on https://cloudrail.com/pricing
 
 ## Other Platforms
 
