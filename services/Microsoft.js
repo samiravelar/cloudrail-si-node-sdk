@@ -443,7 +443,7 @@ var SERVICE_CODE = {
     "processRawMeta": [
         ["size", "$L0", "$P2"],
         ["create", "$L1", "Number", 0],
-        ["if<than", "$L1", "$L0", 23],
+        ["if<than", "$L1", "$L0", 28],
         ["get", "$L10", "$P2", "$L1"],
         ["create", "$L9", "CloudMetaData"],
         ["set", "$L9.Name", "$L10.name"],
@@ -460,13 +460,18 @@ var SERVICE_CODE = {
         ["set", "$L9.Folder", 0],
         ["jumpRel", 1],
         ["set", "$L9.Folder", 1],
+        ["if==than", "$P3", null, 4],
+        ["string.substring", "$L14", "$L10.parentReference.path", 12],
+        ["string.urlDecode", "$L14", "$L14"],
+        ["string.concat", "$L9.Path", "$L14", "/", "$L9.Name"],
+        ["jumpRel", 4],
         ["if==than", "$P3", "/", 2],
         ["string.concat", "$L9.Path", "$P3", "$L9.Name"],
         ["jumpRel", 1],
         ["string.concat", "$L9.Path", "$P3", "/", "$L9.Name"],
         ["push", "$P1", "$L9"],
         ["math.add", "$L1", "$L1", 1],
-        ["jumpRel", -24]
+        ["jumpRel", -29]
     ],
     "exists": [
         ["callFunc", "validatePath", "$P0", "$P2"],
@@ -504,6 +509,27 @@ var SERVICE_CODE = {
         ["return"],
         ["callFunc", "validateResponse", "$P0", "$L2"],
         ["set", "$P1", "$L2.responseBody"]
+    ],
+    "searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuth", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/drive/root/search"],
+        ["create", "$L1", "Object"],
+        ["set", "$L0.requestHeaders", "$L1"],
+        ["string.concat", "$L1.Authorization", "Bearer ", "$S0.accessToken"],
+        ["set", "$L1.Accept", "application/json"],
+        ["string.urlEncode", "$L2", "$P2"],
+        ["string.concat", "$L0.url", "$L0.url", "(q='", "$L2", "')"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$P1", "Array"],
+        ["callFunc", "processRawMeta", "$P0", "$P1", "$L2.value"]
     ],
     "Authenticating:login": [
         ["callFunc", "checkAuth", "$P0", "$L0"]
@@ -1073,11 +1099,11 @@ var Microsoft = (function () {
                 callback(err);
         });
     };
-    Microsoft.prototype.searchFiles = function (query, callback) {
-        Statistics_1.Statistics.addCall("Microsoft", "searchFiles");
+    Microsoft.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("Microsoft", "search");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("", this.interpreterStorage, null, query).then(function () {
-            Helper_1.Helper.checkSandboxError(ip, "Microsoft", "searchFiles");
+        ip.callFunction("searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Microsoft", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

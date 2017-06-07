@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -94,9 +94,9 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L0", "String"],
         ["create", "$L1", "String"],
-        ["string.concat", "$L0", "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&scope=", "$P0.scope"],
+        ["string.concat", "$L0", "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&scope=", "$P0.scope"],
         ["awaitCodeRedirect", "$L2", "$L0"],
-        ["string.concat", "$L1", "grant_type=authorization_code&code=", "$L2", "&redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
+        ["string.concat", "$L1", "grant_type=authorization_code&code=", "$L2", "&redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],
         ["size", "$L15", "$L1"],
         ["string.concat", "$L15", "$L15"],
         ["stream.stringToStream", "$L3", "$L1"],
@@ -171,14 +171,14 @@ var SERVICE_CODE = {
     ]
 };
 var LinkedIn = (function () {
-    function LinkedIn(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function LinkedIn(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("LinkedIn");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;

@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -82,11 +82,11 @@ var SERVICE_CODE = {
     ],
     "authenticate": [
         ["create", "$L2", "String"],
-        ["string.concat", "$L0", "https://api.instagram.com/oauth/authorize/?client_id=", "$P0.clientID", "&response_type=code&redirect_uri=", "$P0.redirectUri", "&scope=", "$P0.scope", "&state=", "$P0.state"],
+        ["string.concat", "$L0", "https://api.instagram.com/oauth/authorize/?client_id=", "$P0.clientId", "&response_type=code&redirect_uri=", "$P0.redirectUri", "&scope=", "$P0.scope", "&state=", "$P0.state"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "--------------------------c77df4126e3a1dc1\r\n"],
         ["string.concat", "$L2", "$L2", "Content-Disposition: form-data; name=\"client_id\"\r\n\r\n"],
-        ["string.concat", "$L2", "$L2", "$P0.clientID", "\r\n"],
+        ["string.concat", "$L2", "$L2", "$P0.clientId", "\r\n"],
         ["string.concat", "$L2", "$L2", "--------------------------c77df4126e3a1dc1\r\n"],
         ["string.concat", "$L2", "$L2", "Content-Disposition: form-data; name=\"client_secret\"\r\n\r\n"],
         ["string.concat", "$L2", "$L2", "$P0.clientSecret", "\r\n"],
@@ -151,14 +151,14 @@ var SERVICE_CODE = {
     ]
 };
 var Instagram = (function () {
-    function Instagram(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function Instagram(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Instagram");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;

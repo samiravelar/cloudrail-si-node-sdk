@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -16,7 +16,7 @@ var SERVICE_CODE = {
         ["create", "$L1.requestHeaders", "Object"],
         ["set", "$L1.requestHeaders.Content-Type", "application/json"],
         ["create", "$L7", "String"],
-        ["string.concat", "$L7", "$P0.clientID", ":", "$P0.clientSecret"],
+        ["string.concat", "$L7", "$P0.clientId", ":", "$P0.clientSecret"],
         ["string.base64encode", "$L7", "$L7"],
         ["string.concat", "$L1.requestHeaders.Authorization", "Basic ", "$L7"],
         ["create", "$L2", "Object"],
@@ -66,7 +66,7 @@ var SERVICE_CODE = {
         ["if==than", "$L0.requestHeaders", null, 1],
         ["create", "$L0.requestHeaders", "Object"],
         ["if!=than", "$P2.appendAuthorization", 0, 3],
-        ["string.concat", "$L1", "$P0.clientID", ":", "$P0.clientSecret"],
+        ["string.concat", "$L1", "$P0.clientId", ":", "$P0.clientSecret"],
         ["string.base64encode", "$L1", "$L1"],
         ["string.concat", "$L0.requestHeaders.Authorization", "Basic ", "$L1"],
         ["http.requestCall", "$L1", "$L0"],
@@ -157,14 +157,14 @@ var SERVICE_CODE = {
     ]
 };
 var MailJet = (function () {
-    function MailJet(redirectReceiver, clientID, clientSecret) {
+    function MailJet(redirectReceiver, clientId, clientSecret) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("MailJet");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {

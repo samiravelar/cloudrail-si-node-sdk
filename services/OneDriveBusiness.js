@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -284,7 +284,7 @@ var SERVICE_CODE = {
         ["jumpRel", 1],
         ["if<than", "$P3", "$P0.paginationCache.offset", 16],
         ["set", "$P0.paginationCache.path", "$P2"],
-        ["set", "$P0.P0.paginationCache.offset", 0],
+        ["set", "$P0.paginationCache.offset", 0],
         ["create", "$P0.paginationCache.metaCache", "Array"],
         ["create", "$L0", "Object"],
         ["create", "$L1", "String"],
@@ -414,6 +414,24 @@ var SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L2"],
         ["set", "$P1", "$L2.responseBody"]
     ],
+    "searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuth", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["string.concat", "$L0.url", "$S0.url", "/drive/items/root/view.search"],
+        ["callFunc", "urlEncode", "$P0", "$L1", "$P2"],
+        ["string.concat", "$L0.url", "$L0.url", "?q=", "$L1"],
+        ["string.concat", "$L0.url", "$L0.url", "&access_token=", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$P1", "Array"],
+        ["callFunc", "processRawMeta", "$P0", "$P1", "$L2.value"]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuth", "$P0", "$L0"]
     ],
@@ -449,7 +467,7 @@ var SERVICE_CODE = {
     "processRawMeta": [
         ["size", "$L0", "$P2"],
         ["create", "$L1", "Number", 0],
-        ["if<than", "$L1", "$L0", 23],
+        ["if<than", "$L1", "$L0", 28],
         ["get", "$L10", "$P2", "$L1"],
         ["create", "$L9", "CloudMetaData"],
         ["set", "$L9.Name", "$L10.name"],
@@ -466,13 +484,18 @@ var SERVICE_CODE = {
         ["set", "$L9.Folder", 0],
         ["jumpRel", 1],
         ["set", "$L9.Folder", 1],
+        ["if==than", "$P3", null, 4],
+        ["string.substring", "$L14", "$L10.parentReference.path", 12],
+        ["string.urlDecode", "$L14", "$L14"],
+        ["string.concat", "$L9.Path", "$L14", "/", "$L9.Name"],
+        ["jumpRel", 4],
         ["if==than", "$P3", "/", 2],
         ["string.concat", "$L9.Path", "$P3", "$L9.Name"],
         ["jumpRel", 1],
         ["string.concat", "$L9.Path", "$P3", "/", "$L9.Name"],
         ["push", "$P1", "$L9"],
         ["math.add", "$L1", "$L1", 1],
-        ["jumpRel", -24]
+        ["jumpRel", -29]
     ],
     "encode": [
         ["string.split", "$L0", "$P2", "\\+"],
@@ -734,9 +757,9 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P2", "accessToken", 38],
-        ["string.concat", "$L0", "https://login.microsoftonline.com/common/oauth2/authorize?client_id=", "$P0.clientID", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://login.microsoftonline.com/common/oauth2/authorize?client_id=", "$P0.clientId", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
         ["awaitCodeRedirect", "$L1", "$L0"],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code&resource=https%3A%2F%2Fapi.office.com%2Fdiscovery%2F"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code&resource=https%3A%2F%2Fapi.office.com%2Fdiscovery%2F"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
         ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
@@ -772,7 +795,7 @@ var SERVICE_CODE = {
         ["jumpRel", 2],
         ["math.add", "$L0", "$L0", 1],
         ["jumpRel", -9],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token&resource=", "$S0.resource"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token&resource=", "$S0.resource"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
         ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
@@ -796,14 +819,14 @@ var SERVICE_CODE = {
     ]
 };
 var OneDriveBusiness = (function () {
-    function OneDriveBusiness(redirectReceiver, clientID, clientSecret, redirectUri, state) {
+    function OneDriveBusiness(redirectReceiver, clientId, clientSecret, redirectUri, state) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("OneDriveBusiness");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
@@ -1022,6 +1045,21 @@ var OneDriveBusiness = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "getThumbnail");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    OneDriveBusiness.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("OneDriveBusiness", "search");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

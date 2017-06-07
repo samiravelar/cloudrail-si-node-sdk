@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -357,7 +357,7 @@ var SERVICE_CODE = {
         ["if==than", "$P1.requestHeaders", null, 1],
         ["create", "$P1.requestHeaders", "Object"],
         ["create", "$L0", "Object"],
-        ["set", "$L0.oauth_consumer_key", "$P0.clientID"],
+        ["set", "$L0.oauth_consumer_key", "$P0.clientId"],
         ["callFunc", "oAuth1:generateNonce", "$L0.oauth_nonce"],
         ["set", "$L0.oauth_signature_method", "HMAC-SHA1"],
         ["create", "$L1", "Date"],
@@ -534,14 +534,14 @@ var SERVICE_CODE = {
     ]
 };
 var Twitter = (function () {
-    function Twitter(redirectReceiver, clientID, clientSecret, redirectUri) {
+    function Twitter(redirectReceiver, clientId, clientSecret, redirectUri) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Twitter");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));

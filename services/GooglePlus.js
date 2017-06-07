@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -130,11 +130,11 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P1", "accessToken", 4],
-        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "$P0.scope", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&suppress_webview_warning=true"],
+        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&suppress_webview_warning=true"],
         ["awaitCodeRedirect", "$L1", "$L0"],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
         ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
@@ -179,14 +179,14 @@ var SERVICE_CODE = {
     ]
 };
 var GooglePlus = (function () {
-    function GooglePlus(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function GooglePlus(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("GooglePlus");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;

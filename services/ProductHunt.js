@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -79,13 +79,13 @@ var SERVICE_CODE = {
         ["callFunc", "authenticate", "$P0"]
     ],
     "authenticate": [
-        ["string.concat", "$L0", "$P0.authUrl", "/authorize?client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUriEncoded", "&response_type=code&scope=", "$P0.scope"],
+        ["string.concat", "$L0", "$P0.authUrl", "/authorize?client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUriEncoded", "&response_type=code&scope=", "$P0.scope"],
         ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["create", "$L2", "Object"],
         ["set", "$L2.method", "POST"],
         ["string.concat", "$L2.url", "$P0.authUrl", "/token"],
         ["create", "$L3", "Object"],
-        ["set", "$L3.client_id", "$P0.clientID"],
+        ["set", "$L3.client_id", "$P0.clientId"],
         ["set", "$L3.client_secret", "$P0.clientSecret"],
         ["set", "$L3.redirect_uri", "$P0.redirectUri"],
         ["set", "$L3.grant_type", "authorization_code"],
@@ -137,14 +137,14 @@ var SERVICE_CODE = {
     ]
 };
 var ProductHunt = (function () {
-    function ProductHunt(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function ProductHunt(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("ProductHunt");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;

@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -97,7 +97,7 @@ var SERVICE_CODE = {
     ],
     "authenticate": [
         ["if==than", "$P1", "accessToken", 4],
-        ["string.concat", "$L0", "https://id.heroku.com/oauth/authorize?client_id=", "$P0.clientID", "&scope=", "$P0.scope", "&response_type=code&state=", "$P0.state"],
+        ["string.concat", "$L0", "https://id.heroku.com/oauth/authorize?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&state=", "$P0.state"],
         ["awaitCodeRedirect", "$L1", "$L0"],
         ["string.concat", "$L2", "grant_type=authorization_code&code=", "$L1", "&client_secret=", "$P0.clientSecret"],
         ["jumpRel", 1],
@@ -142,14 +142,14 @@ var SERVICE_CODE = {
     ]
 };
 var Heroku = (function () {
-    function Heroku(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function Heroku(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Heroku");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;

@@ -1279,6 +1279,14 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	     * @return The thumbnail as a stream
 	     */
 	    getThumbnail: (path: string, callback: NodeCallback<stream.Readable>) => void;
+	    /**
+	     * Searches the users storage for files and folders matching the query.
+	     *
+	     * @param query The query to search with
+	     * @return List of files and folders that were found
+	     * @throws IllegalArgumentException Null or empty query
+	     */
+	    search: (query: string, callback: NodeCallback<CloudMetaData[]>) => void;
 	}
 
 }
@@ -1295,12 +1303,12 @@ declare module 'cloudrail-si/services/Box' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Box implements CloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -1321,6 +1329,7 @@ declare module 'cloudrail-si/services/Box' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -1371,7 +1380,7 @@ declare module 'cloudrail-si/services/Foursquare' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string);
 	    getNearbyPOIs(latitude: number, longitude: number, radius: number, searchTerm: string, categories: string[], callback: NodeCallback<POI[]>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
@@ -1384,12 +1393,12 @@ declare module 'cloudrail-si/services/Dropbox' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Dropbox implements CloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -1410,6 +1419,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -1517,16 +1527,16 @@ declare module 'cloudrail-si/services/Facebook' {
 	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Facebook implements Profile, Social, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1582,17 +1592,17 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class GoogleDrive implements CloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
 	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
 	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
@@ -1608,6 +1618,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -1650,7 +1661,7 @@ declare module 'cloudrail-si/services/GooglePlus' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1680,7 +1691,7 @@ declare module 'cloudrail-si/services/Instagram' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1710,7 +1721,7 @@ declare module 'cloudrail-si/services/LinkedIn' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1762,7 +1773,7 @@ declare module 'cloudrail-si/services/MailJet' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string);
 	    sendEmail(fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
@@ -1783,7 +1794,7 @@ declare module 'cloudrail-si/services/MicrosoftLive' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -1831,7 +1842,7 @@ declare module 'cloudrail-si/services/Microsoft' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
-	    searchFiles(query: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -1870,7 +1881,7 @@ declare module 'cloudrail-si/services/Nexmo' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string);
 	    sendSMS(fromName: string, toNumber: string, content: string, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
@@ -1883,17 +1894,17 @@ declare module 'cloudrail-si/services/OneDrive' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class OneDrive implements CloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
 	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
 	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
@@ -1909,6 +1920,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2233,16 +2245,16 @@ declare module 'cloudrail-si/services/Twitter' {
 	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { DateOfBirth } from 'cloudrail-si/types/DateOfBirth';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Twitter implements Profile, Social, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -2350,12 +2362,12 @@ declare module 'cloudrail-si/services/Egnyte' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Egnyte implements CloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -2376,6 +2388,7 @@ declare module 'cloudrail-si/services/Egnyte' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2467,12 +2480,12 @@ declare module 'cloudrail-si/services/Backblaze' {
 	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { Bucket } from 'cloudrail-si/types/Bucket';
 	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Backblaze implements BusinessCloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -2497,12 +2510,12 @@ declare module 'cloudrail-si/services/Rackspace' {
 	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { Bucket } from 'cloudrail-si/types/Bucket';
 	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class Rackspace implements BusinessCloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -2527,12 +2540,12 @@ declare module 'cloudrail-si/services/MicrosoftAzure' {
 	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { Bucket } from 'cloudrail-si/types/Bucket';
 	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class MicrosoftAzure implements BusinessCloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -2557,12 +2570,12 @@ declare module 'cloudrail-si/services/AmazonS3' {
 	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { Bucket } from 'cloudrail-si/types/Bucket';
 	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class AmazonS3 implements BusinessCloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -2595,7 +2608,7 @@ declare module 'cloudrail-si/services/Heroku' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;
@@ -2617,17 +2630,17 @@ declare module 'cloudrail-si/services/OneDriveBusiness' {
 	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class OneDriveBusiness implements CloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string);
 	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
 	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
 	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
@@ -2643,6 +2656,7 @@ declare module 'cloudrail-si/services/OneDriveBusiness' {
 	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
 	    exists(path: string, callback: NodeCallback<boolean>): void;
 	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2656,12 +2670,12 @@ declare module 'cloudrail-si/services/GoogleCloudPlatform' {
 	import { BusinessCloudStorage } from 'cloudrail-si/interfaces/BusinessCloudStorage';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { Bucket } from 'cloudrail-si/types/Bucket';
 	import { BusinessFileMetaData } from 'cloudrail-si/types/BusinessFileMetaData';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class GoogleCloudPlatform implements BusinessCloudStorage, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
@@ -2686,15 +2700,15 @@ declare module 'cloudrail-si/services/FacebookPage' {
 	import { Social } from 'cloudrail-si/interfaces/Social';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	import stream = require("stream");
 	export class FacebookPage implements Social, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, pageName: string, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, pageName: string, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    postUpdate(content: string, callback: NodeCallback<void>): void;
 	    postImage(message: string, image: stream.Readable, callback: NodeCallback<void>): void;
 	    postVideo(message: string, video: stream.Readable, size: number, mimeType: string, callback: NodeCallback<void>): void;
@@ -2720,7 +2734,7 @@ declare module 'cloudrail-si/services/ProductHunt' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string, scopes?: string[]);
 	    getIdentifier(callback: NodeCallback<string>): void;
 	    getFullName(callback: NodeCallback<string>): void;
 	    getEmail(callback: NodeCallback<string>): void;

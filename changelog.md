@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.18.0**
+  * Add a new method to the cloud storage interface that allows to search for files and folders
+
 * **2.17.4**
   * Add Twizo to the SMS interface
   * Add the Microsoft service which uses the new Microsoft Graph API to access OneDrive

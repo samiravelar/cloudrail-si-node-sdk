@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -108,7 +108,7 @@ var SERVICE_CODE = {
         ["callFunc", "getCategoriesString", "$P0", "$L2", "$P6"],
         ["string.urlEncode", "$L2", "$L2"],
         ["string.concat", "$L0.url", "$L0.url", "&categoryId=", "$L2"],
-        ["string.concat", "$L0.url", "$L0.url", "&client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
+        ["string.concat", "$L0.url", "$L0.url", "&client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],
         ["http.requestCall", "$L2", "$L0"],
         ["callFunc", "checkHttpResponse", "$P0", "$L2"],
         ["json.parse", "$L3", "$L2.responseBody"],
@@ -140,7 +140,7 @@ var SERVICE_CODE = {
         ["string.concat", "$L0.url", "$L0.url", "?"],
         ["jumpRel", 1],
         ["string.concat", "$L0.url", "$L0.url", "&"],
-        ["string.concat", "$L0.url", "$L0.url", "client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
+        ["string.concat", "$L0.url", "$L0.url", "client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],
         ["http.requestCall", "$L1", "$L0"],
         ["if!=than", "$P2.checkErrors", 0, 1],
         ["callFunc", "checkHttpResponse", "$P0", "$L1"],
@@ -220,7 +220,7 @@ var SERVICE_CODE = {
         ["create", "$L2", "Object"],
         ["set", "$L2.method", "GET"],
         ["string.concat", "$L2.url", "https://api.foursquare.com/v2/venues/", "$P2.id", "/photos"],
-        ["string.concat", "$L2.url", "$L2.url", "?client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
+        ["string.concat", "$L2.url", "$L2.url", "?client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],
         ["string.concat", "$L2.url", "$L2.url", "&limit=1&v=20160614&m=foursquare"],
         ["http.requestCall", "$L3", "$L2"],
         ["callFunc", "checkHttpResponse", "$P0", "$L3"],
@@ -240,14 +240,14 @@ var SERVICE_CODE = {
     ]
 };
 var Foursquare = (function () {
-    function Foursquare(redirectReceiver, clientID, clientSecret) {
+    function Foursquare(redirectReceiver, clientId, clientSecret) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Foursquare");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {

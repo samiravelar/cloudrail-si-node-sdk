@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -148,7 +148,7 @@ var SERVICE_CODE = {
         ["jumpRel", 1],
         ["if<than", "$P3", "$P0.paginationCache.offset", 9],
         ["set", "$P0.paginationCache.path", "$P2"],
-        ["set", "$P0.P0.paginationCache.offset", 0],
+        ["set", "$P0.paginationCache.offset", 0],
         ["create", "$P0.paginationCache.metaCache", "Array"],
         ["create", "$L0", "Object"],
         ["set", "$L0.path", "$P2"],
@@ -290,6 +290,40 @@ var SERVICE_CODE = {
         ["return"],
         ["callFunc", "validateResponse", "$P0", "$L3"],
         ["set", "$P1", "$L3.responseBody"]
+    ],
+    "CloudStorage:searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["set", "$L0.url", "https://api.dropboxapi.com/2/files/search"],
+        ["create", "$L1", "Object"],
+        ["set", "$L0.requestHeaders", "$L1"],
+        ["set", "$L1.Content-Type", "application/json"],
+        ["string.concat", "$L1.Authorization", "Bearer ", "$S0.access_token"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.path", ""],
+        ["set", "$L2.query", "$P2"],
+        ["set", "$L2.start", 0],
+        ["set", "$L2.max_results", 100],
+        ["set", "$L2.mode", "filename"],
+        ["json.stringify", "$L3", "$L2"],
+        ["stream.stringToStream", "$L0.requestBody", "$L3"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$P1", "Array"],
+        ["create", "$L3", "Number"],
+        ["size", "$L4", "$L2.matches"],
+        ["if<than", "$L3", "$L4", 5],
+        ["get", "$L5", "$L2.matches", "$L3"],
+        ["callFunc", "makeMeta", "$P0", "$L6", "$L5.metadata"],
+        ["push", "$P1", "$L6"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -6]
     ],
     "AdvancedRequestSupporter:advancedRequest": [
         ["create", "$L0", "Object"],
@@ -799,6 +833,21 @@ var Dropbox = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Dropbox", "getThumbnail");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Dropbox.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "search");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

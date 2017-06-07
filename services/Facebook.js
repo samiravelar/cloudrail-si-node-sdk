@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -263,9 +263,9 @@ var SERVICE_CODE = {
         ["create", "$L0", "String"],
         ["create", "$L1", "String"],
         ["string.urlEncode", "$L3", "$P0.redirectUri"],
-        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=", "$P0.scope"],
+        ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientId", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=", "$P0.scope"],
         ["awaitCodeRedirect", "$L2", "$L0"],
-        ["string.concat", "$L1", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientID", "&redirect_uri=", "$L3", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
+        ["string.concat", "$L1", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientId", "&redirect_uri=", "$L3", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
         ["create", "$L5", "Object"],
         ["set", "$L5.url", "$L1"],
         ["set", "$L5.method", "GET"],
@@ -276,7 +276,7 @@ var SERVICE_CODE = {
         ["set", "$S0.accessToken", "$L8.access_token"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["string.concat", "$L0.url", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret", "&grant_type=fb_exchange_token&fb_exchange_token=", "$S0.accessToken"],
+        ["string.concat", "$L0.url", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret", "&grant_type=fb_exchange_token&fb_exchange_token=", "$S0.accessToken"],
         ["http.requestCall", "$L1", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L1"],
         ["json.parse", "$L2", "$L1.responseBody"],
@@ -294,14 +294,14 @@ var SERVICE_CODE = {
     ]
 };
 var Facebook = (function () {
-    function Facebook(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function Facebook(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Facebook");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;

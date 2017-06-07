@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -255,6 +255,33 @@ var SERVICE_CODE = {
         ["get", "$P1", "$L5", "links", 0, "url"]
     ],
     "CloudStorage:getThumbnail": [],
+    "CloudStorage:searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["string.concat", "$L0.url", "https://", "$P0.domain", ".egnyte.com/pubapi/v1/search"],
+        ["create", "$L1", "Object"],
+        ["set", "$L0.requestHeaders", "$L1"],
+        ["string.concat", "$L1.Authorization", "Bearer ", "$S0.access_token"],
+        ["string.urlEncode", "$L2", "$P2"],
+        ["string.concat", "$L0.url", "$L0.url", "?query=", "$L2", "&count=100"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$P1", "Array"],
+        ["create", "$L3", "Number"],
+        ["size", "$L4", "$L2.results"],
+        ["if<than", "$L3", "$L4", 5],
+        ["get", "$L5", "$L2.results", "$L3"],
+        ["callFunc", "extractMeta", "$P0", "$L6", "$L5"],
+        ["push", "$P1", "$L6"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -6]
+    ],
     "AdvancedRequestSupporter:advancedRequest": [
         ["create", "$L0", "Object"],
         ["create", "$L0.url", "String"],
@@ -688,6 +715,21 @@ var Egnyte = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("CloudStorage:getThumbnail", this.interpreterStorage, null, path).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Egnyte", "getThumbnail");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Egnyte.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("Egnyte", "search");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

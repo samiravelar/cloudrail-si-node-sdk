@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -379,6 +379,46 @@ var SERVICE_CODE = {
         ["callFunc", "checkHttpErrors", "$P0", "$L3", "get thumbnail", 200],
         ["set", "$P1", "$L3.responseBody"]
     ],
+    "searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "replace", "$P0", "$L15", "$P2", " ", "+"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.url", "https://api.box.com/2.0/search"],
+        ["set", "$L0.method", "GET"],
+        ["create", "$L1", "Object"],
+        ["set", "$L0.requestHeaders", "$L1"],
+        ["string.concat", "$L1.Authorization", "Bearer ", "$S0.access_token"],
+        ["string.urlEncode", "$L1", "$L15"],
+        ["string.concat", "$L0.url", "$L0.url", "?query=", "$L1", "&scope=user_content&content_type=name"],
+        ["string.concat", "$L0.url", "$L0.url", "&offset=0&limit=200"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L1", "search files", 200],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["get", "$L3", "$L2.entries"],
+        ["create", "$P1", "Array"],
+        ["create", "$L4", "Number"],
+        ["size", "$L5", "$L3"],
+        ["if<than", "$L4", "$L5", 15],
+        ["get", "$L6", "$L3", "$L4"],
+        ["create", "$L7", "Number", 1],
+        ["size", "$L8", "$L6.path_collection.entries"],
+        ["create", "$L9", "String", "/"],
+        ["if<than", "$L7", "$L8", 6],
+        ["get", "$L10", "$L6.path_collection.entries", "$L7"],
+        ["if!=than", "$L7", 1, 1],
+        ["string.concat", "$L9", "$L9", "/"],
+        ["string.concat", "$L9", "$L9", "$L10.name"],
+        ["math.add", "$L7", "$L7", 1],
+        ["jumpRel", -7],
+        ["callFunc", "makeMeta", "$P0", "$L10", "$L6", "$L9"],
+        ["push", "$P1", "$L10"],
+        ["math.add", "$L4", "$L4", 1],
+        ["jumpRel", -16]
+    ],
     "AdvancedRequestSupporter:advancedRequest": [
         ["create", "$L0", "Object"],
         ["create", "$L0.url", "String"],
@@ -599,6 +639,20 @@ var SERVICE_CODE = {
         ["if<than", "$P1", 0, 2],
         ["create", "$L0", "Error", "Passed argument should be bigger than 0.", "IllegalArgument"],
         ["throwError", "$L0"]
+    ],
+    "replace": [
+        ["string.split", "$L0", "$P2", "$P3"],
+        ["size", "$L1", "$L0"],
+        ["set", "$L2", 0],
+        ["if<than", "$L2", "$L1", 7],
+        ["get", "$L5", "$L0", "$L2"],
+        ["if==than", "$L2", 0, 2],
+        ["set", "$L4", "$L5"],
+        ["jumpRel", 1],
+        ["string.concat", "$L4", "$L4", "$P4", "$L5"],
+        ["math.add", "$L2", "$L2", 1],
+        ["jumpRel", -8],
+        ["set", "$P1", "$L4"]
     ]
 };
 var Box = (function () {
@@ -828,6 +882,21 @@ var Box = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Box", "getThumbnail");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Box.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("Box", "search");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Box", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

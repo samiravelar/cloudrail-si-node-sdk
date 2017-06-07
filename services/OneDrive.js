@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -305,11 +305,11 @@ var SERVICE_CODE = {
         ["jumpRel", 1],
         ["if<than", "$P3", "$P0.paginationCache.offset", 16],
         ["set", "$P0.paginationCache.path", "$P2"],
-        ["set", "$P0.P0.paginationCache.offset", 0],
+        ["set", "$P0.paginationCache.offset", 0],
         ["create", "$P0.paginationCache.metaCache", "Array"],
         ["create", "$L0", "Object"],
         ["create", "$L1", "String"],
-        ["string.urlEncode", "$L28", "$P2"],
+        ["callFunc", "urlEncode", "$P0", "$L28", "$P2"],
         ["string.concat", "$L1", "https://api.onedrive.com/v1.0/drive/root:", "$L28"],
         ["string.concat", "$L1", "$L1", ":/children?access_token=", "$L30"],
         ["set", "$L0.url", "$L1"],
@@ -401,10 +401,28 @@ var SERVICE_CODE = {
         ["json.parse", "$L5", "$L4.responseBody"],
         ["set", "$P1", "$L5.link.webUrl"]
     ],
+    "searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuth", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["set", "$L0.url", "https://api.onedrive.com/v1.0/drive/items/root/view.search"],
+        ["callFunc", "urlEncode", "$P0", "$L1", "$P2"],
+        ["string.concat", "$L0.url", "$L0.url", "?q=", "$L1"],
+        ["string.concat", "$L0.url", "$L0.url", "&access_token=", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$P1", "Array"],
+        ["callFunc", "processRawMeta", "$P0", "$P1", "$L2.value"]
+    ],
     "processRawMeta": [
         ["size", "$L0", "$P2"],
         ["create", "$L1", "Number", 0],
-        ["if<than", "$L1", "$L0", 23],
+        ["if<than", "$L1", "$L0", 28],
         ["get", "$L10", "$P2", "$L1"],
         ["create", "$L9", "CloudMetaData"],
         ["set", "$L9.Name", "$L10.name"],
@@ -421,13 +439,18 @@ var SERVICE_CODE = {
         ["set", "$L9.Folder", 0],
         ["jumpRel", 1],
         ["set", "$L9.Folder", 1],
+        ["if==than", "$P3", null, 4],
+        ["string.substring", "$L14", "$L10.parentReference.path", 12],
+        ["string.urlDecode", "$L14", "$L14"],
+        ["string.concat", "$L9.Path", "$L14", "/", "$L9.Name"],
+        ["jumpRel", 4],
         ["if==than", "$P3", "/", 2],
         ["string.concat", "$L9.Path", "$P3", "$L9.Name"],
         ["jumpRel", 1],
         ["string.concat", "$L9.Path", "$P3", "/", "$L9.Name"],
         ["push", "$P1", "$L9"],
         ["math.add", "$L1", "$L1", 1],
-        ["jumpRel", -24]
+        ["jumpRel", -29]
     ],
     "exists": [
         ["callFunc", "validatePath", "$P0", "$P2"],
@@ -583,7 +606,7 @@ var SERVICE_CODE = {
         ["if>=than", "$P1.code", 400, 21],
         ["json.parse", "$L0", "$P1.responseBody"],
         ["set", "$L1", "$L0.error"],
-        ["set", "$L2", "$L1.message"],
+        ["set", "$L2", "$L0.message"],
         ["if==than", "$P1.code", 401, 2],
         ["create", "$L3", "Error", "$L2", "Authentication"],
         ["throwError", "$L3"],
@@ -732,11 +755,11 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P2", "accessToken", 4],
-        ["string.concat", "$L0", "https://login.live.com/oauth20_authorize.srf?client_id=", "$P0.clientID", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://login.live.com/oauth20_authorize.srf?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
         ["awaitCodeRedirect", "$L1", "$L0"],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
         ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
@@ -783,14 +806,14 @@ var SERVICE_CODE = {
     ]
 };
 var OneDrive = (function () {
-    function OneDrive(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function OneDrive(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("OneDrive");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
@@ -1010,6 +1033,21 @@ var OneDrive = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "OneDrive", "getThumbnail");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    OneDrive.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("OneDrive", "search");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "OneDrive", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -44,7 +44,7 @@ var SERVICE_CODE = {
     "User:aboutRequest": [
         ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L0", "Object"],
-        ["string.concat", "$L0.url", "https://www.googleapis.com/drive/v3/about?fields=user&key=", "$P0.clientID"],
+        ["string.concat", "$L0.url", "https://www.googleapis.com/drive/v3/about?fields=user&key=", "$P0.clientId"],
         ["create", "$L0.requestHeaders", "Object"],
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
         ["set", "$L0.method", "GET"],
@@ -315,9 +315,9 @@ var SERVICE_CODE = {
         ["jumpRel", 1],
         ["if<than", "$P3", "$P0.paginationCache.offset", 32],
         ["set", "$P0.paginationCache.path", "$P2"],
-        ["set", "$P0.P0.paginationCache.offset", 0],
+        ["set", "$P0.paginationCache.offset", 0],
         ["create", "$P0.paginationCache.metaCache", "Array"],
-        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed)%2Ckind%2CnextPageToken&q="],
+        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed%2CmodifiedTime%2CimageMediaMetadata)%2Ckind%2CnextPageToken&q="],
         ["create", "$L2", "String"],
         ["string.concat", "$L2", "'", "$L0", "'", " in parents"],
         ["string.urlEncode", "$L2", "$L2"],
@@ -369,7 +369,7 @@ var SERVICE_CODE = {
         ["size", "$L2", "$P0.paginationCache.metaCache"],
         ["math.add", "$P0.paginationCache.offset", "$P0.paginationCache.offset", "$L2"],
         ["create", "$P0.paginationCache.metaCache", "Array"],
-        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed)%2Ckind%2CnextPageToken&pageToken="],
+        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed%2CmodifiedTime%2CimageMediaMetadata)%2Ckind%2CnextPageToken&pageToken="],
         ["string.concat", "$L1", "$L1", "$P0.paginationCache.cursor"],
         ["create", "$L2", "Object"],
         ["set", "$L2.url", "$L1"],
@@ -529,6 +529,24 @@ var SERVICE_CODE = {
         ["callFunc", "validateResponse", "$P0", "$L2"],
         ["set", "$P1", "$L2.responseBody"]
     ],
+    "searchFiles": [
+        ["callFunc", "checkNull", "$P0", "$P2"],
+        ["if==than", "$P2", "", 2],
+        ["create", "$L0", "Error", "The query is not allowed to be empty.", "IllegalArgument"],
+        ["throwError", "$L0"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["callFunc", "searchForFile", "$P0", "$L0", "$P2", "contains"],
+        ["create", "$P1", "Array"],
+        ["create", "$L1", "Number"],
+        ["size", "$L2", "$L0"],
+        ["if<than", "$L1", "$L2", 6],
+        ["get", "$L3", "$L0", "$L1"],
+        ["callFunc", "rebuildPath", "$P0", "$L4", "$L3.parents.0", ""],
+        ["callFunc", "makeMetaData", "$P0", "$L5", "$L3", "$L4"],
+        ["push", "$P1", "$L5"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -7]
+    ],
     "Authenticating:login": [
         ["callFunc", "checkAuthentication", "$P0"]
     ],
@@ -543,7 +561,7 @@ var SERVICE_CODE = {
     "getAllocation": [
         ["callFunc", "checkAuthentication", "$P0"],
         ["create", "$L0", "Object"],
-        ["string.concat", "$L0.url", "https://www.googleapis.com/drive/v3/about?fields=storageQuota&key=", "$P0.clientID"],
+        ["string.concat", "$L0.url", "https://www.googleapis.com/drive/v3/about?fields=storageQuota&key=", "$P0.clientId"],
         ["create", "$L0.requestHeaders", "Object"],
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
         ["set", "$L0.method", "GET"],
@@ -589,6 +607,14 @@ var SERVICE_CODE = {
         ["set", "$P1.status", "$L1.code"],
         ["set", "$P1.headers", "$L1.responseHeaders"],
         ["set", "$P1.body", "$L1.responseBody"]
+    ],
+    "rebuildPath": [
+        ["callFunc", "getRawMetadataByID", "$P0", "$L0", "$P2"],
+        ["if==than", "$L0.parents", null, 2],
+        ["set", "$P1", "$P3"],
+        ["return"],
+        ["string.concat", "$L2", "/", "$L0.name", "$P3"],
+        ["callFunc", "rebuildPath", "$P0", "$P1", "$L0.parents.0", "$L2"]
     ],
     "resolvePath": [
         ["if==than", "$P2", "/", 2],
@@ -658,7 +684,10 @@ var SERVICE_CODE = {
         ["set", "$L0.method", "GET"],
         ["create", "$L1", "String"],
         ["callFunc", "replace", "$P0", "$L20", "$P2", "'", "\\'"],
+        ["if==than", "$P3", null, 2],
         ["string.concat", "$L1", "name = '", "$L20", "'"],
+        ["jumpRel", 1],
+        ["string.concat", "$L1", "name ", "$P3", " '", "$L20", "'"],
         ["string.urlEncode", "$L1", "$L1"],
         ["create", "$L10", "String"],
         ["string.concat", "$L10", "&files(createdTime,imageMediaMetadata(height,width),mimeType,modifiedTime,name,parents,size,trashed,id),kind"],
@@ -722,15 +751,13 @@ var SERVICE_CODE = {
     ],
     "getFolderContent": [
         ["create", "$P1", "Array"],
-        ["if==than", "$L0", null, 6],
-        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed)%2Ckind%2CnextPageToken&q="],
+        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed%2CmodifiedTime%2CimageMediaMetadata)%2Ckind%2CnextPageToken&q="],
         ["create", "$L2", "String"],
         ["string.concat", "$L2", "'", "$P2", "'", " in parents"],
         ["string.urlEncode", "$L2", "$L2"],
         ["string.concat", "$L1", "$L1", "$L2"],
-        ["jumpRel", 2],
-        ["create", "$L1", "String", "https://www.googleapis.com/drive/v3/files?fields=files(id%2CmimeType%2Cname%2Csize%2Ctrashed)%2Ckind%2CnextPageToken&pageToken="],
-        ["string.concat", "$L1", "$L1", "$L0"],
+        ["if!=than", "$L0", null, 1],
+        ["string.concat", "$L1", "$L1", "&pageToken=", "$L0"],
         ["create", "$L2", "Object"],
         ["set", "$L2.url", "$L1"],
         ["set", "$L2.method", "GET"],
@@ -755,7 +782,8 @@ var SERVICE_CODE = {
         ["jumpRel", -7],
         ["if==than", "$L6.nextPageToken", null, 1],
         ["return"],
-        ["jumpRel", -35]
+        ["set", "$L0", "$L6.nextPageToken"],
+        ["jumpRel", -33]
     ],
     "makeMetaData": [
         ["create", "$P1", "CloudMetaData"],
@@ -830,11 +858,11 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["if==than", "$P1", "accessToken", 4],
-        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientID", "&scope=", "$P0.scope", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&suppress_webview_warning=true"],
+        ["string.concat", "$L0", "https://accounts.google.com/o/oauth2/v2/auth?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&prompt=consent&access_type=offline&redirect_uri=", "$P0.redirectUri", "&suppress_webview_warning=true"],
         ["awaitCodeRedirect", "$L1", "$L0"],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
-        ["string.concat", "$L2", "client_id=", "$P0.clientID", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
         ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
@@ -1034,14 +1062,14 @@ var SERVICE_CODE = {
     ]
 };
 var GoogleDrive = (function () {
-    function GoogleDrive(redirectReceiver, clientID, clientSecret, redirectUri, state, scopes) {
+    function GoogleDrive(redirectReceiver, clientId, clientSecret, redirectUri, state, scopes) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("GoogleDrive");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         this.interpreterStorage["redirectUri"] = redirectUri;
         this.interpreterStorage["state"] = state;
@@ -1261,6 +1289,21 @@ var GoogleDrive = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getThumbnail", this.interpreterStorage, null, path).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "getThumbnail");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    GoogleDrive.prototype.search = function (query, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "search");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("searchFiles", this.interpreterStorage, null, query).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "search");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

@@ -1,7 +1,7 @@
 "use strict";
-var Helper_1 = require("../helpers/Helper");
 var Interpreter_1 = require("../servicecode/Interpreter");
 var Sandbox_1 = require("../servicecode/Sandbox");
+var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
@@ -17,7 +17,7 @@ var SERVICE_CODE = {
         ["create", "$L4", "String"],
         ["string.urlEncode", "$L3", "$P3"],
         ["string.urlEncode", "$L5", "$P1"],
-        ["string.concat", "$L0.url", "$P0.baseUrl", "/sms/json?api_key=", "$P0.clientID", "&api_secret=", "$P0.clientSecret", "&to=", "$P2", "&from=", "$L5", "&text=", "$L3"],
+        ["string.concat", "$L0.url", "$P0.baseUrl", "/sms/json?api_key=", "$P0.clientId", "&api_secret=", "$P0.clientSecret", "&to=", "$P2", "&from=", "$L5", "&text=", "$L3"],
         ["set", "$L0.method", "POST"],
         ["set", "$L1.Content-Type", "application/x-www-form-urlencoded"],
         ["set", "$L1.Content-Length", "0"],
@@ -42,7 +42,7 @@ var SERVICE_CODE = {
         ["string.concat", "$L0.url", "$L0.url", "?"],
         ["jumpRel", 1],
         ["string.concat", "$L0.url", "$L0.url", "&"],
-        ["string.concat", "$L0.url", "$L0.url", "api_key=", "$P0.clientID", "&api_secret=", "$P0.clientSecret"],
+        ["string.concat", "$L0.url", "$L0.url", "api_key=", "$P0.clientId", "&api_secret=", "$P0.clientSecret"],
         ["http.requestCall", "$L1", "$L0"],
         ["if!=than", "$P2.checkErrors", 0, 1],
         ["callFunc", "checkError", "$P0", "$L1"],
@@ -112,14 +112,14 @@ var SERVICE_CODE = {
     ]
 };
 var Nexmo = (function () {
-    function Nexmo(redirectReceiver, clientID, clientSecret) {
+    function Nexmo(redirectReceiver, clientId, clientSecret) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Nexmo");
-        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientId"] = clientId;
         this.interpreterStorage["clientSecret"] = clientSecret;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
