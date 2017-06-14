@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.18.1**
+  * Fix the authentication for Twitter which did not allow a user to successfully authenticate
+
 * **2.18.0**
   * Add a new method to the cloud storage interface that allows to search for files and folders
 

@@ -20,13 +20,14 @@ var AwaitCodeRedirect = (function () {
         Helper_1.Helper.assert(enoughParameters && returnIsVariable && inputIsStringOrVariable);
         var resVar = parameters[0];
         var urlStr = Helper_1.Helper.resolve(environment, parameters[1]);
-        var legacy = parameters.length === 2;
+        var legacy = false;
         var keys = [];
-        for (var i = 2; i < parameters.length; i++) {
-            keys.push(Helper_1.Helper.resolve(environment, parameters[i]));
+        if (parameters.length >= 3 && parameters[2]) {
+            keys = Helper_1.Helper.resolve(environment, parameters[2]);
         }
-        if (legacy) {
+        else {
             keys.push("code");
+            legacy = true;
         }
         var redirectReceiver = environment.instanceDependencyStorage["redirectReceiver"];
         if (!redirectReceiver || typeof redirectReceiver !== "function") {
