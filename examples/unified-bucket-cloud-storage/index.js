@@ -1,8 +1,6 @@
 var fs = require('fs');
 var cloudrail = require("cloudrail-si");
-cloudrail.Settings.setKey("5947b1545f3a46262b370388");
-
-
+cloudrail.Settings.setKey("[Your CloudRail Key]");
 var service;
 //service = new cloudrail.services.AmazonS3(null, "[Your S3 Access Key ID]", "[Your S3 Secret Access Key]", "[Your AWS region]");
 //service = new cloudrail.services.Backblaze(null, "[Your Backblaze Account ID]", "[Your Backblaze App Key]");
@@ -21,7 +19,7 @@ stdin.addListener("data", function(d){ processInput(d); });
 
 function processInput(d) {
     var data = d.toString().trim().split(" ");
-    var cmd = data[0];
+    var cmd = data[0].toLowerCase();
 
     switch(cmd) {
       case "help":

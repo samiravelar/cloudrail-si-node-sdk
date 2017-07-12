@@ -1,6 +1,6 @@
 # Unified Bucket Cloud Storage example
 
-This is a example that shows how you can use the [CloudRail Unified Bucket Cloud Storage API](https://cloudrail.com/integrations/interfaces/BusinessCloudStorage;platformId=Nodejs) to integrate different Bucket Cloud Storage services in one application. It is a simple command-line program that makes it possible to display, create and delete buckets and to list, download and delete files.
+This is an example that shows how you can use the [CloudRail Unified Bucket Cloud Storage API](https://cloudrail.com/integrations/interfaces/BusinessCloudStorage;platformId=Nodejs) to integrate different Bucket Cloud Storage services in one application. It is a simple command-line program that makes it possible to display, create and delete buckets and to list, download and delete files.
 
 ## Prerequisites
 
