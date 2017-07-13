@@ -15,7 +15,7 @@ npm install --save cloudrail-si
 Find the following piece of code in your *index.js* file, uncomment the service you want to use, and enter your developer credentials:
 
 
-```java
+```javascript
 cloudrail.Settings.setKey("[Your CloudRail Key]");
 var service;
 //service = new cloudrail.services.AmazonS3(null, "[Your S3 Access Key ID]", "[Your S3 Secret Access Key]", "[Your AWS region]");
