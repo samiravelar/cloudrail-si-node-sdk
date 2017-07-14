@@ -10,7 +10,7 @@ var service;
 
 var cache = {};
 cache.buckets = [];
-listBuckets();
+showHelp();
 
 var stdin = process.openStdin();
 stdin.addListener("data", function(d){ processInput(d); });
