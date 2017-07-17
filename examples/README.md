@@ -7,3 +7,4 @@ It makes sure authentication with OAuth works even when there are mutliple insta
 * The folder "typescript-promises" has an example that shows how to use the library with Typescript and how the library's API can be promisified to be used with Promises instead of callbacks
 * The folder "electron" has a tiny app that demonstrates how to use the SDK with the electron framework
 * The folder "express-oauth-cloudstorage" shows a minimalistic exmaple of a real world server setup for authentication
+* The folders "unified-bucket-cloud-storage", "unified-cloud-storage", "unified-email-sending", "unified-payment", "unified-points-of-interest", "unified-sms-sending", "unified-social-interaction" and "unified-social-login-and-profile" contain examples about the different integrations.
