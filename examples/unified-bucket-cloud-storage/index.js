@@ -34,7 +34,7 @@ function processInput(d) {
       case "download":
         downloadFile(data[1], data[2]);
         break;
-      case "newBucket":
+      case "newbucket":
         createBucket(data[1]);
         break;
       case "deleteBucket":
