@@ -17,6 +17,7 @@ var Bucket_1 = require("./Bucket");
 var BusinessFileMetaData_1 = require("./BusinessFileMetaData");
 var AdvancedRequestSpecification_1 = require("./AdvancedRequestSpecification");
 var AdvancedRequestResponse_1 = require("./AdvancedRequestResponse");
+var Attachment_1 = require("./Attachment");
 var Types = (function () {
     function Types() {
     }
@@ -39,7 +40,8 @@ var Types = (function () {
         "Bucket": Bucket_1.Bucket,
         "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData,
         "AdvancedRequestSpecification": AdvancedRequestSpecification_1.AdvancedRequestSpecification,
-        "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse
+        "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse,
+        "Attachment": Attachment_1.Attachment
     };
     return Types;
 }());

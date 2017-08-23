@@ -45,6 +45,7 @@ var SERVICE_CODE = {
         ["if!=than", "$L5", null, 2],
         ["callFunc", "processAddresses", "$P0", "$L23", "$L5"],
         ["set", "$L2.Bcc", "$L23"],
+        ["callFunc", "processAttachments", "$P0", "$L2", "$P9"],
         ["json.stringify", "$L6", "$L2"],
         ["stream.stringToStream", "$L1.requestBody", "$L6"],
         ["create", "$L8", "Object"],
@@ -84,6 +85,31 @@ var SERVICE_CODE = {
         ["set", "$P1.url", "https://api.mailjet.com/v3/send"],
         ["set", "$P1.method", "POST"],
         ["set", "$P1.requestHeaders", "$L0"]
+    ],
+    "processAttachments": [
+        ["if==than", "$P2", null, 1],
+        ["return"],
+        ["size", "$L0", "$P2"],
+        ["if==than", "$L0", 0, 1],
+        ["return"],
+        ["create", "$L1", "Number", 0],
+        ["create", "$P1.attachments", "Array"],
+        ["if<than", "$L1", "$L0", 15],
+        ["get", "$L2", "$P2", "$L1"],
+        ["set", "$L4", "$L2.content"],
+        ["set", "$L5", "$L2.filename"],
+        ["callFunc", "checkMandatory", "$P0", "$L4", "content"],
+        ["callFunc", "checkMandatory", "$P0", "$L5", "filename"],
+        ["create", "$L3", "Object"],
+        ["create", "$L4", "String"],
+        ["stream.streamToData", "$L4", "$L2.content"],
+        ["string.base64encode", "$L4", "$L4"],
+        ["set", "$L3.content", "$L4"],
+        ["set", "$L3.Content-type", "$L2.mimeType"],
+        ["set", "$L3.Filename", "$L2.filename"],
+        ["push", "$P1.attachments", "$L3"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -16]
     ],
     "processAddresses": [
         ["create", "$L0", "Number"],
@@ -154,6 +180,12 @@ var SERVICE_CODE = {
         ["string.concat", "$L2", "$P1.code", " - ", "$P1.message"],
         ["create", "$L3", "Error", "$L2", "Http"],
         ["throwError", "$L3"]
+    ],
+    "checkMandatory": [
+        ["if==than", "$P1", null, 3],
+        ["string.concat", "$L1", "Field ", "$P2", " is mandatory"],
+        ["create", "$L0", "Error", "$L1", "IllegalArgument"],
+        ["throwError", "$L0"]
     ]
 };
 var MailJet = (function () {
@@ -171,10 +203,10 @@ var MailJet = (function () {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    MailJet.prototype.sendEmail = function (fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, callback) {
+    MailJet.prototype.sendEmail = function (fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, attachments, callback) {
         Statistics_1.Statistics.addCall("MailJet", "sendEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("sendMJEMail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses).then(function () {
+        ip.callFunction("sendMJEMail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, attachments).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "MailJet", "sendEmail");
         }).then(function () {
             var res;

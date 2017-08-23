@@ -453,7 +453,7 @@ var SERVICE_CODE = {
         ["create", "$L2", "String"],
         ["if==than", "$P2", "accessToken", 4],
         ["string.concat", "$L0", "https://account.box.com/api/oauth2/authorize?response_type=code&client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refresh_token", "&grant_type=refresh_token"],

@@ -98,7 +98,7 @@ var SERVICE_CODE = {
     "authenticate": [
         ["if==than", "$P1", "accessToken", 4],
         ["string.concat", "$L0", "https://id.heroku.com/oauth/authorize?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&state=", "$P0.state"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L2", "grant_type=authorization_code&code=", "$L1", "&client_secret=", "$P0.clientSecret"],
         ["jumpRel", 1],
         ["string.concat", "$L2", "grant_type=refresh_token&refresh_token=", "$S0.refreshToken", "&client_secret=", "$P0.clientSecret"],

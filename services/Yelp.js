@@ -6,7 +6,6 @@ var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
-        ["set", "$P0.baseUrl", "https://api.yelp.com/v2"],
         ["create", "$P0.crToYelp", "Object"],
         ["create", "$P0.yelpToCr", "Object"],
         ["callFunc", "addCategory", "$P0", "airport", "airports"],
@@ -95,39 +94,22 @@ var SERVICE_CODE = {
         ["callFunc", "checkIsEmpty", "$P0", "$P6", "Categories"],
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
-        ["string.concat", "$L0.url", "$P0.baseUrl", "/search"],
+        ["set", "$L0.url", "https://api.yelp.com/v3/businesses/search"],
         ["create", "$L1", "String", "?"],
-        ["string.concat", "$L1", "$L1", "ll=", "$P2", "%2C", "$P3"],
-        ["string.concat", "$L1", "$L1", "&radius_filter=", "$P4"],
+        ["string.concat", "$L1", "$L1", "latitude=", "$P2"],
+        ["string.concat", "$L1", "$L1", "&longitude=", "$P3"],
+        ["string.concat", "$L1", "$L1", "&radius=", "$P4"],
         ["if!=than", "$P5", null, 2],
         ["string.urlEncode", "$L2", "$P5"],
         ["string.concat", "$L1", "$L1", "&term=", "$L2"],
         ["if!=than", "$P6", null, 3],
         ["callFunc", "getCategoriesString", "$P0", "$L2", "$P6"],
         ["string.urlEncode", "$L2", "$L2"],
-        ["string.concat", "$L1", "$L1", "&category_filter=", "$L2"],
-        ["create", "$L2", "Array"],
-        ["if!=than", "$P6", null, 1],
-        ["push", "$L2", "category_filter"],
-        ["push", "$L2", "ll"],
-        ["push", "$L2", "oauth_consumer_key"],
-        ["push", "$L2", "oauth_nonce"],
-        ["push", "$L2", "oauth_signature_method"],
-        ["push", "$L2", "oauth_timestamp"],
-        ["push", "$L2", "oauth_token"],
-        ["push", "$L2", "oauth_version"],
-        ["push", "$L2", "radius_filter"],
-        ["if!=than", "$P5", null, 1],
-        ["push", "$L2", "term"],
-        ["create", "$L3", "Object"],
-        ["string.concat", "$L3.ll", "$P2", ",", "$P3"],
-        ["string.concat", "$L3.radius_filter", "$P4", ""],
-        ["if!=than", "$P5", null, 1],
-        ["set", "$L3.term", "$P5"],
-        ["if!=than", "$P6", null, 1],
-        ["callFunc", "getCategoriesString", "$P0", "$L3.category_filter", "$P6"],
-        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L2", "$L3"],
+        ["string.concat", "$L1", "$L1", "&categories=", "$L2"],
+        ["callFunc", "checkAuthentication", "$P0"],
         ["string.concat", "$L0.url", "$L0.url", "$L1"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
         ["http.requestCall", "$L2", "$L0"],
         ["callFunc", "checkHttpResponse", "$P0", "$L2"],
         ["json.parse", "$L3", "$L2.responseBody"],
@@ -140,62 +122,6 @@ var SERVICE_CODE = {
         ["push", "$P1", "$L7"],
         ["math.add", "$L4", "$L4", 1],
         ["jumpRel", -6]
-    ],
-    "AdvancedRequestSupporter:advancedRequest": [
-        ["create", "$L0", "Object"],
-        ["if!=than", "$P2.appendBaseUrl", 0, 2],
-        ["string.concat", "$L0.url", "$P0.baseUrl", "$P2.url"],
-        ["jumpRel", 1],
-        ["set", "$L0.url", "$P2.url"],
-        ["set", "$L0.requestHeaders", "$P2.headers"],
-        ["set", "$L0.method", "$P2.method"],
-        ["set", "$L0.requestBody", "$P2.body"],
-        ["if==than", "$L0.requestHeaders", null, 1],
-        ["create", "$L0.requestHeaders", "Object"],
-        ["if!=than", "$P2.appendAuthorization", 0, 2],
-        ["callFunc", "extractOAuthParameters", "$P0", "$L1", "$L2", "$L0"],
-        ["callFunc", "oAuth1:signRequest", "$P0", "$L0", "$L1", "$L2"],
-        ["http.requestCall", "$L1", "$L0"],
-        ["if!=than", "$P2.checkErrors", 0, 1],
-        ["callFunc", "checkHttpResponse", "$P0", "$L1"],
-        ["create", "$P1", "AdvancedRequestResponse"],
-        ["set", "$P1.status", "$L1.code"],
-        ["set", "$P1.headers", "$L1.responseHeaders"],
-        ["set", "$P1.body", "$L1.responseBody"]
-    ],
-    "extractOAuthParameters": [
-        ["string.split", "$L2", "$P3.url", "\\?", 2],
-        ["size", "$L3", "$L2"],
-        ["create", "$L4", "String"],
-        ["if==than", "$L3", 2, 1],
-        ["get", "$L4", "$L2", 1],
-        ["callFunc", "extractParameters", "$P0", "$L6", "$L4"],
-        ["object.getKeyArray", "$P1", "$L6"],
-        ["push", "$P1", "oauth_consumer_key"],
-        ["push", "$P1", "oauth_nonce"],
-        ["push", "$P1", "oauth_signature_method"],
-        ["push", "$P1", "oauth_timestamp"],
-        ["push", "$P1", "oauth_token"],
-        ["push", "$P1", "oauth_version"],
-        ["array.sort", "$P1", "$P1"],
-        ["set", "$P2", "$L6"]
-    ],
-    "extractParameters": [
-        ["create", "$P1", "Object"],
-        ["size", "$L0", "$P2"],
-        ["if==than", "$L0", 0, 1],
-        ["return"],
-        ["string.split", "$L1", "$P2", "&"],
-        ["size", "$L2", "$L1"],
-        ["set", "$L3", 0],
-        ["if<than", "$L3", "$L2", 7],
-        ["get", "$L4", "$L1", "$L3"],
-        ["string.split", "$L5", "$L4", "=", 2],
-        ["get", "$L6", "$L5", 0],
-        ["get", "$L7", "$L5", 1],
-        ["set", "$P1", "$L7", "$L6"],
-        ["math.add", "$L3", "$L3", 1],
-        ["jumpRel", -8]
     ],
     "checkNull": [
         ["if==than", "$P1", null, 3],
@@ -222,78 +148,41 @@ var SERVICE_CODE = {
         ["create", "$L1", "Error", "$L0", "IllegalArgument"],
         ["throwError", "$L1"]
     ],
-    "oAuth1:signRequest": [
-        ["if==than", "$P1.requestHeaders", null, 1],
-        ["create", "$P1.requestHeaders", "Object"],
-        ["create", "$L0", "Object"],
-        ["set", "$L0.oauth_consumer_key", "$P0.consumerKey"],
-        ["callFunc", "oAuth1:generateNonce", "$L0.oauth_nonce"],
-        ["set", "$L0.oauth_signature_method", "HMAC-SHA1"],
-        ["create", "$L1", "Date"],
-        ["math.multiply", "$L1", "$L1.Time", 0.001],
-        ["math.floor", "$L1", "$L1"],
-        ["string.format", "$L0.oauth_timestamp", "%d", "$L1"],
-        ["set", "$L0.oauth_token", "$P0.token"],
-        ["set", "$L0.oauth_version", "1.0"],
-        ["string.urlEncode", "$L2", "$P1.url"],
-        ["string.concat", "$L1", "$P1.method", "&", "$L2", "&"],
-        ["set", "$L2", ""],
-        ["set", "$L3", 0],
-        ["size", "$L4", "$P2"],
-        ["if<than", "$L3", "$L4", 12],
-        ["get", "$L5", "$P2", "$L3"],
-        ["if==than", "$L5", "oauth_callback", 1],
-        ["set", "$L0.oauth_callback", "$P0.redirectUri"],
-        ["get", "$L6", "$L0", "$L5"],
-        ["if>than", "$L3", 0, 1],
-        ["string.concat", "$L2", "$L2", "&"],
-        ["if==than", "$L6", null, 1],
-        ["get", "$L6", "$P3", "$L5"],
-        ["string.urlEncode", "$L6", "$L6"],
-        ["string.concat", "$L2", "$L2", "$L5", "=", "$L6"],
-        ["math.add", "$L3", "$L3", 1],
-        ["jumpRel", -13],
-        ["string.urlEncode", "$L2", "$L2"],
-        ["string.concat", "$L1", "$L1", "$L2"],
-        ["set", "$L2", "$P0.tokenSecret"],
-        ["string.concat", "$L2", "$P0.consumerSecret", "&", "$L2"],
-        ["crypt.hmac.sha1", "$L2", "$L2", "$L1"],
-        ["array.uint8ToBase64", "$L2", "$L2"],
-        ["string.urlEncode", "$L2", "$L2"],
-        ["set", "$L0.oauth_signature", "$L2"],
-        ["set", "$L2", "OAuth "],
-        ["if!=than", "$L0.oauth_callback", null, 2],
-        ["string.urlEncode", "$L3", "$L0.oauth_callback"],
-        ["string.concat", "$L2", "$L2", "oauth_callback", "=\"", "$L3", "\"", ", "],
-        ["string.concat", "$L2", "$L2", "oauth_consumer_key", "=\"", "$L0.oauth_consumer_key", "\""],
-        ["string.concat", "$L2", "$L2", ", ", "oauth_nonce", "=\"", "$L0.oauth_nonce", "\""],
-        ["string.concat", "$L2", "$L2", ", ", "oauth_signature", "=\"", "$L0.oauth_signature", "\""],
-        ["string.concat", "$L2", "$L2", ", ", "oauth_signature_method", "=\"", "$L0.oauth_signature_method", "\""],
-        ["string.concat", "$L2", "$L2", ", ", "oauth_timestamp", "=\"", "$L0.oauth_timestamp", "\""],
-        ["if!=than", "$L0.oauth_token", null, 1],
-        ["string.concat", "$L2", "$L2", ", ", "oauth_token", "=\"", "$L0.oauth_token", "\""],
-        ["string.concat", "$L2", "$L2", ", ", "oauth_version", "=\"", "$L0.oauth_version", "\""],
-        ["set", "$P1.requestHeaders.Authorization", "$L2"]
-    ],
-    "oAuth1:generateNonce": [
+    "checkAuthentication": [
         ["create", "$L0", "Date"],
-        ["string.format", "$L0", "%d", "$L0.Time"],
-        ["hash.md5", "$L0", "$L0"],
-        ["size", "$L1", "$L0"],
-        ["set", "$L2", 0],
-        ["set", "$P0", ""],
-        ["get", "$L3", "$L0", "$L2"],
-        ["string.format", "$L4", "%02x", "$L3"],
-        ["string.concat", "$P0", "$P0", "$L4"],
-        ["math.add", "$L2", "$L2", 1],
-        ["if>=than", "$L2", "$L1", -5]
+        ["if==than", "$S0.accessToken", null, 2],
+        ["callFunc", "authenticate", "$P0"],
+        ["return"],
+        ["create", "$L1", "Date"],
+        ["set", "$L1.time", "$S0.expires_in"],
+        ["if<than", "$L1", "$L0", 1],
+        ["callFunc", "authenticate", "$P0"]
+    ],
+    "authenticate": [
+        ["create", "$L8", "String", ""],
+        ["string.concat", "$L8", "$L8", "grant_type=client_credentials", "&client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
+        ["stream.stringToStream", "$L9", "$L8"],
+        ["create", "$L10", "Object"],
+        ["set", "$L10.Accept", "application/json"],
+        ["set", "$L10", "application/x-www-form-urlencoded", "Content-Type"],
+        ["create", "$L11", "Object"],
+        ["set", "$L11.url", "https://api.yelp.com/oauth2/token"],
+        ["set", "$L11.method", "POST"],
+        ["set", "$L11.requestBody", "$L9"],
+        ["set", "$L11.requestHeaders", "$L10"],
+        ["http.requestCall", "$L12", "$L11"],
+        ["callFunc", "checkHttpResponse", "$P0", "$L12"],
+        ["create", "$L13", "String"],
+        ["stream.streamToString", "$L13", "$L12.responseBody"],
+        ["json.parse", "$L14", "$L13"],
+        ["set", "$S0.accessToken", "$L14.access_token"]
     ],
     "checkHttpResponse": [
         ["if>=than", "$P1.code", 400, 9],
-        ["if==than", "$P2.code", 401, 2],
+        ["if==than", "$P1.code", 401, 2],
         ["create", "$L3", "Error", "Invalid credentials or access rights. Make sure that your application has read and write permission.", "Authentication"],
         ["throwError", "$L3"],
-        ["if==than", "$P2.code", 503, 2],
+        ["if==than", "$P1.code", 503, 2],
         ["create", "$L3", "Error", "Service unavailable. Try again later.", "ServiceUnavailable"],
         ["throwError", "$L3"],
         ["json.parse", "$L0", "$P1.responseBody"],
@@ -318,14 +207,14 @@ var SERVICE_CODE = {
     ],
     "extractBusiness": [
         ["create", "$L0", "Location"],
-        ["set", "$L0.latitude", "$P2.location.coordinate.latitude"],
-        ["set", "$L0.longitude", "$P2.location.coordinate.longitude"],
+        ["set", "$L0.latitude", "$P2.coordinates.latitude"],
+        ["set", "$L0.longitude", "$P2.coordinates.longitude"],
         ["create", "$L1", "Array"],
         ["create", "$L2", "Number", 0],
         ["size", "$L3", "$P2.categories"],
         ["if<than", "$L2", "$L3", 7],
         ["get", "$L4", "$P2.categories", "$L2"],
-        ["get", "$L5", "$L4", 1],
+        ["set", "$L5", "$L4.alias"],
         ["get", "$L6", "$P0.yelpToCr", "$L5"],
         ["if!=than", "$L6", null, 1],
         ["push", "$L1", "$L6"],
@@ -339,17 +228,15 @@ var SERVICE_CODE = {
     ]
 };
 var Yelp = (function () {
-    function Yelp(redirectReceiver, consumerKey, consumerSecret, token, tokenSecret) {
+    function Yelp(redirectReceiver, clientID, clientSecret) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Yelp");
-        this.interpreterStorage["consumerKey"] = consumerKey;
-        this.interpreterStorage["consumerSecret"] = consumerSecret;
-        this.interpreterStorage["token"] = token;
-        this.interpreterStorage["tokenSecret"] = tokenSecret;
+        this.interpreterStorage["clientID"] = clientID;
+        this.interpreterStorage["clientSecret"] = clientSecret;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
@@ -360,21 +247,6 @@ var Yelp = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("getNearbyPOIs", this.interpreterStorage, null, latitude, longitude, radius, searchTerm, categories).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Yelp", "getNearbyPOIs");
-        }).then(function () {
-            var res;
-            res = ip.getParameter(1);
-            if (callback != null && typeof callback === "function")
-                callback(undefined, res);
-        }, function (err) {
-            if (callback != null && typeof callback === "function")
-                callback(err);
-        });
-    };
-    Yelp.prototype.advancedRequest = function (specification, callback) {
-        Statistics_1.Statistics.addCall("Yelp", "advancedRequest");
-        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
-            Helper_1.Helper.checkSandboxError(ip, "Yelp", "advancedRequest");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

@@ -59,6 +59,7 @@ var SERVICE_CODE = {
         ["callFunc", "pushAddresses", "$P0", "$L7.cc", "$P7"],
         ["callFunc", "pushAddresses", "$P0", "$L7.bcc", "$P8"],
         ["push", "$L1.personalizations", "$L7"],
+        ["callFunc", "pushAttachments", "$P0", "$L1", "$P9"],
         ["json.stringify", "$L1", "$L1"],
         ["stream.stringToStream", "$L0.requestBody", "$L1"],
         ["http.requestCall", "$L0", "$L0"],
@@ -100,6 +101,32 @@ var SERVICE_CODE = {
         ["math.add", "$L1", 1],
         ["if<than", "$L1", "$L0", 1],
         ["jumpRel", -7]
+    ],
+    "pushAttachments": [
+        ["if==than", "$P2", null, 1],
+        ["return"],
+        ["size", "$L0", "$P2"],
+        ["if==than", "$L0", 0, 1],
+        ["return"],
+        ["create", "$L1", "Number", 0],
+        ["create", "$P1.attachments", "Array"],
+        ["if<than", "$L1", "$L0", 16],
+        ["get", "$L2", "$P2", "$L1"],
+        ["set", "$L4", "$L2.content"],
+        ["set", "$L5", "$L2.filename"],
+        ["callFunc", "checkMandatory", "$P0", "$L4", "content"],
+        ["callFunc", "checkMandatory", "$P0", "$L5", "filename"],
+        ["create", "$L3", "Object"],
+        ["create", "$L4", "String"],
+        ["stream.streamToData", "$L4", "$L2.content"],
+        ["string.base64encode", "$L4", "$L4"],
+        ["set", "$L3.content", "$L4"],
+        ["if!=than", "$L2.mimeType", null, 1],
+        ["set", "$L3.type", "$L2.mimeType"],
+        ["set", "$L3.filename", "$L2.filename"],
+        ["push", "$P1.attachments", "$L3"],
+        ["math.add", "$L1", "$L1", 1],
+        ["jumpRel", -17]
     ],
     "checkMandatory": [
         ["if==than", "$P1", null, 3],
@@ -148,10 +175,10 @@ var SendGrid = (function () {
             ip.callFunctionSync("init", this.interpreterStorage);
         }
     }
-    SendGrid.prototype.sendEmail = function (fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, callback) {
+    SendGrid.prototype.sendEmail = function (fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, attachments, callback) {
         Statistics_1.Statistics.addCall("SendGrid", "sendEmail");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
-        ip.callFunction("sendEmail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses).then(function () {
+        ip.callFunction("sendEmail", this.interpreterStorage, fromAddress, fromName, toAddresses, subject, textBody, htmlBody, ccAddresses, bccAddresses, attachments).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "SendGrid", "sendEmail");
         }).then(function () {
             var res;

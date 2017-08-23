@@ -42,6 +42,13 @@ var CustomDate = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(CustomDate.prototype, "rfcTime2822", {
+        get: function () {
+            return this.date.toUTCString().slice(0, 26) + "Z";
+        },
+        enumerable: true,
+        configurable: true
+    });
     CustomDate.prototype.toJSONString = function () {
         return "" + this.date.getTime();
     };

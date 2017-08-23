@@ -95,7 +95,7 @@ var SERVICE_CODE = {
         ["if!=than", null, "$S0.accessToken", 1],
         ["return"],
         ["string.concat", "$L0", "https://slack.com/oauth/authorize?redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientId", "&state=", "$P0.state", "&scope=", "$P0.scope"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["create", "$L2", "Object"],
         ["set", "$L2.method", "GET"],
         ["string.concat", "$L3", "code=", "$L1", "&redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],

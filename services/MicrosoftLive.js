@@ -114,7 +114,7 @@ var SERVICE_CODE = {
         ["create", "$L2", "String"],
         ["if==than", "$P1", "accessToken", 4],
         ["string.concat", "$L0", "https://login.live.com/oauth20_authorize.srf?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],

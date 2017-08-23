@@ -137,6 +137,7 @@ declare module 'cloudrail-si/types/Date' {
 	    time: number;
 	    rfcTime: string;
 	    rfcTime1123: string;
+	    rfcTime2822: string;
 	    toJSONString(): string;
 	    fromJSONString(jsonString: string): CustomDate;
 	    compareTo(obj: any): number;
@@ -496,6 +497,16 @@ declare module 'cloudrail-si/types/AdvancedRequestResponse' {
 	}
 
 }
+declare module 'cloudrail-si/types/Attachment' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	import stream = require("stream");
+	export class Attachment extends SandboxObject {
+	    content: stream.Readable;
+	    type: string;
+	    filename: string;
+	}
+
+}
 declare module 'cloudrail-si/types/Types' {
 	import { ObjectMap } from 'cloudrail-si/helpers/Helper';
 	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
@@ -827,6 +838,15 @@ declare module 'cloudrail-si/servicecode/commands/string/StringTransform' {
 	    private identifier;
 	    private transform;
 	    constructor(identifier: string, transform: (source: string) => string);
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/string/ChunkSplit' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class ChunkSplit implements Command {
 	    getIdentifier(): string;
 	    execute(environment: Sandbox, parameters: any[]): void;
 	}
@@ -1741,6 +1761,7 @@ declare module 'cloudrail-si/services/LinkedIn' {
 }
 declare module 'cloudrail-si/interfaces/Email' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Attachment } from 'cloudrail-si/types/Attachment';
 	/**
 	 * An interface whose implementations allow sending emails
 	 */
@@ -1757,8 +1778,9 @@ declare module 'cloudrail-si/interfaces/Email' {
 	     * @param htmlBody The email's body HTML part. Either this and/or the textBody must be specified.
 	     * @param ccAddresses Optional. A list of CC recipient email addresses.
 	     * @param bccAddresses Optional. A list of BCC recipient email addresses.
+	     * @param attachments Optional. A list of attachments.
 	     */
-	    sendEmail: (fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], callback?: NodeCallback<void>) => void;
+	    sendEmail: (fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], attachments: Attachment[], callback?: NodeCallback<void>) => void;
 	}
 
 }
@@ -1766,6 +1788,7 @@ declare module 'cloudrail-si/services/MailJet' {
 	import { Email } from 'cloudrail-si/interfaces/Email';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
@@ -1774,7 +1797,7 @@ declare module 'cloudrail-si/services/MailJet' {
 	    private instanceDependencyStorage;
 	    private persistentStorage;
 	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string);
-	    sendEmail(fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], callback: NodeCallback<void>): void;
+	    sendEmail(fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], attachments: Attachment[], callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -2139,6 +2162,7 @@ declare module 'cloudrail-si/services/SendGrid' {
 	import { Email } from 'cloudrail-si/interfaces/Email';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
@@ -2147,7 +2171,7 @@ declare module 'cloudrail-si/services/SendGrid' {
 	    private instanceDependencyStorage;
 	    private persistentStorage;
 	    constructor(redirectReceiver: RedirectReceiver, apiKey: string);
-	    sendEmail(fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], callback: NodeCallback<void>): void;
+	    sendEmail(fromAddress: string, fromName: string, toAddresses: string[], subject: string, textBody: string, htmlBody: string, ccAddresses: string[], bccAddresses: string[], attachments: Attachment[], callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -2324,19 +2348,15 @@ declare module 'cloudrail-si/services/Yahoo' {
 }
 declare module 'cloudrail-si/services/Yelp' {
 	import { PointsOfInterest } from 'cloudrail-si/interfaces/PointsOfInterest';
-	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
-	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
-	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { POI } from 'cloudrail-si/types/POI';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	export class Yelp implements PointsOfInterest, AdvancedRequestSupporter {
+	export class Yelp implements PointsOfInterest {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, consumerKey: string, consumerSecret: string, token: string, tokenSecret: string);
+	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string);
 	    getNearbyPOIs(latitude: number, longitude: number, radius: number, searchTerm: string, categories: string[], callback: NodeCallback<POI[]>): void;
-	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;

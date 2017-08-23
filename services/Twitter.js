@@ -483,7 +483,7 @@ var SERVICE_CODE = {
         ["create", "$L4", "Array"],
         ["push", "$L4", "oauth_token"],
         ["push", "$L4", "oauth_verifier"],
-        ["awaitCodeRedirect", "$L3", "$L3", "$L4"],
+        ["awaitCodeRedirect", "$L3", "$L3", "$L4", "$P0.redirectUri"],
         ["set", "$S0.oauthToken", "$L3.oauth_token"],
         ["create", "$L4", "Object"],
         ["set", "$L4.method", "POST"],

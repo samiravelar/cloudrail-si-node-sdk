@@ -95,7 +95,7 @@ var SERVICE_CODE = {
         ["create", "$L0", "String"],
         ["create", "$L1", "String"],
         ["string.concat", "$L0", "https://www.linkedin.com/uas/oauth2/authorization?response_type=code&client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&scope=", "$P0.scope"],
-        ["awaitCodeRedirect", "$L2", "$L0"],
+        ["awaitCodeRedirect", "$L2", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L1", "grant_type=authorization_code&code=", "$L2", "&redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret"],
         ["size", "$L15", "$L1"],
         ["string.concat", "$L15", "$L15"],

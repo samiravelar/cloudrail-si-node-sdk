@@ -144,7 +144,7 @@ var SERVICE_CODE = {
         ["create", "$L1", "String"],
         ["string.urlEncode", "$L3", "$P0.redirectUri"],
         ["string.concat", "$L0", "https://www.facebook.com/dialog/oauth?response_type=code&client_id=", "$P0.clientId", "&redirect_uri=", "$L3", "&state=", "$P0.state", "&scope=", "$P0.scope"],
-        ["awaitCodeRedirect", "$L2", "$L0"],
+        ["awaitCodeRedirect", "$L2", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L1", "https://graph.facebook.com/v2.8/oauth/access_token?client_id=", "$P0.clientId", "&redirect_uri=", "$L3", "&client_secret=", "$P0.clientSecret", "&code=", "$L2"],
         ["create", "$L5", "Object"],
         ["set", "$L5.url", "$L1"],

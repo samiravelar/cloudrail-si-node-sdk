@@ -128,7 +128,7 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L0", "String"],
         ["string.concat", "$L0", "https://github.com/login/oauth/authorize?client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state", "&scope=", "$P0.scope"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&client_secret=", "$P0.clientSecret", "&code=", "$L1"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],

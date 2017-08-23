@@ -21,7 +21,33 @@ var SERVICE_CODE = {
         ["jumpRel", -7]
     ],
     "CloudStorage:getUserLogin": [],
-    "CloudStorage:getUserName": [],
+    "CloudStorage:getUserName": [
+        ["callFunc", "User:about", "$P0"],
+        ["set", "$P1", "$P0.userInfo.displayName"]
+    ],
+    "User:about": [
+        ["if!=than", "$P0.userInfo", null, 4],
+        ["create", "$L0", "Date"],
+        ["math.add", "$L0", "$L0.Time", -1000],
+        ["if>than", "$P0.userInfo.lastUpdate", "$L0", 1],
+        ["return"],
+        ["callFunc", "User:aboutRequest", "$P0"]
+    ],
+    "User:aboutRequest": [
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["string.concat", "$L0.url", "https://", "$P0.domain", ".egnyte.com/pubapi/v1/userinfo"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["set", "$L0.method", "GET"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P0.userInfo", "Object"],
+        ["create", "$L3", "Date"],
+        ["set", "$P0.userInfo.lastUpdate", "$L3.Time"],
+        ["set", "$P0.userInfo.displayName", "$L2.user.username"]
+    ],
     "CloudStorage:download": [
         ["callFunc", "validatePath", "$P0", "$P2"],
         ["callFunc", "encodePath", "$P0", "$L12", "$P2"],
@@ -306,7 +332,7 @@ var SERVICE_CODE = {
         ["if!=than", null, "$S0.access_token", 1],
         ["return"],
         ["string.concat", "$L0", "https://", "$P0.domain", ".egnyte.com/puboauth/token?response_type=code&scope=", "$P0.scope", "&redirect_uri=", "$P0.redirectUri", "&client_id=", "$P0.clientId", "&state=", "$P0.state"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["create", "$L2", "Object"],
         ["string.concat", "$L2.url", "https://", "$P0.domain", ".egnyte.com/puboauth/token"],
         ["set", "$L2.method", "POST"],

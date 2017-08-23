@@ -83,7 +83,7 @@ var SERVICE_CODE = {
     "authenticate": [
         ["create", "$L2", "String"],
         ["string.concat", "$L0", "https://api.instagram.com/oauth/authorize/?client_id=", "$P0.clientId", "&response_type=code&redirect_uri=", "$P0.redirectUri", "&scope=", "$P0.scope", "&state=", "$P0.state"],
-        ["awaitCodeRedirect", "$L1", "$L0"],
+        ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L2", "--------------------------c77df4126e3a1dc1\r\n"],
         ["string.concat", "$L2", "$L2", "Content-Disposition: form-data; name=\"client_id\"\r\n\r\n"],
         ["string.concat", "$L2", "$L2", "$P0.clientId", "\r\n"],
