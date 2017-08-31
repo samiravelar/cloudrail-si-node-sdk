@@ -1,8 +1,7 @@
-[![npm](https://img.shields.io/npm/v/cloudrail-si.svg?style=flat-square)](https://www.npmjs.com/package/cloudrail-si)
-
 <p align="center">
   <img width="200px" src="http://cloudrail.github.io/img/cloudrail_logo_github.png"/>
 </p>
+[![npm version][npmimg]][npm]
 # CloudRail SI for node.js
 
 Integrate Multiple Services With Just One API

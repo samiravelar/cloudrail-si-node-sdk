@@ -250,6 +250,8 @@ var COMMAND_LIST = [
     new MathCombine_1.MathCombine("math.multiply", function (elements) { return elements.reduce(function (prev, curr) { return prev * curr; }); }),
     new MathCombine_1.MathCombine("math.max", function (elements) { return elements.reduce(function (prev, curr) { return Math.max(prev, curr); }); }),
     new MathCombine_1.MathCombine("math.min", function (elements) { return elements.reduce(function (prev, curr) { return Math.min(prev, curr); }); }),
+    new MathCombine_1.MathCombine("math.subtract", function (elements) { return elements.reduce(function (prev, curr) { return prev - curr; }); }),
+    new MathCombine_1.MathCombine("math.divide", function (elements) { return elements.reduce(function (prev, curr) { return prev / curr; }); }),
     new Floor_1.Floor(),
     new GetKeyArray_1.GetKeyArray(),
     new GetKeyValueArrays_1.GetKeyValueArrays(),

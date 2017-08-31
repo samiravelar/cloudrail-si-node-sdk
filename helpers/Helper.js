@@ -140,7 +140,12 @@ var Helper = (function () {
             var req = request.request(options, function (res) {
                 if ([300, 301, 302, 307, 308].some(function (stat) { return res.statusCode === stat; })) {
                     var redUrl = res.headers["location"];
-                    Helper.makeRequest(redUrl, headers, body, method).then(resolve, reject);
+                    if (redUrl) {
+                        Helper.makeRequest(redUrl, headers, body, method).then(resolve, reject);
+                    }
+                    else {
+                        resolve(res);
+                    }
                 }
                 else
                     resolve(res);

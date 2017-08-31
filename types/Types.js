@@ -18,6 +18,8 @@ var BusinessFileMetaData_1 = require("./BusinessFileMetaData");
 var AdvancedRequestSpecification_1 = require("./AdvancedRequestSpecification");
 var AdvancedRequestResponse_1 = require("./AdvancedRequestResponse");
 var Attachment_1 = require("./Attachment");
+var ChannelMetaData_1 = require("./ChannelMetaData");
+var VideoMetaData_1 = require("./VideoMetaData");
 var Types = (function () {
     function Types() {
     }
@@ -41,7 +43,9 @@ var Types = (function () {
         "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData,
         "AdvancedRequestSpecification": AdvancedRequestSpecification_1.AdvancedRequestSpecification,
         "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse,
-        "Attachment": Attachment_1.Attachment
+        "Attachment": Attachment_1.Attachment,
+        "ChannelMetaData": ChannelMetaData_1.ChannelMetaData,
+        "VideoMetaData": VideoMetaData_1.VideoMetaData
     };
     return Types;
 }());

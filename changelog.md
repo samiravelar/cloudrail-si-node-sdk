@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.20.0**
+  * Release the new video interface containing YouTube, Twitch and Vimeo. This interface allows you to upload and search for videos as well as querying all kinds of metadata.
+
 * **2.19.0**
   * Add the possibility to send attachments to the Email interface and also introduce GMail as a new integration
   * Update Yelp to their new API

@@ -507,6 +507,54 @@ declare module 'cloudrail-si/types/Attachment' {
 	}
 
 }
+declare module 'cloudrail-si/types/ChannelMetaData' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	export class ChannelMetaData extends SandboxObject {
+	    private _id;
+	    private _name;
+	    private _followers;
+	    private _url;
+	    private _logoUrl;
+	    private _bannerUrl;
+	    constructor(_id: string, _name: string, _followers: number, _url: string, _logoUrl: string, _bannerUrl: string);
+	    id: string;
+	    name: string;
+	    followers: number;
+	    url: string;
+	    logoUrl: string;
+	    bannerUrl: string;
+	}
+
+}
+declare module 'cloudrail-si/types/VideoMetaData' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	export class VideoMetaData extends SandboxObject {
+	    private _id;
+	    private _title;
+	    private _description;
+	    private _publishedAt;
+	    private _channelId;
+	    private _duration;
+	    private _thumbnailUrl;
+	    private _embedHtml;
+	    private _viewCount;
+	    private _likeCount;
+	    private _dislikeCount;
+	    constructor(_id: string, _title: string, _description: string, _publishedAt: number, _channelId: string, _duration: number, _thumbnailUrl: string, _embedHtml: string, _viewCount: number, _likeCount: number, _dislikeCount: number);
+	    id: string;
+	    title: string;
+	    description: string;
+	    publishedAt: number;
+	    channelId: string;
+	    duration: number;
+	    thumbnailUrl: string;
+	    embedHtml: string;
+	    viewCount: number;
+	    likeCount: number;
+	    dislikeCount: number;
+	}
+
+}
 declare module 'cloudrail-si/types/Types' {
 	import { ObjectMap } from 'cloudrail-si/helpers/Helper';
 	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
@@ -1788,9 +1836,9 @@ declare module 'cloudrail-si/services/MailJet' {
 	import { Email } from 'cloudrail-si/interfaces/Email';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
-	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class MailJet implements Email, AdvancedRequestSupporter {
 	    private interpreterStorage;
@@ -2162,9 +2210,9 @@ declare module 'cloudrail-si/services/SendGrid' {
 	import { Email } from 'cloudrail-si/interfaces/Email';
 	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
-	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class SendGrid implements Email, AdvancedRequestSupporter {
 	    private interpreterStorage;
