@@ -1,5 +1,14 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.0**
+  * Full release of the messaging interface including FacebookMessanger, Viber, Line and Telegram
+  * Bugfix for Amazon S3: The getChildrenPage() method was not returning more than 1000 files
+  * OneDriveBusiness is now using the new Microsoft Graph API
+  * GoogleDrive now uses the state parameter during authentication
+  * Box: Locating a file within a folder containing more than 100 files was not working properly
+  * GoogleDrive: Some files could not be found even though the files existed and the getChildrenPage method was not working properly for large folders
+  * CloudStorage: The exists method now returns true for the root folder
+
 * **2.20.0**
   * Release the new video interface containing YouTube, Twitch and Vimeo. This interface allows you to upload and search for videos as well as querying all kinds of metadata.
 

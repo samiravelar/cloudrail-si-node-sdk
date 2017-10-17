@@ -116,7 +116,7 @@ var SERVICE_CODE = {
         ["create", "$L3", "Number", 0],
         ["if<than", "$L3", "$L2", 13],
         ["get", "$L4", "$L1.children", "$L3"],
-        ["if==than", "$L4.name", "ContinuationToken", 1],
+        ["if==than", "$L4.name", "NextContinuationToken", 1],
         ["set", "$L0", "$L4.text"],
         ["if==than", "$L4.name", "Contents", 7],
         ["create", "$L5", "BusinessFileMetaData"],

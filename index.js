@@ -34,6 +34,9 @@ var Refund_1 = require("./types/Refund");
 var Subscription_1 = require("./types/Subscription");
 var SubscriptionPlan_1 = require("./types/SubscriptionPlan");
 var SpaceAllocation_1 = require("./types/SpaceAllocation");
+var Message_1 = require("./types/Message");
+var MessagingAttachment_1 = require("./types/MessagingAttachment");
+var Attachment_1 = require("./types/Attachment");
 var Settings_1 = require("./Settings");
 var RedirectReceivers_1 = require("./RedirectReceivers");
 var ImageMetaData_1 = require("./types/ImageMetaData");
@@ -51,6 +54,11 @@ var AdvancedRequestSpecification_1 = require("./types/AdvancedRequestSpecificati
 var AdvancedRequestResponse_1 = require("./types/AdvancedRequestResponse");
 var FacebookPage_1 = require("./services/FacebookPage");
 var ProductHunt_1 = require("./services/ProductHunt");
+var GMail_1 = require("./services/GMail");
+var FacebookMessenger_1 = require("./services/FacebookMessenger");
+var Line_1 = require("./services/Line");
+var Telegram_1 = require("./services/Telegram");
+var Viber_1 = require("./services/Viber");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -86,7 +94,12 @@ module.exports = {
         "Twitter": Twitter_1.Twitter,
         "Twizo": Twizo_1.Twizo,
         "Yahoo": Yahoo_1.Yahoo,
-        "Yelp": Yelp_1.Yelp
+        "Yelp": Yelp_1.Yelp,
+        "GMail": GMail_1.GMail,
+        "FacebookMessenger": FacebookMessenger_1.FacebookMessenger,
+        "Viber": Viber_1.Viber,
+        "Line": Line_1.Line,
+        "Telegram": Telegram_1.Telegram
     },
     "types": {
         "Address": Address_1.Address,
@@ -104,7 +117,10 @@ module.exports = {
         "Bucket": Bucket_1.Bucket,
         "BusinessFileMetaData": BusinessFileMetaData_1.BusinessFileMetaData,
         "AdvancedRequestSpecification": AdvancedRequestSpecification_1.AdvancedRequestSpecification,
-        "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse
+        "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse,
+        "Attachment": Attachment_1.Attachment,
+        "Message": Message_1.Message,
+        "MessagingAttachment": MessagingAttachment_1.MessagingAttachment
     },
     "Settings": Settings_1.Settings,
     "RedirectReceivers": RedirectReceivers_1.RedirectReceivers

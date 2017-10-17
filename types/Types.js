@@ -20,6 +20,8 @@ var AdvancedRequestResponse_1 = require("./AdvancedRequestResponse");
 var Attachment_1 = require("./Attachment");
 var ChannelMetaData_1 = require("./ChannelMetaData");
 var VideoMetaData_1 = require("./VideoMetaData");
+var Message_1 = require("./Message");
+var MessagingAttachment_1 = require("./MessagingAttachment");
 var Types = (function () {
     function Types() {
     }
@@ -45,7 +47,9 @@ var Types = (function () {
         "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse,
         "Attachment": Attachment_1.Attachment,
         "ChannelMetaData": ChannelMetaData_1.ChannelMetaData,
-        "VideoMetaData": VideoMetaData_1.VideoMetaData
+        "VideoMetaData": VideoMetaData_1.VideoMetaData,
+        "Message": Message_1.Message,
+        "MessagingAttachment": MessagingAttachment_1.MessagingAttachment
     };
     return Types;
 }());
