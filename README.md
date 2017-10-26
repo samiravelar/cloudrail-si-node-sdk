@@ -19,7 +19,7 @@ CloudRail is an API integration solution which abstracts multiple APIs from diff
 
 Learn more about CloudRail at https://cloudrail.com
 
-Full documentation can be found [here](https://documentation.cloudrail.com/nodejs/nodejs/Home)
+Full documentation can be found [here](https://cloudrail.com/integrations)
 
 ---
 ---
@@ -46,6 +46,8 @@ Payment | PayPal, Stripe
 Email | Maljet, Sendgrid
 SMS | Twilio, Nexmo
 Point of Interest | Google Places, Foursquare, Yelp
+Video | YouTube, Twitch, Vimeo
+Messaging | FacebookMessenger, Telegram, Line, Viber
 ---
 ### Cloud Storage Interface:
 
@@ -65,7 +67,7 @@ Point of Interest | Google Places, Foursquare, Yelp
 * Generate share links for files and folders
 * Get thumbnails for images
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-cloudstorage)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/CloudStorage;platformId=Nodejs)
 #### Code Example:
 
 ```javascript
@@ -105,7 +107,7 @@ cs.createFolder("/TestFolder", (err) => { // <---
 * List files in a bucket and delete files
 * Get file metadata (last modified, size, etc.)
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-businesscloudstorage)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/BusinessCloudStorage;platformId=Nodejs)
 #### Code Example
 
 ```javascript
@@ -148,7 +150,7 @@ bcs.createBucket("myNewBucket", (err, bucket) => {
 * Retrieve profile pictures.
 * Login using the Social Network.
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-profile)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Profile;platformId=Nodejs)
 #### Code Example:
 
 ```javascript
@@ -185,7 +187,7 @@ profile.getEmail((err, email) => {
 * Post messages to a wall/stream
 * Post pictures and videos to a wall/stream
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-social)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Social;platformId=Nodejs)
 #### Code Example:
 
 ```javascript
@@ -220,7 +222,7 @@ social.postVideo("This is a test video", fileStream, size, "video/mp4", (err) =>
 * Refund previously made charges
 * Manage subscriptions
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-payment)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Payment;platformId=Nodejs)
 #### Code Example
 
 ```javascript
@@ -246,7 +248,7 @@ payment.createCharge(500, "USD", source, (err, charge) => {
 
 * Send Email
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-email)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Email;platformId=Nodejs)
 
 #### Code Example
 
@@ -272,7 +274,7 @@ email.sendEmail("info@cloudrail.com", "CloudRail", ["foo@bar.com", "bar@foo.com"
 
 * Send SMS
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-sms)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/SMS;platformId=Nodejs)
 
 #### Code Example
 
@@ -300,7 +302,7 @@ sms.sendSMS("CloudRail", "+4912345678", "Hello from CloudRail", (err) => {
 * Get a list of POIs nearby
 * Filter by categories or search term
 
-[Full Documentation](https://documentation.cloudrail.com/nodejs/nodejs/Usage#interfaces-pointsofinterest)
+[Full Documentation](https://cloudrail.com/integrations/interfaces/PointsOfInterests;platformId=Nodejs)
 #### Code Example
 
 ``` javascript
@@ -314,6 +316,69 @@ let poi = new cloudrail.services.GooglePlaces(null, "[apiKey]");
 poi.getNearbyPOIs(49.4557091, 8.5279138, 1000, "restaurant", null, (err, pois) => {
     if (err) throw err;
     console.log("Amount of locations called 'restaurant' in a 1 km radius around the given coordinates: " + pois.length);
+});
+```
+---
+### Video Interface:
+
+* YouTube
+* Twitch
+* Vimeo
+
+#### Features
+
+* Get channel metadata
+* List videos for a channel
+* Get video metadata
+* Search for videos
+* Upload a video
+
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Video;platformId=Nodejs)
+#### Code Example
+
+``` javascript
+const cloudrail = require("cloudrail-si");
+cloudrail.Settings.setKey("[CloudRail License Key]");
+
+// let video = new cloudrail.services.Twitch(redirectReceiver, "[clientID]", "[clientSecret]");
+// let video = new cloudrail.services.Vimeo(redirectReceiver, "[clientID]", "[clientSecret]");
+let video = new cloudrail.services.YouTube(redirectReceiver, "[clientID]", "", "com.cloudrail.example:/auth", "state");
+
+video.searchVideos("CloudRail", 0, 50, (err, videos) => {
+    if (err) throw err;
+    console.log("Videos: " + videos);
+});
+```
+---
+### Messaging Interface:
+
+* FacebookMessenger
+* Telegram
+* Line
+* Viber
+
+#### Features
+
+* Send text messages
+* Send files, images, videos and audios
+* Parse a message received on your webhook
+* Download the content of an attachment sent to your webhook
+
+[Full Documentation](https://cloudrail.com/integrations/interfaces/Messaging;platformId=Nodejs)
+#### Code Example
+
+``` javascript
+const cloudrail = require("cloudrail-si");
+cloudrail.Settings.setKey("[CloudRail License Key]");
+
+// let messaging = new cloudrail.services.Line(null, "[BotToken]");
+// let messaging = new cloudrail.services.Telegram(null, "[BotToken]", "[WebhookUrl]");
+// let messaging = new cloudrail.services.Viber(null, "[BotToken]", "[WebhookUrl]", "[BotName]");
+let messaging = new cloudrail.services.FacebookMessenger(null, "[BotToken]");
+
+messaging.sendMessage("92hf2f83f9", "Greetings from CloudRail!", (err, message) => {
+    if (err) throw err;
+    console.log("Message: " + message);
 });
 ```
 ---
