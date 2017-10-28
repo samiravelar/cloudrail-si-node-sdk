@@ -1,7 +1,8 @@
+[![npm version][npmimg]][npm]
 <p align="center">
   <img width="200px" src="http://cloudrail.github.io/img/cloudrail_logo_github.png"/>
 </p>
-[![npm version][npmimg]][npm]
+
 # CloudRail SI for node.js
 
 Integrate Multiple Services With Just One API
