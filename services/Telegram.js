@@ -10,6 +10,24 @@ var SERVICE_CODE = {
         ["string.concat", "$P0.fileURL", "https://api.telegram.org/file/bot", "$P0.botToken"],
         ["set", "$P0.boundaryString", "------7V0ub86bNNNKWdgJgsF7r0DxYtOB06XYxWvyMuYg5BucWEINpyFRcqisOXWr"]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["callFunc", "setWebhook", "$P0"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "$P0.baseURL"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "setWebhook": [
         ["create", "$L0", "Object"],
         ["string.concat", "$L0.url", "$P0.baseURL", "/setWebhook?url=", "$P0.webhook"],
@@ -36,7 +54,10 @@ var SERVICE_CODE = {
         ["callFunc", "checkMandatory", "$P0", "$P3", "messageText"],
         ["callFunc", "setWebhook", "$P0"],
         ["create", "$L0", "Object"],
+        ["string.urlEncode", "$P3", "$P3"],
         ["string.concat", "$L0.url", "$P0.baseURL", "/sendMessage?chat_id=", "$P2", "&text=", "$P3"],
+        ["if!=than", "$P4", null, 1],
+        ["string.concat", "$L0.url", "$L0.url", "&reply_markup=", "$P4"],
         ["set", "$L0.method", "GET"],
         ["create", "$L1", "Object"],
         ["http.requestCall", "$L1", "$L0"],
@@ -55,6 +76,39 @@ var SERVICE_CODE = {
     ],
     "sendFile": [
         ["callFunc", "sendContent", "$P0", "$P1", "$P2", "$P3", "$P4", "$P5", "/sendDocument", "document", "$P7"]
+    ],
+    "sendCarousel": [
+        ["set", "$L0", 0],
+        ["size", "$L1", "$P3"],
+        ["if<than", "$L0", "$L1", 28],
+        ["get", "$L2", "$P3", "$L0"],
+        ["if!=than", "$L2.subTitle", null, 1],
+        ["string.concat", "$L2.title", "$L2.title", "\n", "$L2.subTitle"],
+        ["create", "$L3", "Object"],
+        ["create", "$L3.inline_keyboard", "Array"],
+        ["set", "$L4", 0],
+        ["size", "$L5", "$L2.buttons"],
+        ["if<than", "$L4", "$L5", 12],
+        ["get", "$L6", "$L2.buttons", "$L4"],
+        ["create", "$L7", "Array"],
+        ["create", "$L8", "Object"],
+        ["set", "$L8.text", "$L6.text"],
+        ["if!=than", "$L6.url", null, 2],
+        ["set", "$L8.url", "$L6.url"],
+        ["jumpRel", 1],
+        ["set", "$L8.callback_data", "$L6.payload"],
+        ["push", "$L7", "$L8"],
+        ["push", "$L3.inline_keyboard", "$L7"],
+        ["math.add", "$L4", "$L4", 1],
+        ["jumpRel", -13],
+        ["json.stringify", "$L3", "$L3"],
+        ["string.urlEncode", "$L3", "$L3"],
+        ["if==than", "$L2.mediaUrl", null, 2],
+        ["callFunc", "sendMessage", "$P0", "$P1", "$P2", "$L2.title", "$L3"],
+        ["jumpRel", 1],
+        ["callFunc", "sendContentWithID", "$P0", "$P1", "$P2", "$L2.title", "$L2.mediaUrl", "/sendPhoto", "photo", "$L3"],
+        ["math.add", "$L0", "$L0", 1],
+        ["jumpRel", -29]
     ],
     "downloadContent": [
         ["create", "$L0", "Object"],
@@ -95,6 +149,8 @@ var SERVICE_CODE = {
         ["if!=than", "$P3", null, 2],
         ["string.urlEncode", "$P3", "$P3"],
         ["string.concat", "$L0.url", "$L0.url", "&caption=", "$P3"],
+        ["if!=than", "$P7", null, 1],
+        ["string.concat", "$L0.url", "$L0.url", "&reply_markup=", "$P7"],
         ["create", "$L1", "Object"],
         ["http.requestCall", "$L1", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L1"],
@@ -283,6 +339,21 @@ var Telegram = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("sendFile", this.interpreterStorage, null, receiverId, message, fileId, fileStream, previewUrl, fileName, size).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Telegram", "sendFile");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Telegram.prototype.sendCarousel = function (receiverId, messageItem, callback) {
+        Statistics_1.Statistics.addCall("Telegram", "sendCarousel");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("sendCarousel", this.interpreterStorage, null, receiverId, messageItem).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Telegram", "sendCarousel");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

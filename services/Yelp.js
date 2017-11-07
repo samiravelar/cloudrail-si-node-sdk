@@ -80,6 +80,26 @@ var SERVICE_CODE = {
         ["callFunc", "addCategory", "$P0", "veterinary_care", "vet"],
         ["callFunc", "addCategory", "$P0", "zoo", "zoos"]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "https://api.yelp.com/v3"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if!=than", "$P2.appendAuthorization", 0, 2],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "getNearbyPOIs": [
         ["callFunc", "checkNull", "$P0", "$P2", "Latitude"],
         ["callFunc", "checkNull", "$P0", "$P3", "Longitude"],

@@ -5,6 +5,27 @@ var Helper_1 = require("../helpers/Helper");
 var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "https://api.line.me/v2/bot/message"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["if==than", "$L0.requestHeaders", null, 1],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["if!=than", "$P2.appendAuthorization", 0, 1],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.botToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "processWebhookRequest": [
         ["json.parse", "$L0", "$P2"],
         ["get", "$L1", "$L0.events", 0],
@@ -69,6 +90,61 @@ var SERVICE_CODE = {
         ["callFunc", "send", "$P0", "$P1", "audio", "$P2", "$P3", "$P4", "$P6"]
     ],
     "sendFile": [],
+    "sendCarousel": [
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "POST"],
+        ["set", "$L0.url", "https://api.line.me/v2/bot/message/push"],
+        ["create", "$L1", "Object"],
+        ["set", "$L1.to", "$P2"],
+        ["create", "$L1.messages", "Array"],
+        ["create", "$L2", "Object"],
+        ["set", "$L2.type", "template"],
+        ["set", "$L2.altText", "this is a template message"],
+        ["create", "$L2.template", "Object"],
+        ["set", "$L2.template.type", "carousel"],
+        ["create", "$L2.template.columns", "Array"],
+        ["create", "$L3", "Number", 0],
+        ["size", "$L4", "$P3"],
+        ["if<than", "$L3", "$L4", 21],
+        ["get", "$L5", "$P3", "$L3"],
+        ["create", "$L6", "Object"],
+        ["set", "$L6.thumbnailImageUrl", "$L5.mediaUrl"],
+        ["set", "$L6.title", "$L5.title"],
+        ["set", "$L6.text", "$L5.subTitle"],
+        ["create", "$L6.actions", "Array"],
+        ["set", "$L7", 0],
+        ["size", "$L8", "$L5.buttons"],
+        ["if<than", "$L7", "$L8", 9],
+        ["get", "$L9", "$L5.buttons", "$L7"],
+        ["create", "$L10", "Object"],
+        ["set", "$L10.type", "$L9.type"],
+        ["set", "$L10.label", "$L9.text"],
+        ["set", "$L10.data", "$L9.payload"],
+        ["set", "$L10.uri", "$L9.url"],
+        ["push", "$L6.actions", "$L10"],
+        ["math.add", "$L7", "$L7", 1],
+        ["jumpRel", -10],
+        ["push", "$L2.template.columns", "$L6"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -22],
+        ["push", "$L1.messages", "$L2"],
+        ["json.stringify", "$L1", "$L1"],
+        ["stream.stringToStream", "$L0.requestBody", "$L1"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["set", "$L0.requestHeaders.Content-Type", "application/json"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.botToken"],
+        ["size", "$L11", "$L1"],
+        ["string.concat", "$L12", "$L11"],
+        ["set", "$L0.requestHeaders.Content-Length", "$L12"],
+        ["create", "$L13", "Object"],
+        ["http.requestCall", "$L13", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L13"],
+        ["create", "$L14", "Date"],
+        ["set", "$L14", "$L14.time"],
+        ["create", "$P1", "Message"],
+        ["set", "$P1.ChatId", "$P2"],
+        ["set", "$P1.SendAt", "$L14"]
+    ],
     "downloadContent": [
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
@@ -224,6 +300,21 @@ var Line = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("sendFile", this.interpreterStorage, null, receiverId, message, fileId, fileStream, previewUrl, fileName, size).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Line", "sendFile");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Line.prototype.sendCarousel = function (receiverId, messageItem, callback) {
+        Statistics_1.Statistics.addCall("Line", "sendCarousel");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("sendCarousel", this.interpreterStorage, null, receiverId, messageItem).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Line", "sendCarousel");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

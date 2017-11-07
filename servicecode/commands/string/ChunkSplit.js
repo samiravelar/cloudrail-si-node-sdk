@@ -14,7 +14,7 @@ var ChunkSplit = (function () {
         Helper_1.Helper.assert(Helper_1.Helper.isString(sourceString));
         var chunkSize = Helper_1.Helper.resolve(environment, parameters[2]);
         Helper_1.Helper.assert(Helper_1.Helper.isNumber(chunkSize));
-        var resultArray = str.match(/(.|[\r\n]){1,chunkSize}/g);
+        var resultArray = sourceString.match(/(.|[\r\n]){1,chunkSize}/g);
         environment.setVariable(resultVar, resultArray);
     };
     return ChunkSplit;

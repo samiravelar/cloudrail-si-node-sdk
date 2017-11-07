@@ -9,6 +9,25 @@ var SERVICE_CODE = {
         ["string.concat", "$P0.baseURL", "https://graph.facebook.com/v2.6/me/messages?access_token=", "$P0.botToken"],
         ["set", "$P0.boundaryString", "------7V0ub86bNNNKWdgJgsF7r0DxYtOB06XYxWvyMuYg5BucWEINpyFRcqisOXWr"]
     ],
+    "AdvancedRequestSupporter:advancedRequest": [
+        ["create", "$L0", "Object"],
+        ["create", "$L0.url", "String"],
+        ["if!=than", "$P2.appendBaseUrl", 0, 1],
+        ["set", "$L0.url", "https://graph.facebook.com/v2.6/me"],
+        ["string.concat", "$L0.url", "$L0.url", "$P2.url"],
+        ["if!=than", "$P2.appendAuthorization", 0, 1],
+        ["string.concat", "$L0.url", "$L0.url", "?access_token=", "$P0.botToken"],
+        ["set", "$L0.requestHeaders", "$P2.headers"],
+        ["set", "$L0.method", "$P2.method"],
+        ["set", "$L0.requestBody", "$P2.body"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["if!=than", "$P2.checkErrors", 0, 1],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["create", "$P1", "AdvancedRequestResponse"],
+        ["set", "$P1.status", "$L1.code"],
+        ["set", "$P1.headers", "$L1.responseHeaders"],
+        ["set", "$P1.body", "$L1.responseBody"]
+    ],
     "processWebhookRequest": [
         ["json.parse", "$L0", "$P2"],
         ["set", "$L0", "$L0.entry"],
@@ -60,6 +79,61 @@ var SERVICE_CODE = {
         ["set", "$P1", "$P2"],
         ["set", "$P1.stream", "$L1.responseBody"],
         ["set", "$P1.mimeType", "$L1.responseHeaders.Content-Type"]
+    ],
+    "sendCarousel": [
+        ["create", "$L0", "Object"],
+        ["set", "$L0.url", "$P0.baseURL"],
+        ["set", "$L0.method", "POST"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["set", "$L0.requestHeaders.Content-Type", "application/json"],
+        ["create", "$L1", "Object"],
+        ["create", "$L1.recipient", "Object"],
+        ["create", "$L1.message", "Object"],
+        ["create", "$L1.message.attachment", "Object"],
+        ["create", "$L1.message.attachment.payload", "Object"],
+        ["set", "$L1.recipient.id", "$P2"],
+        ["set", "$L1.message.attachment.type", "template"],
+        ["set", "$L1.message.attachment.payload.template_type", "generic"],
+        ["create", "$L1.message.attachment.payload.elements", "Array"],
+        ["create", "$L3", "Number", 0],
+        ["size", "$L4", "$P3"],
+        ["if<than", "$L3", "$L4", 26],
+        ["get", "$L5", "$P3", "$L3"],
+        ["create", "$L6", "Object"],
+        ["set", "$L6.image_url", "$L5.mediaUrl"],
+        ["set", "$L6.title", "$L5.title"],
+        ["set", "$L6.subtitle", "$L5.subTitle"],
+        ["create", "$L6.buttons", "Array"],
+        ["set", "$L7", 0],
+        ["size", "$L8", "$L5.buttons"],
+        ["if<than", "$L7", "$L8", 14],
+        ["get", "$L9", "$L5.buttons", "$L7"],
+        ["create", "$L10", "Object"],
+        ["set", "$L10.title", "$L9.text"],
+        ["set", "$L11", "$L9.type"],
+        ["if==than", "$L9.type", "uri", 1],
+        ["set", "$L11", "web_url"],
+        ["set", "$L10.type", "$L11"],
+        ["if!=than", "$L9.url", null, 1],
+        ["set", "$L10.url", "$L9.url"],
+        ["if!=than", "$L9.payload", null, 1],
+        ["set", "$L10.payload", "$L9.payload"],
+        ["push", "$L6.buttons", "$L10"],
+        ["math.add", "$L7", "$L7", 1],
+        ["jumpRel", -15],
+        ["push", "$L1.message.attachment.payload.elements", "$L6"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -27],
+        ["json.stringify", "$L1", "$L1"],
+        ["stream.stringToStream", "$L0.requestBody", "$L1"],
+        ["create", "$L13", "Object"],
+        ["http.requestCall", "$L13", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L13"],
+        ["create", "$L14", "Date"],
+        ["set", "$L14", "$L14.time"],
+        ["create", "$P1", "Message"],
+        ["set", "$P1.ChatId", "$P2"],
+        ["set", "$P1.SendAt", "$L14"]
     ],
     "sendContent": [
         ["callFunc", "checkMandatory", "$P0", "$P2", "chatId"],
@@ -289,6 +363,21 @@ var FacebookMessenger = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("sendFile", this.interpreterStorage, null, receiverId, message, fileId, fileStream, previewUrl, fileName, size).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "FacebookMessenger", "sendFile");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    FacebookMessenger.prototype.sendCarousel = function (receiverId, messageItem, callback) {
+        Statistics_1.Statistics.addCall("FacebookMessenger", "sendCarousel");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("sendCarousel", this.interpreterStorage, null, receiverId, messageItem).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "FacebookMessenger", "sendCarousel");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

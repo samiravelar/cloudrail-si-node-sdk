@@ -159,23 +159,23 @@ declare module 'cloudrail-si/types/Address' {
 declare module 'cloudrail-si/errors/DetailErrors' {
 	export class AuthenticationError extends Error {
 	    message: string;
-	    constructor(message?: string);
+	    constructor(message: string);
 	}
 	export class HttpError extends Error {
 	    message: string;
-	    constructor(message?: string);
+	    constructor(message: string);
 	}
 	export class NotFoundError extends Error {
 	    message: string;
-	    constructor(message?: string);
+	    constructor(message: string);
 	}
 	export class ServiceUnavailableError extends Error {
 	    message: string;
-	    constructor(message?: string);
+	    constructor(message: string);
 	}
 	export class IllegalArgumentError extends Error {
 	    message: string;
-	    constructor(message?: string);
+	    constructor(message: string);
 	}
 
 }
@@ -1411,6 +1411,39 @@ declare module 'cloudrail-si/interfaces/AdvancedRequestSupporter' {
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	export interface AdvancedRequestSupporter {
 	    advancedRequest: (specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>) => void;
+	}
+
+}
+declare module 'cloudrail-si/types/MessageButton' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	export class MessageButton extends SandboxObject {
+	    _text: string;
+	    _type: string;
+	    _payload: string;
+	    _url: string;
+	    constructor(_text: string, _type: string, _payload: string, _url: string);
+	    text: string;
+	    type: string;
+	    payload: string;
+	    url: string;
+	    toString(): string;
+	}
+
+}
+declare module 'cloudrail-si/types/MessageItem' {
+	import { SandboxObject } from 'cloudrail-si/types/SandboxObject';
+	import { MessageButton } from 'cloudrail-si/types/MessageButton';
+	export class MessageItem extends SandboxObject {
+	    _title: string;
+	    _subTitle: string;
+	    _mediaUrl: string;
+	    _buttons: MessageButton[];
+	    constructor(_title: string, _subTitle: string, _mediaUrl: string, _buttons: MessageButton[]);
+	    title: string;
+	    subTitle: string;
+	    mediaUrl: string;
+	    buttons: MessageButton[];
+	    toString(): string;
 	}
 
 }
@@ -2892,15 +2925,17 @@ declare module 'cloudrail-si/interfaces/Messaging' {
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
 	import { Message } from 'cloudrail-si/types/Message';
 	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
 	import stream = require("stream");
 	export interface Messaging {
 	    sendMessage: (receiverId: string, message: string, callback: NodeCallback<Message>) => void;
 	    sendImage: (receiverId: string, message: string, identifier: string, imageStream: stream.Readable, previewUrl: string, fileName: string, callback: NodeCallback<Message>) => void;
-	    sendVideo: (receiverId: string, message: string, videoId: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>) => void;
+	    sendVideo: (receiverId: string, message: string, identifier: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>) => void;
 	    sendAudio: (receiverId: string, message: string, identifier: string, audioStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>) => void;
 	    sendFile: (receiverId: string, message: string, identifier: string, fileStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>) => void;
 	    parseReceivedMessages: (httpRequest: stream.Readable, callback: NodeCallback<Message[]>) => void;
 	    downloadContent: (attachment: MessagingAttachment, callback: NodeCallback<MessagingAttachment>) => void;
+	    sendCarousel: (receiverId: string, messageItems: MessageItem[], callback: NodeCallback<Message>) => void;
 	}
 
 }
@@ -2913,6 +2948,7 @@ declare module 'cloudrail-si/services/FacebookMessenger' {
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
 	import { Message } from 'cloudrail-si/types/Message';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class FacebookMessenger implements Messaging, AdvancedRequestSupporter {
 	    private interpreterStorage;
@@ -2924,6 +2960,7 @@ declare module 'cloudrail-si/services/FacebookMessenger' {
 	    sendVideo(receiverId: string, message: string, videoId: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>): void;
 	    sendAudio(receiverId: string, message: string, audioId: string, audioStream: stream.Readable, previewUrl: string, audioName: string, size: number, callback: NodeCallback<Message>): void;
 	    sendFile(receiverId: string, message: string, fileId: string, fileStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>): void;
+	    sendCarousel(receiverId: string, messageItem: MessageItem[], callback: NodeCallback<Message>): void;
 	    parseReceivedMessages(httpRequest: stream.Readable, callback: NodeCallback<Message[]>): void;
 	    downloadContent(attachment: MessagingAttachment, callback: NodeCallback<MessagingAttachment>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2942,6 +2979,7 @@ declare module 'cloudrail-si/services/Line' {
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
 	import { Message } from 'cloudrail-si/types/Message';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Line implements Messaging, AdvancedRequestSupporter {
 	    private interpreterStorage;
@@ -2953,6 +2991,7 @@ declare module 'cloudrail-si/services/Line' {
 	    sendVideo(receiverId: string, message: string, videoId: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>): void;
 	    sendAudio(receiverId: string, message: string, audioId: string, audioStream: stream.Readable, previewUrl: string, audioName: string, size: number, callback: NodeCallback<Message>): void;
 	    sendFile(receiverId: string, message: string, fileId: string, fileStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>): void;
+	    sendCarousel(receiverId: string, messageItem: MessageItem[], callback: NodeCallback<Message>): void;
 	    parseReceivedMessages(httpRequest: stream.Readable, callback: NodeCallback<Message[]>): void;
 	    downloadContent(attachment: MessagingAttachment, callback: NodeCallback<MessagingAttachment>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2971,6 +3010,7 @@ declare module 'cloudrail-si/services/Telegram' {
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
 	import { Message } from 'cloudrail-si/types/Message';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Telegram implements Messaging, AdvancedRequestSupporter {
 	    private interpreterStorage;
@@ -2982,6 +3022,7 @@ declare module 'cloudrail-si/services/Telegram' {
 	    sendVideo(receiverId: string, message: string, videoId: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>): void;
 	    sendAudio(receiverId: string, message: string, audioId: string, audioStream: stream.Readable, previewUrl: string, audioName: string, size: number, callback: NodeCallback<Message>): void;
 	    sendFile(receiverId: string, message: string, fileId: string, fileStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>): void;
+	    sendCarousel(receiverId: string, messageItem: MessageItem[], callback: NodeCallback<Message>): void;
 	    parseReceivedMessages(httpRequest: stream.Readable, callback: NodeCallback<Message[]>): void;
 	    downloadContent(attachment: MessagingAttachment, callback: NodeCallback<MessagingAttachment>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -3000,6 +3041,7 @@ declare module 'cloudrail-si/services/Viber' {
 	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
 	import { Message } from 'cloudrail-si/types/Message';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
 	export class Viber implements Messaging, AdvancedRequestSupporter {
 	    private interpreterStorage;
@@ -3011,6 +3053,7 @@ declare module 'cloudrail-si/services/Viber' {
 	    sendVideo(receiverId: string, message: string, videoId: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>): void;
 	    sendAudio(receiverId: string, message: string, audioId: string, audioStream: stream.Readable, previewUrl: string, audioName: string, size: number, callback: NodeCallback<Message>): void;
 	    sendFile(receiverId: string, message: string, fileId: string, fileStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>): void;
+	    sendCarousel(receiverId: string, messageItem: MessageItem[], callback: NodeCallback<Message>): void;
 	    parseReceivedMessages(httpRequest: stream.Readable, callback: NodeCallback<Message[]>): void;
 	    downloadContent(attachment: MessagingAttachment, callback: NodeCallback<MessagingAttachment>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
