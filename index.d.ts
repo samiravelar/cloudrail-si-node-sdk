@@ -3101,6 +3101,8 @@ declare module 'cloudrail-si/index' {
 	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
 	import { Message } from 'cloudrail-si/types/Message';
 	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
+	import { MessageButton } from 'cloudrail-si/types/MessageButton';
 	import { Attachment } from 'cloudrail-si/types/Attachment';
 	import { Settings } from 'cloudrail-si/Settings';
 	import { RedirectReceivers } from 'cloudrail-si/RedirectReceivers';
@@ -3185,6 +3187,8 @@ declare module 'cloudrail-si/index' {
 	        "Attachment": typeof Attachment;
 	        "Message": typeof Message;
 	        "MessagingAttachment": typeof MessagingAttachment;
+	        "MessageItem": typeof MessageItem;
+	        "MessageButton": typeof MessageButton;
 	    };
 	    "Settings": typeof Settings;
 	    "RedirectReceivers": typeof RedirectReceivers;

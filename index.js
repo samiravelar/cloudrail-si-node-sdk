@@ -36,6 +36,8 @@ var SubscriptionPlan_1 = require("./types/SubscriptionPlan");
 var SpaceAllocation_1 = require("./types/SpaceAllocation");
 var Message_1 = require("./types/Message");
 var MessagingAttachment_1 = require("./types/MessagingAttachment");
+var MessageItem_1 = require("./types/MessageItem");
+var MessageButton_1 = require("./types/MessageButton");
 var Attachment_1 = require("./types/Attachment");
 var Settings_1 = require("./Settings");
 var RedirectReceivers_1 = require("./RedirectReceivers");
@@ -120,7 +122,9 @@ module.exports = {
         "AdvancedRequestResponse": AdvancedRequestResponse_1.AdvancedRequestResponse,
         "Attachment": Attachment_1.Attachment,
         "Message": Message_1.Message,
-        "MessagingAttachment": MessagingAttachment_1.MessagingAttachment
+        "MessagingAttachment": MessagingAttachment_1.MessagingAttachment,
+        "MessageItem": MessageItem_1.MessageItem,
+        "MessageButton": MessageButton_1.MessageButton
     },
     "Settings": Settings_1.Settings,
     "RedirectReceivers": RedirectReceivers_1.RedirectReceivers
