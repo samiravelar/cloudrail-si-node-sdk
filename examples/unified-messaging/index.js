@@ -7,22 +7,22 @@ const port = 8080
 const stream = require('stream')
 const fs = require('fs')
 
-cr.Settings.setKey("59b6b0bb3d704259977b0c55")
+cr.Settings.setKey("[Your CloudRail Key]")
 
 var service
 var serviceString = process.argv[2]
 switch (serviceString) {
 	case "line":
-		service = new cr.services.Line(null, "vyM8g12IFRwiqNDjrJ2sGzXcjutQL/NjTskRVzRbvGao9JOvvwDxsi08pQO6/Bsq2INNH1n69CmoyYFkmBAjFugyqRitCp15Kf2J4mLgOLCajjmfqYD40aFoLTWFbXlLm/AVd3kqx6wv7a+52Z1KfQdB04t89/1O/w1cDnyilFU=")
+		service = new cr.services.Line(null, "[Bot Token]=")
 		break
 	case "facebook":
-		service = new cr.services.FacebookMessenger(null, "EAABoV3wZBUhMBAAV7CAW0gFVr0HnTlGqSijb3fq4Q9prD0AZAOLPt8sQfnJAZBProZA3bvnJnMJTmfZBSm4ilssjGDQfjP0FIzFwtrPXvLodfsU9NZAjSTvzzDX7gSYPEmcZA4sgm53HP7WwXnT3ZBnhoKbbOYz75wNyF7a7UC3nIwZDZD")
+		service = new cr.services.FacebookMessenger(null, "[Bot Token]")
 		break
 	case "telegram":
-    service = new cr.services.Telegram(null, "429357708:AAEa2tE_fJp1yYCLD1jwki4_DPVtuU3mN14", "https://webhooks.cloudrail.com:80")
+    service = new cr.services.Telegram(null, "[Bot Token]", "[Webhook URL]")
 		break
 	case "viber":
-		service = new cr.services.Viber(null, "", "https://webhooks.cloudrail.com:80", "someName")
+		service = new cr.services.Viber(null, "[Bot Token]", "[Webhook URL]", "[Bot Name]")
 		break
 }
 
