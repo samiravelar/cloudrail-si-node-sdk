@@ -1,0 +1,9 @@
+{
+  "name": "unified-messaging",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "cloudrail-si": "^2.21.2",
+    "express": "*"
+  }
+}
