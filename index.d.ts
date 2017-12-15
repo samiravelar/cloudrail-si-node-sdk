@@ -1419,9 +1419,9 @@ declare module 'cloudrail-si/types/MessageButton' {
 	export class MessageButton extends SandboxObject {
 	    _text: string;
 	    _type: string;
-	    _payload: string;
 	    _url: string;
-	    constructor(_text: string, _type: string, _payload: string, _url: string);
+	    _payload: string;
+	    constructor(_text: string, _type: string, _url: string, _payload: string);
 	    text: string;
 	    type: string;
 	    payload: string;
@@ -3063,6 +3063,37 @@ declare module 'cloudrail-si/services/Viber' {
 	}
 
 }
+declare module 'cloudrail-si/services/SlackBot' {
+	import { Messaging } from 'cloudrail-si/interfaces/Messaging';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	import { MessagingAttachment } from 'cloudrail-si/types/MessagingAttachment';
+	import { Message } from 'cloudrail-si/types/Message';
+	import { MessageItem } from 'cloudrail-si/types/MessageItem';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class SlackBot implements Messaging, AdvancedRequestSupporter {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, botToken: string);
+	    sendMessage(receiverId: string, message: string, callback: NodeCallback<Message>): void;
+	    sendImage(receiverId: string, message: string, imageId: string, imageStream: stream.Readable, previewUrl: string, mimeType: string, callback: NodeCallback<Message>): void;
+	    sendVideo(receiverId: string, message: string, videoId: string, videoStream: stream.Readable, previewUrl: string, size: number, callback: NodeCallback<Message>): void;
+	    sendAudio(receiverId: string, message: string, audioId: string, audioStream: stream.Readable, previewUrl: string, audioName: string, size: number, callback: NodeCallback<Message>): void;
+	    sendFile(receiverId: string, message: string, fileId: string, fileStream: stream.Readable, previewUrl: string, fileName: string, size: number, callback: NodeCallback<Message>): void;
+	    sendCarousel(receiverId: string, messageItem: MessageItem[], callback: NodeCallback<Message>): void;
+	    parseReceivedMessages(httpRequest: stream.Readable, callback: NodeCallback<Message[]>): void;
+	    downloadContent(attachment: MessagingAttachment, callback: NodeCallback<MessagingAttachment>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -3125,7 +3156,8 @@ declare module 'cloudrail-si/index' {
 	import { FacebookMessenger } from 'cloudrail-si/services/FacebookMessenger';
 	import { Line } from 'cloudrail-si/services/Line';
 	import { Telegram } from 'cloudrail-si/services/Telegram';
-	import { Viber } from 'cloudrail-si/services/Viber'; var _default: {
+	import { Viber } from 'cloudrail-si/services/Viber';
+	import { SlackBot } from 'cloudrail-si/services/SlackBot'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -3155,6 +3187,7 @@ declare module 'cloudrail-si/index' {
 	        "Rackspace": typeof Rackspace;
 	        "SendGrid": typeof SendGrid;
 	        "Slack": typeof Slack;
+	        "SlackBot": typeof SlackBot;
 	        "Stripe": typeof Stripe;
 	        "Twilio": typeof Twilio;
 	        "Twitter": typeof Twitter;

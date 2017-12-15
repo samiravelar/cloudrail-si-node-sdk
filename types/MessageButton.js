@@ -7,12 +7,12 @@ var __extends = (this && this.__extends) || function (d, b) {
 var SandboxObject_1 = require("./SandboxObject");
 var MessageButton = (function (_super) {
     __extends(MessageButton, _super);
-    function MessageButton(_text, _type, _payload, _url) {
+    function MessageButton(_text, _type, _url, _payload) {
         _super.call(this);
         this._text = _text;
         this._type = _type;
-        this._payload = _payload;
         this._url = _url;
+        this._payload = _payload;
     }
     Object.defineProperty(MessageButton.prototype, "text", {
         get: function () {

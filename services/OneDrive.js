@@ -813,13 +813,14 @@ var SERVICE_CODE = {
         ["set", "$P1", "$S0.accessToken"]
     ],
     "authenticate": [
+        ["string.urlEncode", "$L22", "$P0.clientSecret"],
         ["create", "$L2", "String"],
         ["if==than", "$P2", "accessToken", 4],
         ["string.concat", "$L0", "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
         ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
-        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&code=", "$L1", "&grant_type=authorization_code"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$L22", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],
-        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$P0.clientSecret", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
+        ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$L22", "&refresh_token=", "$S0.refreshToken", "&grant_type=refresh_token"],
         ["stream.stringToStream", "$L3", "$L2"],
         ["create", "$L4", "Object"],
         ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],

@@ -61,6 +61,7 @@ var FacebookMessenger_1 = require("./services/FacebookMessenger");
 var Line_1 = require("./services/Line");
 var Telegram_1 = require("./services/Telegram");
 var Viber_1 = require("./services/Viber");
+var SlackBot_1 = require("./services/SlackBot");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -91,6 +92,7 @@ module.exports = {
         "Rackspace": Rackspace_1.Rackspace,
         "SendGrid": SendGrid_1.SendGrid,
         "Slack": Slack_1.Slack,
+        "SlackBot": SlackBot_1.SlackBot,
         "Stripe": Stripe_1.Stripe,
         "Twilio": Twilio_1.Twilio,
         "Twitter": Twitter_1.Twitter,

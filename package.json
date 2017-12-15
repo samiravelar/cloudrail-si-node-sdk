@@ -34,6 +34,7 @@
 		"Rackspace",
 		"SendGrid",
 		"Slack",
+		"SlackBot",
 		"Stripe",
 		"Twilio",
 		"Twitter",
@@ -46,12 +47,12 @@
 		"Line",
 		"Telegram"
 	],
-	"description": "The CloudRail SI SDK for Node.JS, a simple, universal, unified API for the most popular cloud services. Supports: AmazonS3, Box, Backblaze, Dropbox, Egnyte, Facebook, FacebookPage, Foursquare, GitHub, GoogleCloudPlatform, GoogleDrive, GooglePlaces, GooglePlus, Heroku, Instagram, LinkedIn, MailJet, MicrosoftAzure, MicrosoftLive, Microsoft, Nexmo, OneDrive, OneDriveBusiness, PayPal, ProductHunt, Rackspace, SendGrid, Slack, Stripe, Twilio, Twitter, Twizo, Yahoo, Yelp, GMail, FacebookMessenger, Viber, Line, Telegram",
+	"description": "The CloudRail SI SDK for Node.JS, a simple, universal, unified API for the most popular cloud services. Supports: AmazonS3, Box, Backblaze, Dropbox, Egnyte, Facebook, FacebookPage, Foursquare, GitHub, GoogleCloudPlatform, GoogleDrive, GooglePlaces, GooglePlus, Heroku, Instagram, LinkedIn, MailJet, MicrosoftAzure, MicrosoftLive, Microsoft, Nexmo, OneDrive, OneDriveBusiness, PayPal, ProductHunt, Rackspace, SendGrid, Slack, SlackBot, Stripe, Twilio, Twitter, Twizo, Yahoo, Yelp, GMail, FacebookMessenger, Viber, Line, Telegram",
 	"engines": {
 		"node": ">=4.0.0"
 	},
 	"engineStrict": true,
-	"version": "2.21.2",
+	"version": "2.21.3",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"dependencies": {

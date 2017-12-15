@@ -1,5 +1,10 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.3**
+  * Add a fix for AmazonS3's listFiles method
+  * Bug fixes for GMail and Telegram
+  * Add SlackBot as a new service for the messaging interface
+
 * **2.21.0**
   * Full release of the messaging interface including FacebookMessanger, Viber, Line and Telegram
   * Bugfix for Amazon S3: The getChildrenPage() method was not returning more than 1000 files

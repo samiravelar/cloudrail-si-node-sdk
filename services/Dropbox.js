@@ -146,16 +146,17 @@ var SERVICE_CODE = {
         ["create", "$P1", "Array"],
         ["if!=than", "$P0.paginationCache.path", "$P2", 1],
         ["jumpRel", 1],
-        ["if<than", "$P3", "$P0.paginationCache.offset", 9],
+        ["if<than", "$P3", "$P0.paginationCache.offset", 10],
         ["set", "$P0.paginationCache.path", "$P2"],
         ["set", "$P0.paginationCache.offset", 0],
         ["create", "$P0.paginationCache.metaCache", "Array"],
         ["create", "$L0", "Object"],
         ["set", "$L0.path", "$P2"],
+        ["set", "$L0.limit", "$P4"],
         ["callFunc", "standardJSONRequest", "$P0", "$L1", "$L0", "https://api.dropboxapi.com/2/files/list_folder"],
         ["callFunc", "processRawMeta", "$P0", "$P0.paginationCache.metaCache", "$L1"],
         ["set", "$P0.paginationCache.cursor", "$L1.cursor"],
-        ["jumpRel", -12],
+        ["jumpRel", -13],
         ["create", "$L0", "Number"],
         ["size", "$L0", "$P0.paginationCache.metaCache"],
         ["math.add", "$L0", "$L0", "$P0.paginationCache.offset"],
@@ -184,7 +185,7 @@ var SERVICE_CODE = {
         ["create", "$P0.paginationCache.metaCache", "Array"],
         ["callFunc", "processRawMeta", "$P0", "$P0.paginationCache.metaCache", "$L1"],
         ["set", "$P0.paginationCache.cursor", "$L1.cursor"],
-        ["jumpRel", -41]
+        ["jumpRel", -42]
     ],
     "CloudStorage:exists": [
         ["callFunc", "validatePath", "$P0", "$P2"],
@@ -540,7 +541,7 @@ var SERVICE_CODE = {
         ["throwError", "$L0"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 27],
+        ["if>=than", "$P1.code", 400, 25],
         ["if==than", "$P1.code", 400, 3],
         ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["create", "$L3", "Error", "$L2", "Http"],
@@ -556,9 +557,7 @@ var SERVICE_CODE = {
         ["throwError", "$L3"],
         ["create", "$L3", "Error", "$L2", "Authentication"],
         ["throwError", "$L3"],
-        ["json.parse", "$L0", "$P1.responseBody"],
-        ["string.indexOf", "$L4", "$L0.error_summary", "not_found"],
-        ["json.stringify", "$L2", "$L0"],
+        ["string.indexOf", "$L4", "$L2", "not_found"],
         ["if>=than", "$P1.code", 402, 5],
         ["if<=than", "$P1.code", 509, 4],
         ["if!=than", "$P1.code", 503, 3],

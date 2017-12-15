@@ -10,6 +10,7 @@ var SERVICE_CODE = {
         ["create", "$P0.crToFoursquare", "Object"],
         ["create", "$P0.foursquareToCr", "Object"],
         ["callFunc", "addCategory", "$P0", "airport", "4bf58dd8d48988d1ed931735"],
+        ["callFunc", "addCategory", "$P0", "atm", "52f2ab2ebcbc57f1066b8b56"],
         ["callFunc", "addCategory", "$P0", "amusement_park", "4bf58dd8d48988d182941735"],
         ["callFunc", "addCategory", "$P0", "aquarium", "4fceea171983d5d06c3e9823"],
         ["callFunc", "addCategory", "$P0", "art_gallery", "4bf58dd8d48988d1e2931735"],
