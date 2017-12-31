@@ -1,5 +1,8 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.4**
+  * Bugfix for GoogleDrive and SlackBot
+
 * **2.21.3**
   * Add a fix for AmazonS3's listFiles method
   * Bug fixes for GMail and Telegram

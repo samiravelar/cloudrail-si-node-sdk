@@ -6,8 +6,7 @@ var InitSelfTest_1 = require("../servicecode/InitSelfTest");
 var Statistics_1 = require("../statistics/Statistics");
 var SERVICE_CODE = {
     "init": [
-        ["set", "$P0.baseURL", "https://slack-com-j0g994z4ajpf.runscope.net/api/"],
-        ["set", "$P0.botToken", "xoxb-273990877507-DcJDzZNVthLRPGpQczSThDLV"],
+        ["set", "$P0.baseURL", "https://slack.com/api/"],
         ["set", "$P0.boundaryString", "------7V0ub86bNNNKWdgJgsF7r0DxYtOB06XYxWvyMuYg5BucWEINpyFRcqisOXWr"]
     ],
     "AdvancedRequestSupporter:advancedRequest": [],
