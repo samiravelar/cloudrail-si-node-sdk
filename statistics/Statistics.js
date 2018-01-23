@@ -42,7 +42,8 @@ var Statistics = (function () {
             var body = {
                 data: Statistics.data,
                 appKey: Settings_1.Settings.licenseKey,
-                platform: Statistics.PLATFORM
+                platform: Statistics.PLATFORM,
+                additionalStats: Statistics.additionalStats
             };
             var promise = Promise.resolve();
             if (Statistics.entryID) {
@@ -86,6 +87,9 @@ var Statistics = (function () {
             }).catch(function (err) { });
         });
         return Statistics.sendStatSyncPromise;
+    };
+    Statistics.setAdditionalStats = function (key, value) {
+        Statistics.additionalStats[key] = value;
     };
     Statistics.getMethodCalls = function (service, method) {
         Statistics.data[service] = Statistics.data[service] || {};
@@ -133,6 +137,7 @@ var Statistics = (function () {
     Statistics.count = 0;
     Statistics.callSyncPromise = Promise.resolve();
     Statistics.sendStatSyncPromise = Promise.resolve();
+    Statistics.additionalStats = {};
     return Statistics;
 }());
 exports.Statistics = Statistics;

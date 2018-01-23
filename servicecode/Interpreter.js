@@ -54,6 +54,7 @@ var DataToUint8_1 = require("./commands/array/DataToUint8");
 var Settings_1 = require("../Settings");
 var Sign_1 = require("./commands/crypt/Sign");
 var Sort_1 = require("./commands/array/Sort");
+var AddStat_1 = require("./commands/stats/AddStat");
 var Interpreter = (function () {
     function Interpreter(sandbox) {
         this.sandbox = sandbox;
@@ -273,7 +274,8 @@ var COMMAND_LIST = [
     new xmlStringify.Stringify(),
     new Uint8ToData_1.Uint8ToData(),
     new DataToUint8_1.DataToUint8(),
-    new Sort_1.Sort()
+    new Sort_1.Sort(),
+    new AddStat_1.AddStat()
 ];
 var COMMANDS = {};
 for (var _i = 0, COMMAND_LIST_1 = COMMAND_LIST; _i < COMMAND_LIST_1.length; _i++) {

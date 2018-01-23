@@ -1,5 +1,9 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.6**
+  * Add PCloud as a new service to the CloudStorage interface
+  * Bugfix for GoogleDrive
+
 * **2.21.4**
   * Bugfix for GoogleDrive and SlackBot
 

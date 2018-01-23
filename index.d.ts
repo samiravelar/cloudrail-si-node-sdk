@@ -1109,6 +1109,54 @@ declare module 'cloudrail-si/servicecode/commands/array/Sort' {
 	}
 
 }
+declare module 'cloudrail-si/servicecode/InitSelfTest' {
+	import * as Promise from "bluebird";
+	export class InitSelfTest {
+	    private static testedServices;
+	    static initTest(servicename: string): boolean;
+	    static execute(servicename: string): boolean;
+	    static getMac(): Promise<string>;
+	    static getNameVersion(): {
+	        name: string;
+	        version: string;
+	    };
+	    static getOS(): string;
+	}
+
+}
+declare module 'cloudrail-si/statistics/Statistics' {
+	export class Statistics {
+	    private static CR_VERSION;
+	    private static PLATFORM;
+	    private static SERVER_URL;
+	    private static DELAY;
+	    private static timer;
+	    private static data;
+	    private static next;
+	    private static count;
+	    private static entryID;
+	    private static callSyncPromise;
+	    private static sendStatSyncPromise;
+	    private static additionalStats;
+	    static addCall(service: string, method: string): void;
+	    static addError(service: string, method: string): void;
+	    private static sendStatistics();
+	    static setAdditionalStats(key: string, value: any): void;
+	    private static getMethodCalls(service, method);
+	    private static hashString(str);
+	    private static getCRVer();
+	}
+
+}
+declare module 'cloudrail-si/servicecode/commands/stats/AddStat' {
+	import { Command } from 'cloudrail-si/servicecode/Command';
+	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
+	export class AddStat implements Command {
+	    getIdentifier(): string;
+	    execute(environment: Sandbox, parameters: any[]): void;
+	}
+
+}
 declare module 'cloudrail-si/servicecode/Interpreter' {
 	import { Sandbox } from 'cloudrail-si/servicecode/Sandbox';
 	import * as Promise from "bluebird";
@@ -1160,43 +1208,6 @@ declare module 'cloudrail-si/servicecode/Sandbox' {
 	    saveStateToString(): string;
 	    loadStateFromString(savedState: string): void;
 	    getParameter(idx: number, stacklevel: number): any;
-	}
-
-}
-declare module 'cloudrail-si/servicecode/InitSelfTest' {
-	import * as Promise from "bluebird";
-	export class InitSelfTest {
-	    private static testedServices;
-	    static initTest(servicename: string): boolean;
-	    static execute(servicename: string): boolean;
-	    static getMac(): Promise<string>;
-	    static getNameVersion(): {
-	        name: string;
-	        version: string;
-	    };
-	    static getOS(): string;
-	}
-
-}
-declare module 'cloudrail-si/statistics/Statistics' {
-	export class Statistics {
-	    private static CR_VERSION;
-	    private static PLATFORM;
-	    private static SERVER_URL;
-	    private static DELAY;
-	    private static timer;
-	    private static data;
-	    private static next;
-	    private static count;
-	    private static entryID;
-	    private static callSyncPromise;
-	    private static sendStatSyncPromise;
-	    static addCall(service: string, method: string): void;
-	    static addError(service: string, method: string): void;
-	    private static sendStatistics();
-	    private static getMethodCalls(service, method);
-	    private static hashString(str);
-	    private static getCRVer();
 	}
 
 }
@@ -3094,6 +3105,46 @@ declare module 'cloudrail-si/services/SlackBot' {
 	}
 
 }
+declare module 'cloudrail-si/services/PCloud' {
+	import { CloudStorage } from 'cloudrail-si/interfaces/CloudStorage';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
+	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import stream = require("stream");
+	import { CloudMetaData } from 'cloudrail-si/types/CloudMetaData';
+	import { SpaceAllocation } from 'cloudrail-si/types/SpaceAllocation';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
+	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
+	export class PCloud implements CloudStorage, AdvancedRequestSupporter {
+	    private interpreterStorage;
+	    private instanceDependencyStorage;
+	    private persistentStorage;
+	    constructor(redirectReceiver: RedirectReceiver, clientId: string, clientSecret: string, redirectUri: string, state: string);
+	    download(filePath: string, callback: NodeCallback<stream.Readable>): void;
+	    upload(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback: NodeCallback<void>): void;
+	    move(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    delete(filePath: string, callback: NodeCallback<void>): void;
+	    copy(sourcePath: string, destinationPath: string, callback: NodeCallback<void>): void;
+	    createFolder(folderPath: string, callback: NodeCallback<void>): void;
+	    getMetadata(filePath: string, callback: NodeCallback<CloudMetaData>): void;
+	    getChildren(folderPath: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    getChildrenPage(path: string, offset: number, limit: number, callback: NodeCallback<CloudMetaData[]>): void;
+	    getUserLogin(callback: NodeCallback<string>): void;
+	    getUserName(callback: NodeCallback<string>): void;
+	    createShareLink(path: string, callback: NodeCallback<string>): void;
+	    getAllocation(callback: NodeCallback<SpaceAllocation>): void;
+	    exists(path: string, callback: NodeCallback<boolean>): void;
+	    getThumbnail(path: string, callback: NodeCallback<stream.Readable>): void;
+	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
+	    login(callback: NodeCallback<void>): void;
+	    logout(callback: NodeCallback<void>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
+	    saveAsString(): string;
+	    loadAsString(savedState: string): void;
+	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
+	}
+
+}
 declare module 'cloudrail-si/index' {
 	import { Box } from 'cloudrail-si/services/Box';
 	import { Foursquare } from 'cloudrail-si/services/Foursquare';
@@ -3157,7 +3208,8 @@ declare module 'cloudrail-si/index' {
 	import { Line } from 'cloudrail-si/services/Line';
 	import { Telegram } from 'cloudrail-si/services/Telegram';
 	import { Viber } from 'cloudrail-si/services/Viber';
-	import { SlackBot } from 'cloudrail-si/services/SlackBot'; var _default: {
+	import { SlackBot } from 'cloudrail-si/services/SlackBot';
+	import { PCloud } from 'cloudrail-si/services/PCloud'; var _default: {
 	    "services": {
 	        "AmazonS3": typeof AmazonS3;
 	        "Box": typeof Box;
@@ -3199,6 +3251,7 @@ declare module 'cloudrail-si/index' {
 	        "Viber": typeof Viber;
 	        "Line": typeof Line;
 	        "Telegram": typeof Telegram;
+	        "PCloud": typeof PCloud;
 	    };
 	    "types": {
 	        "Address": typeof Address;

@@ -62,6 +62,7 @@ var Line_1 = require("./services/Line");
 var Telegram_1 = require("./services/Telegram");
 var Viber_1 = require("./services/Viber");
 var SlackBot_1 = require("./services/SlackBot");
+var PCloud_1 = require("./services/PCloud");
 module.exports = {
     "services": {
         "AmazonS3": AmazonS3_1.AmazonS3,
@@ -103,7 +104,8 @@ module.exports = {
         "FacebookMessenger": FacebookMessenger_1.FacebookMessenger,
         "Viber": Viber_1.Viber,
         "Line": Line_1.Line,
-        "Telegram": Telegram_1.Telegram
+        "Telegram": Telegram_1.Telegram,
+        "PCloud": PCloud_1.PCloud
     },
     "types": {
         "Address": Address_1.Address,
