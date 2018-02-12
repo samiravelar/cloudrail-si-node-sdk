@@ -41,6 +41,7 @@ var SERVICE_CODE = {
         ["set", "$P0.userInfo.lastUpdate", "$L4.Time"],
         ["set", "$P0.userInfo.emailAddress", "$L3.email"],
         ["string.concat", "$P0.userInfo.userId", "$L3.userid", ""],
+        ["string.concat", "$P0.userInfo.isPremium", "$L3.premium", ""],
         ["set", "$P0.userInfo.quotaTotal", "$L3.quota"],
         ["set", "$P0.userInfo.quotaUsed", "$L3.usedquota"]
     ],
@@ -90,6 +91,8 @@ var SERVICE_CODE = {
         ["throwError", "$L6"],
         ["string.urlEncode", "$L0", "$L0"],
         ["string.urlEncode", "$L1", "$L1"],
+        ["callFunc", "getFileMetadata", "$P0", "$L11", "$P1"],
+        ["if!=than", "$L11", null, 7],
         ["if==than", "$P4", true, 2],
         ["callFunc", "CloudStorage:delete", "$P0", "$P1"],
         ["jumpRel", 4],
@@ -266,7 +269,8 @@ var SERVICE_CODE = {
         ["if!=than", "$P2.size", null, 1],
         ["set", "$P1.size", "$P2.size"],
         ["set", "$P1.folder", "$P2.isfolder"],
-        ["create", "$L0", "Date"],
+        ["if!=than", "$P2.modified", null, 2],
+        ["create", "$L0", "Date", "$P2.modified"],
         ["set", "$P1.modifiedAt", "$L0.time"],
         ["if!=than", "$P2.width", null, 1],
         ["create", "$P1.imageMetaData", "ImageMetaData", "$P2.width", "$P2.height"]
@@ -471,12 +475,11 @@ var SERVICE_CODE = {
     "setCurrentUser": [
         ["if==than", "$P0.isUserSet", null, 8],
         ["callFunc", "User:about", "$P0"],
-        ["hash.sha256", "$L0", "$P0.userInfo.userId"],
-        ["callFunc", "stringifyHash", "$P0", "$L2", "$L0"],
-        ["stats.add", "userId", "$L2"],
+        ["stats.add", "PCloud:userId", "$P0.userInfo.userId"],
         ["hash.sha256", "$L1", "$P0.userInfo.emailAddress"],
         ["callFunc", "stringifyHash", "$P0", "$L3", "$L1"],
-        ["stats.add", "userEmail", "$L3"],
+        ["stats.add", "PCloud:userEmail", "$L3"],
+        ["stats.add", "PCloud:isPremium", "$P0.userInfo.isPremium"],
         ["set", "$P0.isUserSet", 1]
     ],
     "stringifyHash": [
@@ -603,6 +606,10 @@ var SERVICE_CODE = {
         ["if==than", "$L4", null, 1],
         ["create", "$L4", "Error", "Unknown Error", "None"],
         ["throwError", "$L4"]
+    ],
+    "CloudStorage:uploadWithContentModifiedDate": [
+        ["create", "$L0", "Error", "Cannot modify file metadata", "Forbidden"],
+        ["throwError", "$L0"]
     ]
 };
 var PCloud = (function () {
@@ -876,6 +883,20 @@ var PCloud = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "PCloud", "logout");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    PCloud.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("PCloud", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:uploadWithContentModifiedDate", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "PCloud", "uploadWithContentModifiedDate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

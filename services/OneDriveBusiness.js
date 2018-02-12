@@ -57,10 +57,14 @@ var SERVICE_CODE = {
         ["if==than", "$L10", "false", 2],
         ["create", "$L31", "Error", "Parent path does not exist.", "NotFound"],
         ["throwError", "$L31"],
-        ["if<=than", "$P3", 4000000, 2],
+        ["if<=than", "$P3", 4000000, 4],
         ["callFunc", "simpleUpload", "$P0", "$P1", "$P2", "$P3", "$P4"],
-        ["jumpRel", 1],
-        ["callFunc", "chunkedUpload", "$P0", "$P2", "$P1", "$P3", "$P4"]
+        ["if!=than", "$P5", null, 1],
+        ["callFunc", "updateMetadata", "$P0", "$P1", "$P5"],
+        ["jumpRel", 3],
+        ["callFunc", "chunkedUpload", "$P0", "$P2", "$P1", "$P3", "$P4"],
+        ["if!=than", "$P5", null, 1],
+        ["callFunc", "updateMetadata", "$P0", "$P1", "$P5"]
     ],
     "downloadSC": [
         ["callFunc", "validatePath", "$P0", "$P2"],
@@ -662,6 +666,12 @@ var SERVICE_CODE = {
         ["if!=than", "$L5.lastModifiedDateTime", null, 2],
         ["create", "$L10", "Date", "$L5.lastModifiedDateTime"],
         ["set", "$P1.modifiedAt", "$L10.time"],
+        ["if!=than", "$L5.fileSystemInfo", null, 5],
+        ["create", "$L14", "Object"],
+        ["set", "$L14", "$L5.fileSystemInfo"],
+        ["if!=than", "$L14", null, 2],
+        ["create", "$L15", "Date", "$L14.lastModifiedDateTime"],
+        ["set", "$P1.contentModifiedAt", "$L15.time"],
         ["if==than", "$L5.folder", null, 2],
         ["set", "$P1.Folder", 0],
         ["jumpRel", 1],
@@ -913,6 +923,48 @@ var SERVICE_CODE = {
         ["math.add", "$L2", "$L2", 1],
         ["jumpRel", -8],
         ["set", "$P1", "$L4"]
+    ],
+    "CloudStorage:uploadWithContentModifiedDate": [
+        ["callFunc", "checkNull", "$P0", "$P2", "$P5"],
+        ["create", "$L0", "Date"],
+        ["set", "$L0.time", "$P5"],
+        ["set", "$L1", "$L0.rfcTimeUsingFormat2"],
+        ["callFunc", "uploadSC", "$P0", "$P1", "$P2", "$P3", "$P4", "$L1"]
+    ],
+    "updateMetadata": [
+        ["create", "$L0", "Object"],
+        ["create", "$L1", "String"],
+        ["callFunc", "urlEncode", "$P0", "$L2", "$P1"],
+        ["string.concat", "$L1", "$P0.baseUrl", "/drive/root:", "$L2"],
+        ["set", "$L0.url", "$L1"],
+        ["set", "$L0.method", "GET"],
+        ["create", "$L10", "Object"],
+        ["string.concat", "$L10.Authorization", "Bearer ", "$S0.accessToken"],
+        ["set", "$L10.Accept", "application/json"],
+        ["set", "$L0.requestHeaders", "$L10"],
+        ["create", "$L4", "Object"],
+        ["http.requestCall", "$L4", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["create", "$L5", "Object"],
+        ["json.parse", "$L5", "$L4.responseBody"],
+        ["get", "$L3", "$L5.id"],
+        ["create", "$L6", "Object"],
+        ["string.concat", "$L6.url", "$P0.baseUrl", "/drive/items/", "$L3"],
+        ["create", "$L7", "Object"],
+        ["create", "$L8", "Object"],
+        ["set", "$L8.lastModifiedDateTime", "$P2"],
+        ["set", "$L7.fileSystemInfo", "$L8"],
+        ["json.stringify", "$L7", "$L7"],
+        ["stream.stringToStream", "$L7", "$L7"],
+        ["create", "$L9", "Object"],
+        ["set", "$L9.Content-Type", "application/json"],
+        ["string.concat", "$L9.Authorization", "Bearer ", "$S0.accessToken"],
+        ["set", "$L6.method", "PATCH"],
+        ["set", "$L6.requestHeaders", "$L9"],
+        ["set", "$L6.requestBody", "$L7"],
+        ["create", "$L11", "Object"],
+        ["http.requestCall", "$L11", "$L6"],
+        ["callFunc", "validateResponse", "$P0", "$L11"]
     ]
 };
 var OneDriveBusiness = (function () {
@@ -1186,6 +1238,20 @@ var OneDriveBusiness = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "logout");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    OneDriveBusiness.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("OneDriveBusiness", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:uploadWithContentModifiedDate", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "OneDriveBusiness", "uploadWithContentModifiedDate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

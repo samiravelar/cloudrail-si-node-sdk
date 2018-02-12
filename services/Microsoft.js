@@ -1142,6 +1142,20 @@ var Microsoft = (function () {
                 callback(err);
         });
     };
+    Microsoft.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("Microsoft", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Microsoft", "uploadWithContentModifiedDate");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     Microsoft.prototype.advancedRequest = function (specification, callback) {
         Statistics_1.Statistics.addCall("Microsoft", "advancedRequest");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));

@@ -402,9 +402,12 @@ var SERVICE_CODE = {
         ["callFunc", "validatePath", "$P0", "$P1"],
         ["callFunc", "checkNull", "$P0", "$P2"],
         ["callFunc", "checkAuthentication", "$P0"],
-        ["if!=than", "$P4", 0, 4],
+        ["if!=than", "$P4", 0, 7],
         ["callFunc", "resolvePath", "$P0", "$L20", "$P1", 1],
-        ["if!=than", "$L20", null, 2],
+        ["if!=than", "$L20", null, 5],
+        ["if!=than", "$P5", null, 2],
+        ["callFunc", "uploadOverwrite", "$P0", "$P1", "$P2", "$L20", "$P5"],
+        ["return"],
         ["callFunc", "uploadOverwrite", "$P0", "$P1", "$P2", "$L20"],
         ["return"],
         ["callFunc", "checkIfPathExists", "$P0", "$L25", "$P1"],
@@ -460,17 +463,25 @@ var SERVICE_CODE = {
         ["create", "$L2", "Object"],
         ["set", "$L2.method", "PUT"],
         ["set", "$L2.url", "$L9"],
+        ["if==than", "$P5", null, 1],
         ["set", "$L2.requestBody", "$P2"],
         ["create", "$L3", "Object"],
         ["set", "$L2.requestHeaders", "$L3"],
         ["set", "$L3", "$L28", "Content-Type"],
         ["create", "$L4", "Object"],
         ["http.requestCall", "$L4", "$L2"],
-        ["callFunc", "validateResponse", "$P0", "$L4"]
+        ["callFunc", "validateResponse", "$P0", "$L4"],
+        ["if!=than", "$P5", null, 3],
+        ["callFunc", "resolvePath", "$P0", "$L31", "$P1", 1],
+        ["if!=than", "$L31", null, 1],
+        ["callFunc", "uploadOverwrite", "$P0", "$P1", "$P2", "$L31", "$P5"]
     ],
     "uploadOverwrite": [
         ["create", "$L2", "Object"],
         ["set", "$L2.method", "PUT"],
+        ["if!=than", "$P4", null, 2],
+        ["string.concat", "$L2.url", "https://www.googleapis.com/upload/drive/v2/files/", "$P3", "?uploadType=resumable", "&setModifiedDate=true"],
+        ["jumpRel", 1],
         ["string.concat", "$L2.url", "https://www.googleapis.com/upload/drive/v2/files/", "$P3", "?uploadType=resumable"],
         ["create", "$L3", "Object"],
         ["set", "$L2.requestHeaders", "$L3"],
@@ -488,6 +499,8 @@ var SERVICE_CODE = {
         ["debug.out", "No known MimeType for extension '", "$L29", "'. Used 'application/octet-stream' instead."],
         ["set", "$L3", "$L28", "X-Upload-Content-Type"],
         ["create", "$L5", "Object"],
+        ["if!=than", "$P4", null, 1],
+        ["set", "$L5.modifiedDate", "$P4"],
         ["json.stringify", "$L6", "$L5"],
         ["stream.stringToStream", "$L7", "$L6"],
         ["set", "$L2.requestBody", "$L7"],
@@ -816,9 +829,10 @@ var SERVICE_CODE = {
         ["callFunc", "getRawMetadataByID", "$P0", "$L0", "$P2"],
         ["create", "$P1", "CloudMetaData"],
         ["set", "$P1.Name", "$L0.name"],
-        ["if!=than", "$L0.modifiedTime", null, 2],
+        ["if!=than", "$L0.modifiedTime", null, 3],
         ["create", "$L1", "Date", "$L0.modifiedTime"],
         ["set", "$P1.modifiedAt", "$L1.time"],
+        ["set", "$P1.contentModifiedAt", "$L1.time"],
         ["if!=than", "$L0.size", null, 1],
         ["math.add", "$P1.Size", "$L0.size", 0],
         ["if==than", "$L0.mimeType", "application/vnd.google-apps.folder", 2],
@@ -1063,6 +1077,13 @@ var SERVICE_CODE = {
         ["math.add", "$L2", "$L2", 1],
         ["jumpRel", -8],
         ["set", "$P1", "$L4"]
+    ],
+    "CloudStorage:uploadWithContentModifiedDate": [
+        ["callFunc", "checkNull", "$P0", "$P2", "$P5"],
+        ["create", "$L0", "Date"],
+        ["set", "$L0.time", "$P5"],
+        ["set", "$L1", "$L0.rfcTimeUsingFormat2"],
+        ["callFunc", "uploadGD", "$P0", "$P1", "$P2", "$P3", "$P4", "$L1"]
     ]
 };
 var GoogleDrive = (function () {
@@ -1337,6 +1358,20 @@ var GoogleDrive = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "logout");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    GoogleDrive.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("GoogleDrive", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:uploadWithContentModifiedDate", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "GoogleDrive", "uploadWithContentModifiedDate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

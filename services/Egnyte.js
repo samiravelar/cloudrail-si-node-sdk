@@ -77,6 +77,8 @@ var SERVICE_CODE = {
         ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
         ["string.concat", "$L0.requestHeaders.Content-Length", "$P3", ""],
         ["set", "$L0.requestHeaders.Content-Type", "text/plain"],
+        ["if!=than", "$P5", null, 1],
+        ["set", "$L0.requestHeaders.Last-Modified", "$P5"],
         ["set", "$L0.requestBody", "$P2"],
         ["http.requestCall", "$L5", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L5"]
@@ -453,10 +455,11 @@ var SERVICE_CODE = {
         ["create", "$P1", "CloudMetaData"],
         ["set", "$P1.name", "$P2.name"],
         ["set", "$P1.path", "$P2.path"],
-        ["if==than", "$P2.is_folder", 0, 4],
+        ["if==than", "$P2.is_folder", 0, 5],
         ["set", "$P1.size", "$P2.size"],
         ["set", "$P1.folder", 0],
         ["callFunc", "parseDate", "$P0", "$P1.modifiedAt", "$P2.last_modified"],
+        ["set", "$P1.contentModifiedAt", "$P1.modifiedAt"],
         ["return"],
         ["set", "$P1.folder", 1],
         ["set", "$P1.modifiedAt", "$P2.lastModified"]
@@ -510,6 +513,13 @@ var SERVICE_CODE = {
         ["return"],
         ["create", "$L0", "Error", "Could not recognize month in Date"],
         ["throwError", "$L0"]
+    ],
+    "CloudStorage:uploadWithContentModifiedDate": [
+        ["callFunc", "checkNull", "$P0", "$P2", "$P5"],
+        ["create", "$L0", "Date"],
+        ["set", "$L0.time", "$P5"],
+        ["set", "$L1", "$L0.rfcTime1123"],
+        ["callFunc", "CloudStorage:upload", "$P0", "$P1", "$P2", "$P3", "$P4", "$L1"]
     ]
 };
 var Egnyte = (function () {
@@ -785,6 +795,20 @@ var Egnyte = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Egnyte", "logout");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Egnyte.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("Egnyte", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:uploadWithContentModifiedDate", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Egnyte", "uploadWithContentModifiedDate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

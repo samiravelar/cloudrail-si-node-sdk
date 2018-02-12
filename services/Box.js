@@ -56,9 +56,12 @@ var SERVICE_CODE = {
         ["callFunc", "checkNull", "$P0", "$P2"],
         ["callFunc", "checkPositive", "$P0", "$P3"],
         ["callFunc", "checkAuthentication", "$P0"],
-        ["if!=than", "$P4", 0, 4],
+        ["if!=than", "$P4", 0, 7],
         ["callFunc", "resolvePath", "$P0", "$L20", "$P1", 1],
-        ["if!=than", "$L20", null, 2],
+        ["if!=than", "$L20", null, 5],
+        ["if!=than", "$P5", null, 2],
+        ["callFunc", "uploadOverwrite", "$P0", "$P1", "$P2", "$L20", "$P5"],
+        ["return"],
         ["callFunc", "uploadOverwrite", "$P0", "$P1", "$P2", "$L20"],
         ["return"],
         ["string.lastIndexOf", "$L0", "$P1", "/"],
@@ -72,6 +75,8 @@ var SERVICE_CODE = {
         ["set", "$L5.name", "$L2"],
         ["create", "$L5.parent", "Object"],
         ["set", "$L5.parent.id", "$L4.id"],
+        ["if!=than", "$P5", null, 1],
+        ["set", "$L5.content_modified_at", "$P5"],
         ["json.stringify", "$L6", "$L5"],
         ["string.lastIndexOf", "$L7", "$L2", "."],
         ["math.add", "$L7", "$L7", 1],
@@ -102,6 +107,8 @@ var SERVICE_CODE = {
         ["math.add", "$L1", "$L0", 1],
         ["string.substring", "$L2", "$P1", "$L1"],
         ["create", "$L5", "Object"],
+        ["if!=than", "$P4", null, 1],
+        ["set", "$L5.content_modified_at", "$P4"],
         ["json.stringify", "$L6", "$L5"],
         ["string.lastIndexOf", "$L7", "$L2", "."],
         ["math.add", "$L7", "$L7", 1],
@@ -566,6 +573,8 @@ var SERVICE_CODE = {
         ["set", "$P1.name", "$P2.name"],
         ["if!=than", "$P2.modified_at", null, 1],
         ["callFunc", "extractTimeWithTimezone", "$P0", "$P1.modifiedAt", "$P2.modified_at"],
+        ["if!=than", "$P2.content_modified_at", null, 1],
+        ["callFunc", "extractTimeWithTimezone", "$P0", "$P1.contentModifiedAt", "$P2.content_modified_at"],
         ["if==than", "$P2.type", "folder", 2],
         ["set", "$P1.folder", 1],
         ["jumpRel", 2],
@@ -659,6 +668,13 @@ var SERVICE_CODE = {
         ["math.add", "$L2", "$L2", 1],
         ["jumpRel", -8],
         ["set", "$P1", "$L4"]
+    ],
+    "CloudStorage:uploadWithContentModifiedDate": [
+        ["callFunc", "checkNull", "$P0", "$P2", "$P5"],
+        ["create", "$L0", "Date"],
+        ["set", "$L0.time", "$P5"],
+        ["set", "$L1", "$L0.rfcTimeUsingFormat3"],
+        ["callFunc", "CloudStorage:upload", "$P0", "$P1", "$P2", "$P3", "$P4", "$L1"]
     ]
 };
 var Box = (function () {
@@ -932,6 +948,20 @@ var Box = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Box", "logout");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Box.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("Box", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:uploadWithContentModifiedDate", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Box", "uploadWithContentModifiedDate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

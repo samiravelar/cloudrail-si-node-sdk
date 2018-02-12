@@ -35,6 +35,20 @@ var CustomDate = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(CustomDate.prototype, "rfcTimeUsingFormat2", {
+        get: function () {
+            return this.date.toISOString().slice(0, 23) + "Z";
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CustomDate.prototype, "rfcTimeUsingFormat3", {
+        get: function () {
+            return this.date.toISOString().slice(0, 19) + this.date.toTimeString().substr(12, 5);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(CustomDate.prototype, "rfcTime1123", {
         get: function () {
             return this.date.toUTCString();

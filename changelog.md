@@ -1,5 +1,11 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.7**
+  * Add a new method to the CloudStorage interface that allows uploading files with a custom modified date
+  * Fix a missing Authorization header in getChildren and getChildrenPage of OneDrive
+  * Fix error handling in Dropbox
+  * Fix an issue with upload in PCloud
+
 * **2.21.6**
   * Add PCloud as a new service to the CloudStorage interface
   * Bugfix for GoogleDrive

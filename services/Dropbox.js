@@ -70,9 +70,9 @@ var SERVICE_CODE = {
         ["callFunc", "checkFileExists", "$P0", "$P1"],
         ["callFunc", "checkParentPathExists", "$P0", "$P1"],
         ["if<=than", "$P3", 10000000, 2],
-        ["callFunc", "simpleUpload", "$P0", "$P2", "$P1", "$P4"],
+        ["callFunc", "simpleUpload", "$P0", "$P2", "$P1", "$P4", "$P5"],
         ["jumpRel", 1],
-        ["callFunc", "chunkedUpload", "$P0", "$P2", "$P1", "$P3", "$P4"]
+        ["callFunc", "chunkedUpload", "$P0", "$P2", "$P1", "$P3", "$P4", "$P5"]
     ],
     "CloudStorage:move": [
         ["callFunc", "validatePath", "$P0", "$P1"],
@@ -388,6 +388,9 @@ var SERVICE_CODE = {
         ["if!=than", "$P2.server_modified", null, 2],
         ["create", "$L1", "Date", "$P2.server_modified"],
         ["set", "$P1.modifiedAt", "$L1.time"],
+        ["if!=than", "$P2.client_modified", null, 2],
+        ["create", "$L6", "Date", "$P2.client_modified"],
+        ["set", "$P1.contentModifiedAt", "$L6.time"],
         ["get", "$L0", "$P2", ".tag"],
         ["if==than", "$L0", "folder", 2],
         ["set", "$P1.folder", 1],
@@ -426,6 +429,8 @@ var SERVICE_CODE = {
         ["set", "$L3.path", "$P2"],
         ["if!=than", "$P3", 0, 1],
         ["set", "$L3.mode", "overwrite"],
+        ["if!=than", "$P4", null, 1],
+        ["set", "$L3.client_modified", "$P4"],
         ["json.stringify", "$L4", "$L3"],
         ["set", "$L1.Dropbox-API-Arg", "$L4"],
         ["set", "$L0.requestHeaders", "$L1"],
@@ -446,7 +451,7 @@ var SERVICE_CODE = {
         ["math.add", "$L6", "$L5", 10000000],
         ["set", "$L5", "$L6"],
         ["jumpRel", -8],
-        ["callFunc", "chunkedFinish", "$P0", "$P1", "$P2", "$L1", "$L5", "$P4"]
+        ["callFunc", "chunkedFinish", "$P0", "$P1", "$P2", "$L1", "$L5", "$P4", "$P5"]
     ],
     "chunkedStart": [
         ["create", "$L0", "Object"],
@@ -497,6 +502,8 @@ var SERVICE_CODE = {
         ["create", "$L8", "Object"],
         ["if!=than", "$P5", 0, 1],
         ["set", "$L8.mode", "overwrite"],
+        ["if!=than", "$P6", null, 1],
+        ["set", "$L8.client_modified", "$P6"],
         ["set", "$L8.path", "$P2"],
         ["create", "$L7", "Object"],
         ["set", "$L7.cursor", "$L3"],
@@ -541,7 +548,7 @@ var SERVICE_CODE = {
         ["throwError", "$L0"]
     ],
     "validateResponse": [
-        ["if>=than", "$P1.code", 400, 25],
+        ["if>=than", "$P1.code", 400, 26],
         ["if==than", "$P1.code", 400, 3],
         ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["create", "$L3", "Error", "$L2", "Http"],
@@ -557,6 +564,7 @@ var SERVICE_CODE = {
         ["throwError", "$L3"],
         ["create", "$L3", "Error", "$L2", "Authentication"],
         ["throwError", "$L3"],
+        ["stream.streamToString", "$L2", "$P1.responseBody"],
         ["string.indexOf", "$L4", "$L2", "not_found"],
         ["if>=than", "$P1.code", 402, 5],
         ["if<=than", "$P1.code", 509, 4],
@@ -603,6 +611,13 @@ var SERVICE_CODE = {
         ["if==than", "$L4.code", 200, 2],
         ["create", "$L5", "Error", "File already exists.", "Http"],
         ["throwError", "$L5"]
+    ],
+    "CloudStorage:uploadWithContentModifiedDate": [
+        ["callFunc", "checkNull", "$P0", "$P2", "$P5"],
+        ["create", "$L0", "Date"],
+        ["set", "$L0.time", "$P5"],
+        ["set", "$L1", "$L0.rfcTime"],
+        ["callFunc", "CloudStorage:upload", "$P0", "$P1", "$P2", "$P3", "$P4", "$L1"]
     ]
 };
 var Dropbox = (function () {
@@ -876,6 +891,20 @@ var Dropbox = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Authenticating:logout", this.interpreterStorage).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Dropbox", "logout");
+        }).then(function () {
+            var res;
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Dropbox.prototype.uploadWithContentModifiedDate = function (filePath, stream, size, overwrite, contentModifiedDate, callback) {
+        Statistics_1.Statistics.addCall("Dropbox", "uploadWithContentModifiedDate");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("CloudStorage:uploadWithContentModifiedDate", this.interpreterStorage, filePath, stream, size, overwrite ? 1 : 0, contentModifiedDate).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Dropbox", "uploadWithContentModifiedDate");
         }).then(function () {
             var res;
             if (callback != null && typeof callback === "function")

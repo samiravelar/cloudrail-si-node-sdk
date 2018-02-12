@@ -34,7 +34,7 @@ var SERVICE_CODE = {
         ["create", "$L1", "Number", 0],
         ["size", "$L2", "$L0"],
         ["create", "$P1", "Array"],
-        ["if<than", "$L1", "$L2", 16],
+        ["if<than", "$L1", "$L2", 18],
         ["get", "$L3", "$L0", "$L1"],
         ["get", "$L4", "$L3.messaging", 0],
         ["get", "$L8", "$L3.messaging", 0],
@@ -46,11 +46,13 @@ var SERVICE_CODE = {
         ["set", "$L7.ChatId", "$L4.sender.id"],
         ["set", "$L7.SendAt", "$L4.timestamp"],
         ["set", "$L7.MessageText", "$L4.message.text"],
+        ["if!=than", "$L5", null, 1],
         ["set", "$L7.Location", "$L5"],
+        ["if!=than", "$L6", null, 1],
         ["set", "$L7.Attachments", "$L6"],
         ["push", "$P1", "$L7"],
         ["math.add", "$L1", "$L1", 1],
-        ["jumpRel", -17]
+        ["jumpRel", -19]
     ],
     "sendMessage": [
         ["callFunc", "checkMandatory", "$P0", "$P2", "chatId"],

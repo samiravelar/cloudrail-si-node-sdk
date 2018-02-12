@@ -91,6 +91,7 @@ declare module 'cloudrail-si/types/CloudMetaData' {
 	    private _folder;
 	    modifiedAt: number;
 	    imageMetaData: ImageMetaData;
+	    contentModifiedAt: number;
 	    folder: boolean;
 	    toString(): string;
 	}
@@ -136,6 +137,8 @@ declare module 'cloudrail-si/types/Date' {
 	    getDate(): Date;
 	    time: number;
 	    rfcTime: string;
+	    rfcTimeUsingFormat2: string;
+	    rfcTimeUsingFormat3: string;
 	    rfcTime1123: string;
 	    rfcTime2822: string;
 	    toJSONString(): string;
@@ -1332,6 +1335,15 @@ declare module 'cloudrail-si/interfaces/CloudStorage' {
 	     */
 	    upload: (filePath: string, stream: stream.Readable, size: number, overwrite: boolean, callback?: NodeCallback<void>) => void;
 	    /**
+	     * Uploads a file to a cloud storage, throws an exception if the path is invalid, the parent path does not exist, the stream is null or the size negative
+	     * @param filePath The path where to store the file from the root folder and including the name, e.g /myFolder/myFile.jpg
+	     * @param stream A stream from which the file can be read
+	     * @param size The size in bytes of the data that can be read from the stream
+	     * @param overwrite If true, an existing file with the same path will be overwritten (its contents updated), if false the presence of a file with the same name will cause an exception
+	     * @param contentModifiedDate The time when the files was last modified locally
+	     */
+	    uploadWithContentModifiedDate: (filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>) => void;
+	    /**
 	     * Moves a file or a folder in the cloud storage, throws an exception if one of the paths is invalid, the source path or the parent destination path does not exist
 	     * @param sourcePath The path to the file which should be moved from the root folder and including the name
 	     * @param destinationPath The path to move the file to from the root folder and including the name
@@ -1491,6 +1503,7 @@ declare module 'cloudrail-si/services/Box' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -1581,6 +1594,7 @@ declare module 'cloudrail-si/services/Dropbox' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -1780,6 +1794,7 @@ declare module 'cloudrail-si/services/GoogleDrive' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -2007,6 +2022,7 @@ declare module 'cloudrail-si/services/Microsoft' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -2085,6 +2101,7 @@ declare module 'cloudrail-si/services/OneDrive' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -2550,6 +2567,7 @@ declare module 'cloudrail-si/services/Egnyte' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -2818,6 +2836,7 @@ declare module 'cloudrail-si/services/OneDriveBusiness' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
@@ -3138,6 +3157,7 @@ declare module 'cloudrail-si/services/PCloud' {
 	    search(query: string, callback: NodeCallback<CloudMetaData[]>): void;
 	    login(callback: NodeCallback<void>): void;
 	    logout(callback: NodeCallback<void>): void;
+	    uploadWithContentModifiedDate(filePath: string, stream: stream.Readable, size: number, overwrite: boolean, contentModifiedDate: number, callback: NodeCallback<void>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
