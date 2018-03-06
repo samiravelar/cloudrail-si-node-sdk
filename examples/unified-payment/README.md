@@ -1,6 +1,6 @@
 # Unified Payment example
 
-This is a simple example that shows how you can easily access different POI services with node.js using the [CloudRail Unified Payment API](https://cloudrail.com/integrations/interfaces/Payment;platformId=Nodejs).
+This is a simple example that shows how you can easily access different payment services with node.js using the [CloudRail Unified Payment API](https://cloudrail.com/integrations/interfaces/Payment;platformId=Nodejs).
 
 ## Prerequisites
 

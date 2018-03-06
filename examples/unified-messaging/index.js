@@ -13,7 +13,7 @@ var service
 var serviceString = process.argv[2]
 switch (serviceString) {
 	case "line":
-		service = new cr.services.Line(null, "[Bot Token]=")
+		service = new cr.services.Line(null, "[Bot Token]")
 		break
 	case "facebook":
 		service = new cr.services.FacebookMessenger(null, "[Bot Token]")
