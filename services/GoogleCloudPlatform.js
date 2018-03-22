@@ -88,7 +88,15 @@ var SERVICE_CODE = {
         ["callFunc", "makeMeta", "$P0", "$L6", "$L5"],
         ["push", "$P1", "$L6"],
         ["math.add", "$L4", "$L4", 1],
-        ["jumpRel", -7]
+        ["jumpRel", -7],
+        ["if!=than", "$L2.nextPageToken", null, 7],
+        ["string.concat", "$L0.url", "$P0.storageBase", "/b/", "$P2.name", "/o?maxResults=1000", "&pageToken=", "$L2.nextPageToken"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["jumpRel", -17]
     ],
     "getFileMetadata": [
         ["callFunc", "checkBucket", "$P0", "$P2"],
@@ -147,6 +155,7 @@ var SERVICE_CODE = {
         ["set", "$L0.url", "$P2.url"],
         ["set", "$L0.requestHeaders", "$P2.headers"],
         ["set", "$L0.method", "$P2.method"],
+        ["if!=than", "$P2.body", null, 1],
         ["set", "$L0.requestBody", "$P2.body"],
         ["if==than", "$L0.requestHeaders", null, 1],
         ["create", "$L0.requestHeaders", "Object"],

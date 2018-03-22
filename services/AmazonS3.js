@@ -321,6 +321,7 @@ var SERVICE_CODE = {
         ["set", "$L0.url", "$P2.url"],
         ["set", "$L0.requestHeaders", "$P2.headers"],
         ["set", "$L0.method", "$P2.method"],
+        ["if!=than", "$P2.body", null, 1],
         ["set", "$L0.requestBody", "$P2.body"],
         ["if!=than", "$P2.appendAuthorization", 0, 23],
         ["callFunc", "extractQuery", "$P0", "$L1", "$L0.url"],

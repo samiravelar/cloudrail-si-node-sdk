@@ -2511,7 +2511,7 @@ declare module 'cloudrail-si/services/Yelp' {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
-	    constructor(redirectReceiver: RedirectReceiver, clientID: string, clientSecret: string);
+	    constructor(redirectReceiver: RedirectReceiver, apiKey: string);
 	    getNearbyPOIs(latitude: number, longitude: number, radius: number, searchTerm: string, categories: string[], callback: NodeCallback<POI[]>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;

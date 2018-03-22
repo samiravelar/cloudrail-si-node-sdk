@@ -20,7 +20,10 @@ var SERVICE_CODE = {
         ["math.add", "$L1", "$L1", 1],
         ["jumpRel", -7]
     ],
-    "CloudStorage:getUserLogin": [],
+    "CloudStorage:getUserLogin": [
+        ["callFunc", "User:about", "$P0"],
+        ["set", "$P1", "$P0.userInfo.email"]
+    ],
     "CloudStorage:getUserName": [
         ["callFunc", "User:about", "$P0"],
         ["set", "$P1", "$P0.userInfo.displayName"]
@@ -38,7 +41,7 @@ var SERVICE_CODE = {
         ["create", "$L0", "Object"],
         ["string.concat", "$L0.url", "https://", "$P0.domain", ".egnyte.com/pubapi/v1/userinfo"],
         ["create", "$L0.requestHeaders", "Object"],
-        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.access_token"],
         ["set", "$L0.method", "GET"],
         ["http.requestCall", "$L1", "$L0"],
         ["json.parse", "$L2", "$L1.responseBody"],
@@ -46,7 +49,8 @@ var SERVICE_CODE = {
         ["create", "$P0.userInfo", "Object"],
         ["create", "$L3", "Date"],
         ["set", "$P0.userInfo.lastUpdate", "$L3.Time"],
-        ["set", "$P0.userInfo.displayName", "$L2.user.username"]
+        ["set", "$P0.userInfo.displayName", "$L2.username"],
+        ["set", "$P0.userInfo.email", "$L2.email"]
     ],
     "CloudStorage:download": [
         ["callFunc", "validatePath", "$P0", "$P2"],

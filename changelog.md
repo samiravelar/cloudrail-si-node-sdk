@@ -1,5 +1,12 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.8**
+  * Google Cloud Platform: Implement missing paging in listFiles() method
+  * Egnyte & Google Drive: Minor fixes
+  * Google Cloud Platform & Amazon S3: Add missing advanced request feature
+  * Microsoft Azure: Fix listFiles() method and implement advanced request
+  * Yelp: Update to a new API version including a different authentication
+
 * **2.21.7**
   * Add a new method to the CloudStorage interface that allows uploading files with a custom modified date
   * Fix a missing Authorization header in getChildren and getChildrenPage of OneDrive

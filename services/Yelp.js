@@ -91,9 +91,8 @@ var SERVICE_CODE = {
         ["set", "$L0.requestHeaders", "$P2.headers"],
         ["set", "$L0.method", "$P2.method"],
         ["set", "$L0.requestBody", "$P2.body"],
-        ["if!=than", "$P2.appendAuthorization", 0, 2],
-        ["callFunc", "checkAuthentication", "$P0"],
-        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["if!=than", "$P2.appendAuthorization", 0, 1],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.apiKey"],
         ["http.requestCall", "$L1", "$L0"],
         ["if!=than", "$P2.checkErrors", 0, 1],
         ["callFunc", "validateResponse", "$P0", "$L1"],
@@ -128,10 +127,9 @@ var SERVICE_CODE = {
         ["callFunc", "getCategoriesString", "$P0", "$L2", "$P6"],
         ["string.urlEncode", "$L2", "$L2"],
         ["string.concat", "$L1", "$L1", "&categories=", "$L2"],
-        ["callFunc", "checkAuthentication", "$P0"],
         ["string.concat", "$L0.url", "$L0.url", "$L1"],
         ["create", "$L0.requestHeaders", "Object"],
-        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$S0.accessToken"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.apiKey"],
         ["http.requestCall", "$L2", "$L0"],
         ["callFunc", "checkHttpResponse", "$P0", "$L2"],
         ["json.parse", "$L3", "$L2.responseBody"],
@@ -169,35 +167,6 @@ var SERVICE_CODE = {
         ["string.concat", "$L0", "$P3", " is not allowed to be empty."],
         ["create", "$L1", "Error", "$L0", "IllegalArgument"],
         ["throwError", "$L1"]
-    ],
-    "checkAuthentication": [
-        ["create", "$L0", "Date"],
-        ["if==than", "$S0.accessToken", null, 2],
-        ["callFunc", "authenticate", "$P0"],
-        ["return"],
-        ["create", "$L1", "Date"],
-        ["set", "$L1.time", "$S0.expires_in"],
-        ["if<than", "$L1", "$L0", 1],
-        ["callFunc", "authenticate", "$P0"]
-    ],
-    "authenticate": [
-        ["create", "$L8", "String", ""],
-        ["string.concat", "$L8", "$L8", "grant_type=client_credentials", "&client_id=", "$P0.clientID", "&client_secret=", "$P0.clientSecret"],
-        ["stream.stringToStream", "$L9", "$L8"],
-        ["create", "$L10", "Object"],
-        ["set", "$L10.Accept", "application/json"],
-        ["set", "$L10", "application/x-www-form-urlencoded", "Content-Type"],
-        ["create", "$L11", "Object"],
-        ["set", "$L11.url", "https://api.yelp.com/oauth2/token"],
-        ["set", "$L11.method", "POST"],
-        ["set", "$L11.requestBody", "$L9"],
-        ["set", "$L11.requestHeaders", "$L10"],
-        ["http.requestCall", "$L12", "$L11"],
-        ["callFunc", "checkHttpResponse", "$P0", "$L12"],
-        ["create", "$L13", "String"],
-        ["stream.streamToString", "$L13", "$L12.responseBody"],
-        ["json.parse", "$L14", "$L13"],
-        ["set", "$S0.accessToken", "$L14.access_token"]
     ],
     "checkHttpResponse": [
         ["if>=than", "$P1.code", 400, 9],
@@ -250,15 +219,14 @@ var SERVICE_CODE = {
     ]
 };
 var Yelp = (function () {
-    function Yelp(redirectReceiver, clientID, clientSecret) {
+    function Yelp(redirectReceiver, apiKey) {
         this.interpreterStorage = {};
         this.persistentStorage = [{}];
         this.instanceDependencyStorage = {
             redirectReceiver: redirectReceiver
         };
         InitSelfTest_1.InitSelfTest.initTest("Yelp");
-        this.interpreterStorage["clientID"] = clientID;
-        this.interpreterStorage["clientSecret"] = clientSecret;
+        this.interpreterStorage["apiKey"] = apiKey;
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         if (SERVICE_CODE["init"]) {
             ip.callFunctionSync("init", this.interpreterStorage);
