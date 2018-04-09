@@ -2504,15 +2504,19 @@ declare module 'cloudrail-si/services/Yahoo' {
 }
 declare module 'cloudrail-si/services/Yelp' {
 	import { PointsOfInterest } from 'cloudrail-si/interfaces/PointsOfInterest';
+	import { AdvancedRequestSupporter } from 'cloudrail-si/interfaces/AdvancedRequestSupporter';
 	import { NodeCallback } from 'cloudrail-si/helpers/Helper';
+	import { AdvancedRequestSpecification } from 'cloudrail-si/types/AdvancedRequestSpecification';
+	import { AdvancedRequestResponse } from 'cloudrail-si/types/AdvancedRequestResponse';
 	import { POI } from 'cloudrail-si/types/POI';
 	import { RedirectReceiver } from 'cloudrail-si/servicecode/commands/AwaitCodeRedirect';
-	export class Yelp implements PointsOfInterest {
+	export class Yelp implements PointsOfInterest, AdvancedRequestSupporter {
 	    private interpreterStorage;
 	    private instanceDependencyStorage;
 	    private persistentStorage;
 	    constructor(redirectReceiver: RedirectReceiver, apiKey: string);
 	    getNearbyPOIs(latitude: number, longitude: number, radius: number, searchTerm: string, categories: string[], callback: NodeCallback<POI[]>): void;
+	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
 	    saveAsString(): string;
 	    loadAsString(savedState: string): void;
 	    resumeLogin(executionState: string, callback: NodeCallback<void>): void;
@@ -2615,6 +2619,13 @@ declare module 'cloudrail-si/interfaces/BusinessCloudStorage' {
 	     */
 	    listFiles: (bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>) => void;
 	    /**
+	      *Get a list of files contained in the specified bucket which start with the given prefix
+	      *
+	      *@param bucket The bucket containing the files.
+	      *@param prefix The string which filters results to return only files whose name begin with the specified prefix.
+	      */
+	    listFilesWithPrefix: (bucket: Bucket, prefix: string, callback: NodeCallback<BusinessFileMetaData[]>) => void;
+	    /**
 	     * Uploads a new file into a bucket or replaces the file if it is already present.
 	     *
 	     * @param bucket  The bucket into which the file shall be put.
@@ -2674,6 +2685,7 @@ declare module 'cloudrail-si/services/Backblaze' {
 	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
 	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
 	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    listFilesWithPrefix(bucket: Bucket, prefix: string, callback: NodeCallback<BusinessFileMetaData[]>): void;
 	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
 	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2704,6 +2716,7 @@ declare module 'cloudrail-si/services/Rackspace' {
 	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
 	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
 	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    listFilesWithPrefix(bucket: Bucket, prefix: string, callback: NodeCallback<BusinessFileMetaData[]>): void;
 	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
 	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2734,6 +2747,7 @@ declare module 'cloudrail-si/services/MicrosoftAzure' {
 	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
 	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
 	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    listFilesWithPrefix(bucket: Bucket, prefix: string, callback: NodeCallback<BusinessFileMetaData[]>): void;
 	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
 	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2764,6 +2778,7 @@ declare module 'cloudrail-si/services/AmazonS3' {
 	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
 	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
 	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    listFilesWithPrefix(bucket: Bucket, prefix: string, callback: NodeCallback<BusinessFileMetaData[]>): void;
 	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
 	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;
@@ -2865,6 +2880,7 @@ declare module 'cloudrail-si/services/GoogleCloudPlatform' {
 	    deleteFile(fileName: string, bucket: Bucket, callback: NodeCallback<void>): void;
 	    getFileMetadata(bucket: Bucket, fileName: string, callback: NodeCallback<BusinessFileMetaData>): void;
 	    listFiles(bucket: Bucket, callback: NodeCallback<BusinessFileMetaData[]>): void;
+	    listFilesWithPrefix(bucket: Bucket, prefix: string, callback: NodeCallback<BusinessFileMetaData[]>): void;
 	    uploadFile(bucket: Bucket, name: string, stream: stream.Readable, size: number, callback: NodeCallback<void>): void;
 	    downloadFile(fileName: string, bucket: Bucket, callback: NodeCallback<stream.Readable>): void;
 	    advancedRequest(specification: AdvancedRequestSpecification, callback: NodeCallback<AdvancedRequestResponse>): void;

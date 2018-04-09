@@ -1,5 +1,10 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.9**
+  * Business Cloud Storage : Implement listFilesWithPrefix method . 
+  * Minor fixes for Google Drive API. 
+
+
 * **2.21.8**
   * Google Cloud Platform: Implement missing paging in listFiles() method
   * Egnyte & Google Drive: Minor fixes

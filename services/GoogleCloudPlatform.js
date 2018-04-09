@@ -98,6 +98,42 @@ var SERVICE_CODE = {
         ["json.parse", "$L2", "$L1.responseBody"],
         ["jumpRel", -17]
     ],
+    "listFilesWithPrefix": [
+        ["callFunc", "checkBucket", "$P0", "$P2"],
+        ["callFunc", "checkPrefix", "$P0", "$P3"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L0", "Object"],
+        ["set", "$L0.method", "GET"],
+        ["string.concat", "$L0.url", "$P0.storageBase", "/b/", "$P2.name", "/o?maxResults=1000", "&prefix=", "$P3"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["create", "$P1", "Array"],
+        ["size", "$L3", "$L2.items"],
+        ["create", "$L4", "Number"],
+        ["if<than", "$L4", "$L3", 6],
+        ["get", "$L5", "$L2.items", "$L4"],
+        ["if==than", "$L5.timeDeleted", null, 2],
+        ["callFunc", "makeMeta", "$P0", "$L6", "$L5"],
+        ["push", "$P1", "$L6"],
+        ["math.add", "$L4", "$L4", 1],
+        ["jumpRel", -7],
+        ["if!=than", "$L2.nextPageToken", null, 7],
+        ["string.concat", "$L0.url", "$P0.storageBase", "/b/", "$P2.name", "/o?maxResults=1000", "&pageToken=", "$L2.nextPageToken"],
+        ["create", "$L0.requestHeaders", "Object"],
+        ["string.concat", "$L0.requestHeaders.Authorization", "Bearer ", "$P0.accessToken"],
+        ["http.requestCall", "$L1", "$L0"],
+        ["callFunc", "validateResponse", "$P0", "$L1"],
+        ["json.parse", "$L2", "$L1.responseBody"],
+        ["jumpRel", -17]
+    ],
+    "checkPrefix": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L1", "Error", "Prefix supplied is null", "IllegalArgument"],
+        ["throwError", "$L1"]
+    ],
     "getFileMetadata": [
         ["callFunc", "checkBucket", "$P0", "$P2"],
         ["callFunc", "checkNull", "$P0", "$P3"],
@@ -370,6 +406,21 @@ var GoogleCloudPlatform = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listFiles", this.interpreterStorage, null, bucket).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "listFiles");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    GoogleCloudPlatform.prototype.listFilesWithPrefix = function (bucket, prefix, callback) {
+        Statistics_1.Statistics.addCall("GoogleCloudPlatform", "listFilesWithPrefix");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("listFilesWithPrefix", this.interpreterStorage, null, bucket, prefix).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "GoogleCloudPlatform", "listFilesWithPrefix");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

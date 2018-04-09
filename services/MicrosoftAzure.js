@@ -219,6 +219,58 @@ var SERVICE_CODE = {
         ["jumpRel", -20],
         ["set", "$P1", "$L14"]
     ],
+    "Storage:listFilesWithPrefix": [
+        ["callFunc", "checkBucket", "$P0", "$P2"],
+        ["callFunc", "checkPrefix", "$P0", "$P3"],
+        ["create", "$L1", "Date"],
+        ["create", "$L4", "Object"],
+        ["set", "$L4", "$L1.rfcTime1123", "x-ms-date"],
+        ["set", "$L4", "2016-05-31", "x-ms-version"],
+        ["create", "$L3", "String"],
+        ["string.concat", "$L3", "/", "$P0.accountName", "/", "$P2.name", "\ncomp:list", "\nprefix:", "$P3", "\nrestype:directory"],
+        ["create", "$L2", "String"],
+        ["callFunc", "signedString", "$L2", "GET", "", "$L4", "$L3", "$P0"],
+        ["string.concat", "$L2", "SharedKey ", "$P0.accountName", ":", "$L2"],
+        ["set", "$L4", "$L2", "Authorization"],
+        ["create", "$L5", "Object"],
+        ["string.concat", "$L0", "https://", "$P0.accountName", ".file.core.windows.net/", "$P2.name", "?comp=list&prefix=", "$P3", "&restype=directory"],
+        ["set", "$L5.url", "$L0"],
+        ["set", "$L5.method", "GET"],
+        ["set", "$L5.requestHeaders", "$L4"],
+        ["http.requestCall", "$L6", "$L5"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L6", "authentication", 200],
+        ["create", "$L14", "Array"],
+        ["stream.streamToString", "$L12", "$L6.responseBody"],
+        ["xml.parse", "$L12", "$L12"],
+        ["size", "$L10", "$L12.children.1.children"],
+        ["if!=than", "$L10", 0, 20],
+        ["math.add", "$L10", "$L10", -1],
+        ["create", "$L13", "BusinessFileMetaData"],
+        ["get", "$L15", "$L12.children.1.children", "$L10"],
+        ["if==than", "$L15.name", "Directory", 8],
+        ["create", "$L20", "String"],
+        ["string.concat", "$L20", "$L15.children.0.text", "/"],
+        ["set", "$L13.fileName", "$L20"],
+        ["size", "$L16", "$L15.children.1.children"],
+        ["if!=than", "$L16", 0, 2],
+        ["math.add", "$L11", "$L15.children.1.children.0.text", 0],
+        ["set", "$L13.size", "$L11"],
+        ["push", "$L14", "$L13"],
+        ["if==than", "$L15.name", "File", 6],
+        ["set", "$L13.fileName", "$L15.children.0.text"],
+        ["size", "$L16", "$L15.children.1.children"],
+        ["if!=than", "$L16", 0, 2],
+        ["math.add", "$L11", "$L15.children.1.children.0.text", 0],
+        ["set", "$L13.size", "$L11"],
+        ["push", "$L14", "$L13"],
+        ["jumpRel", -21],
+        ["set", "$P1", "$L14"]
+    ],
+    "checkPrefix": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L1", "Error", "Prefix supplied is null", "IllegalArgument"],
+        ["throwError", "$L1"]
+    ],
     "getSubDirectories": [
         ["create", "$L1", "Date"],
         ["create", "$L4", "Object"],
@@ -633,6 +685,21 @@ var MicrosoftAzure = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listFiles", this.interpreterStorage, null, bucket).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "listFiles");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    MicrosoftAzure.prototype.listFilesWithPrefix = function (bucket, prefix, callback) {
+        Statistics_1.Statistics.addCall("MicrosoftAzure", "listFilesWithPrefix");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Storage:listFilesWithPrefix", this.interpreterStorage, null, bucket, prefix).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "MicrosoftAzure", "listFilesWithPrefix");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

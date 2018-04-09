@@ -137,6 +137,43 @@ var SERVICE_CODE = {
         ["jumpRel", -9],
         ["set", "$P1", "$L14"]
     ],
+    "Storage:listFilesWithPrefix": [
+        ["callFunc", "checkBucket", "$P0", "$P2"],
+        ["callFunc", "checkPrefix", "$P0", "$P3"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L4", "Object"],
+        ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
+        ["set", "$L4", "$S0.authorizationToken", "X-Auth-Token"],
+        ["create", "$L5", "Object"],
+        ["string.concat", "$L10", "$S0.publicURL", "/", "$P2.name", "?format=json"],
+        ["if!=than", "$P3", null, 2],
+        ["string.concat", "$L2", "$L10", "&prefix=", "$P3"],
+        ["set", "$L10", "$L2"],
+        ["set", "$L5.url", "$L10"],
+        ["set", "$L5.method", "GET"],
+        ["set", "$L5.requestHeaders", "$L4"],
+        ["http.requestCall", "$L6", "$L5"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L6", "authentication", 200],
+        ["create", "$L14", "Array"],
+        ["stream.streamToString", "$L12", "$L6.responseBody"],
+        ["json.parse", "$L12", "$L12"],
+        ["size", "$L10", "$L12"],
+        ["if!=than", "$L10", 0, 8],
+        ["math.add", "$L10", "$L10", -1],
+        ["create", "$L13", "BusinessFileMetaData"],
+        ["get", "$L15", "$L12", "$L10"],
+        ["set", "$L13.fileID", "$L15.hash"],
+        ["set", "$L13.fileName", "$L15.name"],
+        ["set", "$L13.size", "$L15.bytes"],
+        ["push", "$L14", "$L13"],
+        ["jumpRel", -9],
+        ["set", "$P1", "$L14"]
+    ],
+    "checkPrefix": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L1", "Error", "Prefix supplied is null", "IllegalArgument"],
+        ["throwError", "$L1"]
+    ],
     "Storage:getFileMetadata": [
         ["callFunc", "checkBucket", "$P0", "$P2"],
         ["callFunc", "checkNull", "$P0", "$P3"],
@@ -430,6 +467,21 @@ var Rackspace = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listFiles", this.interpreterStorage, null, bucket).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Rackspace", "listFiles");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Rackspace.prototype.listFilesWithPrefix = function (bucket, prefix, callback) {
+        Statistics_1.Statistics.addCall("Rackspace", "listFilesWithPrefix");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Storage:listFilesWithPrefix", this.interpreterStorage, null, bucket, prefix).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Rackspace", "listFilesWithPrefix");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

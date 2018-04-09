@@ -206,6 +206,56 @@ var SERVICE_CODE = {
         ["jumpRel", -23],
         ["set", "$P1", "$L14"]
     ],
+    "Storage:listFilesWithPrefix": [
+        ["callFunc", "checkBucket", "$P0", "$P2"],
+        ["callFunc", "checkPrefix", "$P0", "$P3"],
+        ["callFunc", "checkAuthentication", "$P0"],
+        ["create", "$L4", "Object"],
+        ["set", "$L4", "application/x-www-form-urlencoded", "Content-Type"],
+        ["set", "$L4", "$S0.authorizationToken", "Authorization"],
+        ["string.concat", "$L9", "{\"bucketId\":\"", "$P2.identifier", "\"", ",", "\"maxFileCount\":", 1000, ",", "\"prefix\":\"", "$P3", "\"", "}"],
+        ["size", "$L10", "$L9"],
+        ["string.concat", "$L4.Content-Length", "$L10"],
+        ["create", "$L5", "Object"],
+        ["string.concat", "$L0", "$S0.apiUrl", "/b2api/v1/b2_list_file_names"],
+        ["set", "$L5.url", "$L0"],
+        ["set", "$L5.method", "POST"],
+        ["set", "$L5.requestHeaders", "$L4"],
+        ["stream.stringToStream", "$L9", "$L9"],
+        ["set", "$L5.requestBody", "$L9"],
+        ["http.requestCall", "$L6", "$L5"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L6", "authentication", 200],
+        ["create", "$L14", "Array"],
+        ["stream.streamToString", "$L12", "$L6.responseBody"],
+        ["json.parse", "$L12", "$L12"],
+        ["size", "$L10", "$L12.files"],
+        ["if!=than", "$L10", 0, 9],
+        ["math.add", "$L10", "$L10", -1],
+        ["create", "$L13", "BusinessFileMetaData"],
+        ["get", "$L15", "$L12.files", "$L10"],
+        ["set", "$L13.fileID", "$L15.fileId"],
+        ["set", "$L13.fileName", "$L15.fileName"],
+        ["set", "$L13.lastModified", "$L15.uploadTimestamp"],
+        ["set", "$L13.size", "$L15.contentLength"],
+        ["push", "$L14", "$L13"],
+        ["jumpRel", -10],
+        ["if!=than", "$L12.nextFileName", null, 9],
+        ["string.concat", "$L9", "{\"bucketId\":\"", "$P2.identifier", "\"", ",", "\"maxFileCount\":", 1000, ",", "\"startFileName\":", "\"", "$L12.nextFileName", "\"", "}"],
+        ["size", "$L10", "$L9"],
+        ["string.concat", "$L4.Content-Length", "$L10"],
+        ["set", "$L5.requestHeaders", "$L4"],
+        ["stream.stringToStream", "$L9", "$L9"],
+        ["set", "$L5.requestBody", "$L9"],
+        ["http.requestCall", "$L6", "$L5"],
+        ["callFunc", "checkHttpErrors", "$P0", "$L6", "authentication", 200],
+        ["jumpRel", -23],
+        ["set", "$P1", "$L14"]
+    ],
+    "checkPrefix": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L1", "Error", "Prefix supplied is null", "IllegalArgument"],
+        ["throwError", "$L1"]
+    ],
     "Storage:deleteFile": [
         ["callFunc", "Storage:getFileMetadata", "$P0", "$L0", "$P2", "$P1"],
         ["get", "$L15", "$L0.fileID"],
@@ -453,6 +503,21 @@ var Backblaze = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("Storage:listFiles", this.interpreterStorage, null, bucket).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "Backblaze", "listFiles");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    Backblaze.prototype.listFilesWithPrefix = function (bucket, prefix, callback) {
+        Statistics_1.Statistics.addCall("Backblaze", "listFilesWithPrefix");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("Storage:listFilesWithPrefix", this.interpreterStorage, null, bucket, prefix).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Backblaze", "listFilesWithPrefix");
         }).then(function () {
             var res;
             res = ip.getParameter(1);

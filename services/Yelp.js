@@ -247,6 +247,21 @@ var Yelp = (function () {
                 callback(err);
         });
     };
+    Yelp.prototype.advancedRequest = function (specification, callback) {
+        Statistics_1.Statistics.addCall("Yelp", "advancedRequest");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("AdvancedRequestSupporter:advancedRequest", this.interpreterStorage, null, specification).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "Yelp", "advancedRequest");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
     Yelp.prototype.saveAsString = function () {
         Statistics_1.Statistics.addCall("Yelp", "saveAsString");
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));

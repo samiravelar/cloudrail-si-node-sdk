@@ -110,7 +110,7 @@ var SERVICE_CODE = {
     "listFiles": [
         ["callFunc", "checkBucket", "$P0", "$P2"],
         ["create", "$P1", "Array"],
-        ["callFunc", "listFilesChunk", "$P0", "$L1", "$P2.name", "$L0"],
+        ["callFunc", "listFilesChunk", "$P0", "$L1", "$P2.name", "$L0", null],
         ["set", "$L0", null],
         ["size", "$L2", "$L1.children"],
         ["create", "$L3", "Number", 0],
@@ -130,6 +130,36 @@ var SERVICE_CODE = {
         ["jumpRel", -14],
         ["if!=than", "$L0", null, 1],
         ["jumpRel", -20]
+    ],
+    "listFilesWithPrefix": [
+        ["callFunc", "checkBucket", "$P0", "$P2"],
+        ["callFunc", "checkPrefix", "$P0", "$P3"],
+        ["create", "$P1", "Array"],
+        ["callFunc", "listFilesChunk", "$P0", "$L1", "$P2.name", "$L0", "$P3"],
+        ["set", "$L0", null],
+        ["size", "$L2", "$L1.children"],
+        ["create", "$L3", "Number", 0],
+        ["if<than", "$L3", "$L2", 13],
+        ["get", "$L4", "$L1.children", "$L3"],
+        ["if==than", "$L4.name", "NextContinuationToken", 1],
+        ["set", "$L0", "$L4.text"],
+        ["if==than", "$L4.name", "Contents", 7],
+        ["create", "$L5", "BusinessFileMetaData"],
+        ["set", "$L5.fileName", "$L4.children.0.text"],
+        ["set", "$L5.fileID", "$L4.children.0.text"],
+        ["math.add", "$L5.size", "$L4.children.3.text", 0],
+        ["create", "$L6", "Date", "$L4.children.1.text"],
+        ["set", "$L5.lastModified", "$L6.time"],
+        ["push", "$P1", "$L5"],
+        ["math.add", "$L3", "$L3", 1],
+        ["jumpRel", -14],
+        ["if!=than", "$L0", null, 1],
+        ["jumpRel", -20]
+    ],
+    "checkPrefix": [
+        ["if==than", "$P1", null, 2],
+        ["create", "$L1", "Error", "Prefix supplied is null", "IllegalArgument"],
+        ["throwError", "$L1"]
     ],
     "getFileMetadata": [
         ["callFunc", "checkBucket", "$P0", "$P2"],
@@ -471,9 +501,14 @@ var SERVICE_CODE = {
         ["create", "$L0", "Object"],
         ["set", "$L0.method", "GET"],
         ["string.concat", "$L0.url", "https://", "$P2", ".", "$P0.baseUrl", "?list-type=2"],
-        ["if!=than", "$P3", null, 2],
+        ["if!=than", "$P3", null, 3],
         ["string.urlEncode", "$L1", "$P3"],
-        ["string.concat", "$L0.url", "$L0.url", "&continuation-token=", "$L1"],
+        ["string.concat", "$L2", "$L0.url", "&continuation-token=", "$L1"],
+        ["string.concat", "$L0.url", "$L2"],
+        ["if!=than", "$P4", null, 3],
+        ["string.urlEncode", "$L1", "$P4"],
+        ["string.concat", "$L3", "$L0.url", "&prefix=", "$L1"],
+        ["string.concat", "$L0.url", "$L3"],
         ["create", "$L1", "Object"],
         ["set", "$L0.requestHeaders", "$L1"],
         ["string.concat", "$L1.host", "$P2", ".", "$P0.baseUrl"],
@@ -490,6 +525,9 @@ var SERVICE_CODE = {
         ["push", "$L12", "continuation-token"],
         ["set", "$L11.continuation-token", "$P3"],
         ["push", "$L12", "list-type"],
+        ["if!=than", "$P4", null, 2],
+        ["push", "$L12", "prefix"],
+        ["set", "$L11.prefix", "$P4"],
         ["callFunc", "signRequest", "$P0", "$L0", "$L11", "$L12", "$L10", "$L1.x-amz-content-sha256"],
         ["http.requestCall", "$L2", "$L0"],
         ["callFunc", "validateResponse", "$P0", "$L2", 200],
@@ -685,6 +723,21 @@ var AmazonS3 = (function () {
         var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
         ip.callFunction("listFiles", this.interpreterStorage, null, bucket).then(function () {
             Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "listFiles");
+        }).then(function () {
+            var res;
+            res = ip.getParameter(1);
+            if (callback != null && typeof callback === "function")
+                callback(undefined, res);
+        }, function (err) {
+            if (callback != null && typeof callback === "function")
+                callback(err);
+        });
+    };
+    AmazonS3.prototype.listFilesWithPrefix = function (bucket, prefix, callback) {
+        Statistics_1.Statistics.addCall("AmazonS3", "listFilesWithPrefix");
+        var ip = new Interpreter_1.Interpreter(new Sandbox_1.Sandbox(SERVICE_CODE, this.persistentStorage, this.instanceDependencyStorage));
+        ip.callFunction("listFilesWithPrefix", this.interpreterStorage, null, bucket, prefix).then(function () {
+            Helper_1.Helper.checkSandboxError(ip, "AmazonS3", "listFilesWithPrefix");
         }).then(function () {
             var res;
             res = ip.getParameter(1);
