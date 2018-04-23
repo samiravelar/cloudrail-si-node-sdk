@@ -853,7 +853,7 @@ var SERVICE_CODE = {
         ["string.urlEncode", "$L22", "$P0.clientSecret"],
         ["create", "$L2", "String"],
         ["if==than", "$P2", "accessToken", 4],
-        ["string.concat", "$L0", "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri"],
+        ["string.concat", "$L0", "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=", "$P0.clientId", "&scope=", "$P0.scope", "&response_type=code&redirect_uri=", "$P0.redirectUri", "&state=", "$P0.state"],
         ["awaitCodeRedirect", "$L1", "$L0", null, "$P0.redirectUri"],
         ["string.concat", "$L2", "client_id=", "$P0.clientId", "&redirect_uri=", "$P0.redirectUri", "&client_secret=", "$L22", "&code=", "$L1", "&grant_type=authorization_code"],
         ["jumpRel", 1],

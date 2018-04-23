@@ -8,7 +8,7 @@ var SERVICE_CODE = {
     "init": [
         ["set", "$P0.boundary", "Amgrmg43ghg3g39glv0k2ldk"],
         ["if==than", "$P0.scopes", null, 2],
-        ["set", "$P0.scope", "public_profile%2Cemail%2Cuser_birthday%2Cuser_about_me%2Cpublish_actions%2Cuser_friends%2Cuser_photos"],
+        ["set", "$P0.scope", "public_profile%2Cemail%2Cuser_birthday%2Cpublish_actions%2Cuser_friends%2Cuser_photos"],
         ["jumpRel", 11],
         ["create", "$P0.scope", "String"],
         ["size", "$L0", "$P0.scopes"],

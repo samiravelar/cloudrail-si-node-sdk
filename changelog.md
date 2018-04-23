@@ -1,5 +1,10 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.10**
+  * OneDrive: Attach missing state parameter to authentication url 
+  * Facebook: Removed user_about_me scope which shows description. This is removed from Facebook
+  * Google Cloud: Added object name encoding to google cloud
+
 * **2.21.9**
   * Business Cloud Storage : Implement listFilesWithPrefix method . 
   * Minor fixes for Google Drive API. 
