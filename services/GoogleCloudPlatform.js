@@ -315,6 +315,20 @@ var SERVICE_CODE = {
         ["create", "$L0", "Error", "Size can not be negative.", "IllegalArgument"],
         ["throwError", "$L0"]
     ],
+    "replace": [
+        ["string.split", "$L0", "$P2", "$P3"],
+        ["size", "$L1", "$L0"],
+        ["set", "$L2", 0],
+        ["if<than", "$L2", "$L1", 7],
+        ["get", "$L5", "$L0", "$L2"],
+        ["if==than", "$L2", 0, 2],
+        ["set", "$L4", "$L5"],
+        ["jumpRel", 1],
+        ["string.concat", "$L4", "$L4", "$P4", "$L5"],
+        ["math.add", "$L2", "$L2", 1],
+        ["jumpRel", -8],
+        ["set", "$P1", "$L4"]
+    ],
     "encodeObjectName": [
         ["callFunc", "replace", "$P0", "$L1", "$P2", "’", "\'"],
         ["string.urlEncode", "$P1", "$L1"]

@@ -1,5 +1,11 @@
 # CloudRail SI Node.JS SDK changelog
 
+* **2.21.11**
+  * OneDriveBusiness: Fix missing url encoding of the client secret on refreshing tokens
+  * GoogleCloudPlatform: Add a missing internal function
+  * MicrosoftAzure: Fix an issue in the advanced request function 
+
+
 * **2.21.10**
   * OneDrive: Attach missing state parameter to authentication url 
   * Facebook: Removed user_about_me scope which shows description. This is removed from Facebook
