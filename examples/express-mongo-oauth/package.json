@@ -5,7 +5,13 @@
     "cloudrail-si": "2.x",
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
-    "mongoose": "^4.5.1"
+    "mongoose": "^4.5.1",
+    "snyk": "^1.316.1"
   },
-  "private": true
+  "private": true,
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
